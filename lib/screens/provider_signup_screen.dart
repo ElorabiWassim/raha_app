@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login.dart';
-import 'provider_verification_screen.dart'; // We'll create this next
+// import 'provider_verification_screen.dart'; // We'll create this next
 import 'splash.dart';
 
 const primaryColor = Color(0xFF33AD04);
@@ -377,25 +377,25 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
                           elevation: 2,
                         ),
                         onPressed: () {
-                          if (_formKey.currentState!.validate() &&
-                              _acceptTerms &&
-                              _selectedServiceType != null) {
-                            // Navigate to verification screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const ProviderVerificationScreen(),
-                              ),
-                            );
-                          } else if (_selectedServiceType == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Please select a service type'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
+                          // if (_formKey.currentState!.validate() &&
+                          //     _acceptTerms &&
+                          //     _selectedServiceType != null) {
+                          //    Navigate to verification screen
+                          //    Navigator.push(
+                          //      context,
+                          //      MaterialPageRoute(
+                          //        builder: (_) =>
+                          //            const ProviderVerificationScreen(),
+                          //      ),
+                          //   );
+                          // } else if (_selectedServiceType == null) {
+                          //   ScaffoldMessenger.of(context).showSnackBar(
+                          //     SnackBar(
+                          //       content: Text('Please select a service type'),
+                          //       backgroundColor: Colors.red,
+                          //     ),
+                          //   );
+                          // }
                         },
                         child: Text(
                           'Verify Your Account',
