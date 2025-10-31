@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -20,4 +19,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/Icons/
+    - assets/icons/
+
+google_fonts: ^6.2.1

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/search_box.dart';
+import '../widgets/category_list.dart';
+import '../widgets/Home_Demand.dart';
+import '../widgets/proffesionalCardWidget.dart';
 
 class HomeScreenHomeOwner extends StatefulWidget {
   const HomeScreenHomeOwner({super.key});
@@ -11,21 +15,74 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(padding: EdgeInsetsGeometry.all(20)),
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: AssetImage(
-                  'assets/images/MohammedPicture.png',
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(padding: EdgeInsets.all(20)),
+            Row(
+              children: [
+                Padding(padding: EdgeInsets.only(left: 20)),
+                CircleAvatar(
+                  radius: 24,
+                  backgroundImage: AssetImage(
+                    'assets/images/MohammedPicture.png',
+                  ),
                 ),
+                Container(
+                  margin: EdgeInsets.only(left: 10),
+                  child: Text(
+                    "Salam Mohamed",
+                    style: TextStyle(
+                      color: Color(0xFF6E946D),
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SearchBox(),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 20, bottom: 30),
+              child: Text(
+                "Browse Categories",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              Text("Salam Mohamed"),
-            ],
-          ),
-        ],
+            ),
+            CategoryList(),
+            HomeDemand(),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+              child: Text(
+                "Top Rated Near You",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
+            ProfessionalCard(
+              name: 'Amine Faiz',
+              profession: 'Master Plumber',
+              rating: 4.9,
+              reviews: 124,
+              imagePath: 'assets/images/JohnDoe.png',
+            ),
+            ProfessionalCard(
+              name: 'Maria Haniya',
+              profession: 'Expert Carp',
+              rating: 5.0,
+              reviews: 88,
+              imagePath: 'assets/images/Maria.png',
+            ),
+            ProfessionalCard(
+              name: 'Ali Imem',
+              profession: 'Gardening & Landscaping',
+              rating: 4.8,
+              reviews: 150,
+              imagePath: 'assets/images/AliImem.png',
+            ),
+          ],
+        ),
       ),
     );
   }
