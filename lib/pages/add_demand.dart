@@ -64,7 +64,8 @@ class _AddDemand extends State<AddDemand> {
                 cursorColor: Colors.black,
                 controller: addressController,
                 decoration: InputDecoration(
-                  labelText: 'Adress',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  labelText: 'Enter your adress',
                   labelStyle: TextStyle(color: Color(0xFF1E293B)),
                   hintText: 'Enter your adress',
                   hintStyle: TextStyle(color: Color(0xFFB8B9B9)),
