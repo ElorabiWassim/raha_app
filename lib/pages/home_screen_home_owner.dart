@@ -32,7 +32,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
                 Container(
                   margin: EdgeInsets.only(left: 10),
                   child: Text(
-                    "Salam Mohamed",
+                    "Salam Wassim",
                     style: TextStyle(
                       color: Color(0xFF6E946D),
                       fontSize: 30,

@@ -1,0 +1,25 @@
+ListTile(
+                leading: CircleAvatar(
+                  radius: 28,
+                  backgroundImage: AssetImage('assets/images/JohnDoe.png'),
+                ),
+                title: Text(
+                  serviceProviders[index],
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[800],
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 20,
+                  color: Colors.grey[600],
+                ),
+                tileColor: Colors.white,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                onTap: () {},
+              )

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './category_widget.dart';
-import '../pages/category_screen.dart';
+import '../pages/wilaya_screen.dart';
 
 class CategoryList extends StatelessWidget {
   const CategoryList({super.key});
@@ -15,22 +15,22 @@ class CategoryList extends StatelessWidget {
             CircleButton(
               icon: 'assets/icons/cleaning.png',
               label: 'Cleaning',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "Cleaning"),
             ),
             CircleButton(
               icon: 'assets/icons/plumbing.png',
               label: 'Plumbing',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "Plumbing"),
             ),
             CircleButton(
               icon: 'assets/icons/electrical.png',
               label: 'Electrical',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "Electrical"),
             ),
             CircleButton(
               icon: 'assets/icons/gardening.png',
               label: 'Gardening',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "Gardening"),
             ),
           ],
         ),
@@ -41,22 +41,22 @@ class CategoryList extends StatelessWidget {
             CircleButton(
               icon: 'assets/icons/handyman.png',
               label: 'Handyman',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "Handyman"),
             ),
             CircleButton(
               icon: 'assets/icons/painting.png',
               label: 'Painting',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "Painting"),
             ),
             CircleButton(
               icon: 'assets/icons/moving.png',
               label: 'Moving',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "Moving"),
             ),
             CircleButton(
               icon: 'assets/icons/more.png',
               label: 'More',
-              destination: CategoryScreen(),
+              destination: WilayaScreen(category: "More"),
             ),
           ],
         ),

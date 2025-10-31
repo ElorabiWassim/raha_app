@@ -20,7 +20,7 @@ class ProfessionalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 25),
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
