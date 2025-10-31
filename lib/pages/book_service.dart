@@ -81,7 +81,7 @@ class _BookService extends State<BookService> {
                     value!.isEmpty ? 'Please enter a description' : null,
               ),
               SizedBox(height: 10),
-              btn2(onPressSubmit, "Add Photos"),
+              btn2(() => {}, "Add Photos"),
               SizedBox(height: 10),
               QuestionDemand(question: "When do you need the service ?"),
               SizedBox(height: 5),
