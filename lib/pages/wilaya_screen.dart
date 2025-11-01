@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../dataClasses/Wilayas.dart';
-import './service_provider_screen.dart'; // make sure you have this screen
+import './service_provider_screen.dart';
 
 class WilayaScreen extends StatelessWidget {
   final String category;
-  WilayaScreen({super.key, required this.category});
+  const WilayaScreen({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,9 @@ class WilayaScreen extends StatelessWidget {
         itemCount: wilayas.length,
         itemBuilder: (context, index) {
           final wilaya = wilayas[index];
-          // Check if this wilaya has providers for the selected category
+          
           if (!wilaya.serviceProvidersByCategory.containsKey(category)) {
-            return SizedBox.shrink(); // we skip the wilaya if it deosn't have any sps
+            return SizedBox.shrink();
           }
 
           return Padding(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './home_screen_home_owner.dart';
+import './profilehome.dart';
 
 class HomeBottomNav extends StatefulWidget {
   const HomeBottomNav({super.key});
@@ -15,7 +16,7 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
     Center(child: HomeScreenHomeOwner()),
     Center(child: Text(" Bookings")),
     Center(child: Text(" Messages")),
-    Center(child: Text(" Profile")),
+     MyProfileScreen(),
   ];
 
   @override

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../widgets/proffesionalCardWidget.dart';
+import '../models/service_provider_model.dart';
+import './profile.dart';
 
 class ServiceProviderScreen extends StatelessWidget {
-  final List<String> serviceProviders;
-  //at the moment it is a list of strings not profiles
+  final List<ServiceProvider> serviceProviders;
+
   const ServiceProviderScreen({super.key, required this.serviceProviders});
 
   @override
@@ -27,17 +29,30 @@ class ServiceProviderScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: serviceProviders.length,
         itemBuilder: (context, index) {
+          final provider = serviceProviders[index];
           return Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 4.0,
             ),
-            child: ProfessionalCard(
-              name: serviceProviders[index],
-              profession: 'proffesion',
-              rating: 0,
-              reviews: 0,
-              imagePath: 'assets/images/JohnDoe.png',
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => Providerprofile(
+                      serviceProvider: provider,
+                    ),
+                  ),
+                );
+              },
+              child: ProfessionalCard(
+                name: provider.name,
+                profession: provider.profession,
+                rating: provider.rating,
+                reviews: provider.reviewCount,
+                imagePath: provider.imagePath,
+              ),
             ),
           );
         },
