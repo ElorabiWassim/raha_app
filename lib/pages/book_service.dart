@@ -6,7 +6,8 @@ import '../widgets/elevatedButton.dart';
 import '../widgets/service_card.dart';
 
 class BookService extends StatefulWidget {
-  const BookService({super.key});
+  final String service_name;
+  const BookService({super.key, required this.service_name});
   @override
   State<BookService> createState() => _BookService();
 }
@@ -50,7 +51,7 @@ class _BookService extends State<BookService> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ServiceCard(
-                title: "Drain Cleaning",
+                title: widget.service_name,
                 subtitle: "Service Selected",
                 icon: Icons.build,
               ),
