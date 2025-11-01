@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../models/service_provider_model.dart';
+import 'book_service.dart';
 
 class Providerprofile extends StatefulWidget {
   final ServiceProvider serviceProvider;
-  
+
   const Providerprofile({super.key, required this.serviceProvider});
-  
+
   @override
   State<Providerprofile> createState() => _ProviderprofileState();
 }
@@ -59,7 +60,7 @@ class _ProviderprofileState extends State<Providerprofile> {
   @override
   Widget build(BuildContext context) {
     final provider = widget.serviceProvider;
-    
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -118,10 +119,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                   SizedBox(height: 2),
                   Text(
                     provider.location,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[500],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                   ),
                   SizedBox(height: 12),
                   Row(
@@ -156,8 +154,10 @@ class _ProviderprofileState extends State<Providerprofile> {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: () {},
-                          icon: Icon(Icons.message_outlined,
-                              color: Colors.grey[700]),
+                          icon: Icon(
+                            Icons.message_outlined,
+                            color: Colors.grey[700],
+                          ),
                           label: Text(
                             "Message",
                             style: TextStyle(
@@ -224,19 +224,31 @@ class _ProviderprofileState extends State<Providerprofile> {
                     child: IntrinsicHeight(
                       child: Row(
                         children: [
-                          Expanded(child: _buildStat(provider.jobsDone, 'Jobs Done')),
+                          Expanded(
+                            child: _buildStat(provider.jobsDone, 'Jobs Done'),
+                          ),
                           VerticalDivider(
                             width: 1,
                             thickness: 1,
                             color: Colors.grey[300],
                           ),
-                          Expanded(child: _buildStat(provider.experience, 'Experience')),
+                          Expanded(
+                            child: _buildStat(
+                              provider.experience,
+                              'Experience',
+                            ),
+                          ),
                           VerticalDivider(
                             width: 1,
                             thickness: 1,
                             color: Colors.grey[300],
                           ),
-                          Expanded(child: _buildStat(provider.responseTime, 'Response')),
+                          Expanded(
+                            child: _buildStat(
+                              provider.responseTime,
+                              'Response',
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -275,7 +287,11 @@ class _ProviderprofileState extends State<Providerprofile> {
             ),
 
             _buildServicesSection(servicesKey, provider.services),
-            _buildReviewsSection(reviewsKey, provider.rating, provider.reviewCount),
+            _buildReviewsSection(
+              reviewsKey,
+              provider.rating,
+              provider.reviewCount,
+            ),
             _buildPortfolioSection(portfolioKey),
           ],
         ),
@@ -291,10 +307,7 @@ class _ProviderprofileState extends State<Providerprofile> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-        ),
+        Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
       ],
     );
   }
@@ -303,7 +316,7 @@ class _ProviderprofileState extends State<Providerprofile> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Color(0xFF68E36C).withOpacity(0.1),
+        color: Color(0xFF68E36C).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -324,23 +337,35 @@ class _ProviderprofileState extends State<Providerprofile> {
     );
   }
 
-  Widget _buildServicesSection(GlobalKey key, List<Service> services) {
-    return Container(
-      key: key,
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: services.map((service) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+ Widget _buildServicesSection( GlobalKey key, List<Service> services) {
+  return Container(
+    key: key,
+    padding: EdgeInsets.all(16),
+    child: Column(
+      children: services.map((service) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: GestureDetector(
+            onTap: () {
+              // Navigate to the details page (replace with your actual page)
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookService(service_name: service.title),
+                ),
+              );
+            },
             child: _buildServiceCard(
               service.title,
               '${service.pricingModel} ${service.price}',
             ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
 
   Widget _buildServiceCard(String title, String price) {
     return Container(
@@ -349,7 +374,7 @@ class _ProviderprofileState extends State<Providerprofile> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 0,
           ),
@@ -369,10 +394,7 @@ class _ProviderprofileState extends State<Providerprofile> {
           padding: const EdgeInsets.only(top: 4),
           child: Text(
             price,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
         ),
         trailing: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
@@ -390,7 +412,7 @@ class _ProviderprofileState extends State<Providerprofile> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               spreadRadius: 0,
             ),
@@ -402,10 +424,7 @@ class _ProviderprofileState extends State<Providerprofile> {
           children: [
             Text(
               'Reviews Summary',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Row(
@@ -430,10 +449,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                     SizedBox(height: 4),
                     Text(
                       'Based on $reviewCount reviews',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -511,10 +527,7 @@ class _ProviderprofileState extends State<Providerprofile> {
           children: [
             Text(
               'Portfolio',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 12),
             Text(

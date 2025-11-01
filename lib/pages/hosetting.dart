@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/profile_data.dart';
 import './profilehome.dart';
+
 class SettingsScreen extends StatefulWidget {
   final ProfileData profileData;
 
@@ -26,7 +27,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditProfileScreen(profileData: currentProfileData),
+        builder: (context) =>
+            EditProfileScreen(profileData: currentProfileData),
       ),
     );
 
@@ -34,8 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       setState(() {
         currentProfileData = result;
       });
-      
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Profile updated successfully!'),
@@ -84,7 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                   ),
@@ -94,7 +95,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 contentPadding: EdgeInsets.all(16),
                 leading: CircleAvatar(
                   radius: 28,
-                  backgroundImage: AssetImage('assets/images/MohammedPicture.png'),
+                  backgroundImage: AssetImage(
+                    'assets/images/MohammedPicture.png',
+                  ),
                 ),
                 title: Text(
                   currentProfileData.name,
@@ -108,16 +111,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     currentProfileData.email,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
                 ),
-                trailing: Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey[400],
-                ),
+                trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                 onTap: () {
                   // Navigate to profile view
                 },
@@ -135,7 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                   ),
@@ -177,7 +174,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                   ),
@@ -225,7 +222,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                   ),
@@ -236,25 +233,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildMenuItem(
                     icon: Icons.lock_outline,
                     title: 'Change Password',
-                    onTap: () {
-                    
-                    },
+                    onTap: () {},
                   ),
                   Divider(height: 1, thickness: 1, color: Colors.grey[200]),
                   _buildMenuItem(
                     icon: Icons.security_outlined,
                     title: 'Two-Factor Authentication',
-                    onTap: () {
-                     
-                    },
+                    onTap: () {},
                   ),
                   Divider(height: 1, thickness: 1, color: Colors.grey[200]),
                   _buildMenuItem(
                     icon: Icons.privacy_tip_outlined,
                     title: 'Privacy Policy',
-                    onTap: () {
-                     
-                    },
+                    onTap: () {},
                   ),
                 ],
               ),
@@ -262,7 +253,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             SizedBox(height: 24),
 
-           
             _buildSectionHeader('SUPPORT & LEGAL'),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16),
@@ -271,7 +261,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                   ),
@@ -282,25 +272,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildMenuItem(
                     icon: Icons.help_outline,
                     title: 'Help Center',
-                    onTap: () {
-                      
-                    },
+                    onTap: () {},
                   ),
                   Divider(height: 1, thickness: 1, color: Colors.grey[200]),
                   _buildMenuItem(
                     icon: Icons.headset_mic_outlined,
                     title: 'Contact Support',
-                    onTap: () {
-                      
-                    },
+                    onTap: () {},
                   ),
                   Divider(height: 1, thickness: 1, color: Colors.grey[200]),
                   _buildMenuItem(
                     icon: Icons.description_outlined,
                     title: 'Terms of Service',
-                    onTap: () {
-                     
-                    },
+                    onTap: () {},
                   ),
                 ],
               ),
@@ -308,7 +292,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             SizedBox(height: 32),
 
-           
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SizedBox(
@@ -339,7 +322,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
-    ) ;
+    );
   }
 
   Widget _buildSectionHeader(String title) {
@@ -374,29 +357,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(0xFF68E36C).withOpacity(0.1),
+                color: Color(0xFF68E36C).withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                color: Color(0xFF68E36C),
-                size: 22,
-              ),
+              child: Icon(icon, color: Color(0xFF68E36C), size: 22),
             ),
             SizedBox(width: 16),
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black87,
-                ),
+                style: TextStyle(fontSize: 15, color: Colors.black87),
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.chevron_right, color: Colors.grey[400]),
           ],
         ),
       ),
@@ -416,30 +389,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(0xFF68E36C).withOpacity(0.1),
+              color: Color(0xFF68E36C).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              icon,
-              color: Color(0xFF68E36C),
-              size: 22,
-            ),
+            child: Icon(icon, color: Color(0xFF68E36C), size: 22),
           ),
           SizedBox(width: 16),
           Expanded(
             child: Text(
               title,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black87,
-              ),
+              style: TextStyle(fontSize: 15, color: Colors.black87),
             ),
           ),
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Color(0xFF68E36C),
-            activeTrackColor: Color(0xFF68E36C).withOpacity(0.5),
+            
+            activeTrackColor: Color(0xFF68E36C).withValues(alpha: 0.5),
           ),
         ],
       ),
@@ -451,25 +417,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-            'Log Out',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          title: Text('Log Out', style: TextStyle(fontWeight: FontWeight.bold)),
           content: Text('Are you sure you want to log out?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Colors.grey[600]),
-              ),
+              child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-             
               },
               child: Text(
                 'Log Out',

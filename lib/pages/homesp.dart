@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../models/serviceprovider_data.dart';
 import './addservicescreen.dart';
 import './setting.dart';
+
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ServiceProviderHome(),
-  ));
+  runApp(
+    MaterialApp(debugShowCheckedModeBanner: false, home: ServiceProviderHome()),
+  );
 }
-
-
 
 class ServiceProviderHome extends StatefulWidget {
   const ServiceProviderHome({super.key});
@@ -59,7 +56,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
 
   void _navigateToPage(String pageName) {
     Widget? page;
-    
+
     switch (pageName) {
       case 'Add Service':
         page = AddServiceScreen(
@@ -90,12 +87,9 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
         return;
     }
 
-    if (page != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => page!),
-      );
-    }
+    
+      Navigator.push(context, MaterialPageRoute(builder: (context) => page!));
+    
   }
 
   @override
@@ -189,7 +183,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF68E36C).withOpacity(0.3),
+            color: Color(0xFF68E36C).withValues(alpha: 0.3),
             blurRadius: 10,
             spreadRadius: 0,
           ),
@@ -233,7 +227,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
                       '(${provider.reviewCount} reviews)',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
@@ -290,7 +284,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 0,
           ),
@@ -302,7 +296,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 24),
@@ -317,10 +311,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
             ),
           ),
           SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-          ),
+          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         ],
       ),
     );
@@ -411,7 +402,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               spreadRadius: 0,
             ),
@@ -422,7 +413,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 28),
@@ -504,7 +495,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               spreadRadius: 0,
             ),
@@ -515,7 +506,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 28),
@@ -537,7 +528,10 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
                       ),
                       SizedBox(width: 8),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: color,
                           borderRadius: BorderRadius.circular(12),
@@ -621,7 +615,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 0,
           ),
@@ -650,7 +644,7 @@ class _ServiceProviderHomeState extends State<ServiceProviderHome> {
                 padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: service.isActive
-                      ? Color(0xFF68E36C).withOpacity(0.1)
+                      ? Color(0xFF68E36C).withValues(alpha: 1)
                       : Colors.grey[200],
                   borderRadius: BorderRadius.circular(4),
                 ),

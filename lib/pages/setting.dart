@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import './homesp.dart';
 import '../models/serviceprovider_data.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -75,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF68E36C).withOpacity(0.3),
+            color: Color(0xFF68E36C).withValues(alpha: 0.3),
             blurRadius: 10,
             spreadRadius: 0,
           ),
@@ -106,7 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   widget.provider.profession,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
                 SizedBox(height: 4),
@@ -114,7 +113,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   widget.provider.location,
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -151,7 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           trailing: Container(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: Color(0xFF68E36C).withOpacity(0.1),
+              color: Color(0xFF68E36C).withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -329,7 +328,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.8),
                 blurRadius: 10,
                 spreadRadius: 0,
               ),
@@ -358,7 +357,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: (textColor ?? Color(0xFF68E36C)).withOpacity(0.1),
+                color: (textColor ?? Color(0xFF68E36C)).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -412,7 +411,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Color(0xFF68E36C).withOpacity(0.1),
+              color: Color(0xFF68E36C).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: Color(0xFF68E36C), size: 22),

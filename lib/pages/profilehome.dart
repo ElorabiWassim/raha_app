@@ -114,10 +114,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         setState(() {
           profileData = result;
         });
-      }}
-     
-      
-     else {
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Navigation to $pageName - Coming Soon'),
@@ -172,7 +170,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   CircleAvatar(
                     radius: 55,
                     backgroundColor: Colors.grey[300],
-                    backgroundImage: AssetImage('assets/images/MohammedPicture.png'),
+                    backgroundImage: AssetImage(
+                      'assets/images/MohammedPicture.png',
+                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -280,36 +280,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             ),
 
             SizedBox(height: 24),
-
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Activity Summary',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      _buildActivityTab('Upcoming', 'upcoming'),
-                      SizedBox(width: 32),
-                      _buildActivityTab('History', 'history'),
-                      SizedBox(width: 32),
-                      _buildActivityTab('Saved', 'saved'),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  _buildActivityList(),
-                  SizedBox(height: 80),
-                ],
-              ),
-            ),
           ],
         ),
       ),
@@ -331,7 +301,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: iconColor, size: 24),
@@ -340,10 +310,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 15, color: Colors.grey[700]),
               ),
             ),
           ],
@@ -367,7 +334,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: iconColor, size: 24),
@@ -376,10 +343,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 15, color: Colors.grey[700]),
               ),
             ),
             Icon(Icons.chevron_right, color: Colors.grey[400]),
@@ -389,186 +353,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
-  Widget _buildActivityTab(String label, String value) {
-    final isActive = _selectedActivityTab == value;
-
-    return InkWell(
-      onTap: () {
-        setState(() => _selectedActivityTab = value);
-      },
-      child: Container(
-        padding: EdgeInsets.only(bottom: 8),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isActive ? Color(0xFF68E36C) : Colors.transparent,
-              width: 3,
-            ),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isActive ? Color(0xFF68E36C) : Colors.grey[500],
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-            fontSize: 15,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActivityList() {
-    final activities = _activityData[_selectedActivityTab] ?? [];
-
-    if (activities.isEmpty) {
-      return Container(
-        padding: EdgeInsets.all(40),
-        child: Center(
-          child: Text(
-            'No activities found',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[500],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      children: activities.map((activity) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: 16),
-          child: _buildActivityCard(
-            title: activity['title']!,
-            provider: activity['provider']!,
-            date: activity['date']!,
-            time: activity['time']!,
-            status: activity['status']!,
-            onTap: () {
-              _navigateToPage('${activity['title']} Details');
-            },
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildActivityCard({
-    required String title,
-    required String provider,
-    required String date,
-    required String time,
-    required String status,
-    VoidCallback? onTap,
-  }) {
-    Color statusColor;
-    switch (status) {
-      case 'CONFIRMED':
-        statusColor = Color(0xFF68E36C);
-        break;
-      case 'COMPLETED':
-        statusColor = Colors.blue;
-        break;
-      case 'SAVED':
-        statusColor = Colors.orange;
-        break;
-      default:
-        statusColor = Colors.grey;
-    }
-
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        provider,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: statusColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(Icons.calendar_today_outlined,
-                    size: 16, color: Colors.grey[600]),
-                SizedBox(width: 6),
-                Text(
-                  date,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                SizedBox(width: 16),
-                Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
-                SizedBox(width: 6),
-                Text(
-                  time,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 // Edit Profile Screen
@@ -594,7 +378,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameController = TextEditingController(text: widget.profileData.name);
     _emailController = TextEditingController(text: widget.profileData.email);
     _phoneController = TextEditingController(text: widget.profileData.phone);
-    _addressController = TextEditingController(text: widget.profileData.address);
+    _addressController = TextEditingController(
+      text: widget.profileData.address,
+    );
   }
 
   @override
@@ -643,7 +429,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   CircleAvatar(
                     radius: 60,
                     backgroundColor: Colors.grey[300],
-                    backgroundImage: AssetImage('assets/images/MohammedPicture.png'),
+                    backgroundImage: AssetImage(
+                      'assets/images/MohammedPicture.png',
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -655,11 +443,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 3),
                       ),
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+                      child: Icon(Icons.edit, color: Colors.white, size: 20),
                     ),
                   ),
                 ],
@@ -667,10 +451,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               SizedBox(height: 40),
 
-              _buildInputField(
-                label: 'Full Name',
-                controller: _nameController,
-              ),
+              _buildInputField(label: 'Full Name', controller: _nameController),
 
               SizedBox(height: 24),
               _buildInputField(
@@ -771,10 +552,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLines,
-          style: TextStyle(
-            fontSize: 15,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 15, color: Colors.black87),
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -801,7 +579,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _saveChanges() {
-  
     ProfileData updatedProfile = ProfileData(
       name: _nameController.text,
       email: _emailController.text,
