@@ -21,78 +21,106 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
     MyProfileScreen(),
   ];
 
+  final List<String> _labels = ['Home', 'Bookings', 'Messages', 'Profile'];
+  final List<IconData> _icons = [
+    Icons.home_outlined,
+    Icons.calendar_today_outlined,
+    Icons.chat_outlined,
+    Icons.person_outline,
+  ];
+  final List<IconData> _activeIcons = [
+    Icons.home,
+    Icons.calendar_today,
+    Icons.chat,
+    Icons.person,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black, blurRadius: 6)],
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.green,
-          unselectedItemColor: Colors.grey,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: _ActiveIcon(icon: Icons.home, label: "Home"),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today_outlined),
-              label: 'Bookings',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_outlined),
-              label: 'Messages',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: 'Profile',
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, -3),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// Custom active icon with green arc and filled color
-class _ActiveIcon extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _ActiveIcon({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Green curved line (the arc effect)
-        Container(
-          height: 3,
-          width: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            gradient: const LinearGradient(
-              colors: [Colors.greenAccent, Colors.green],
-            ),
-          ),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: List.generate(_icons.length, (index) {
+            final isSelected = _selectedIndex == index;
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? Colors.green.withOpacity(0.1)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Active indicator line above the icon
+                    if (isSelected)
+                      Container(
+                        height: 3,
+                        width: 20,
+                        margin: const EdgeInsets.only(bottom: 4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          gradient: const LinearGradient(
+                            colors: [Colors.greenAccent, Colors.green],
+                          ),
+                        ),
+                      )
+                    else
+                      const SizedBox(
+                        height: 7,
+                      ), // maintain space for inactive items
+                    Icon(
+                      isSelected ? _activeIcons[index] : _icons[index],
+                      color: isSelected ? Colors.green : Colors.grey,
+                      size: isSelected ? 28 : 24,
+                    ),
+                    const SizedBox(height: 4),
+                    AnimatedDefaultTextStyle(
+                      style: TextStyle(
+                        color: isSelected ? Colors.green : Colors.grey,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                        fontSize: isSelected ? 12 : 11,
+                      ),
+                      duration: const Duration(milliseconds: 300),
+                      child: Text(_labels[index]),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
         ),
-        const SizedBox(height: 4),
-        Icon(icon, color: Colors.green),
-      ],
+      ),
     );
   }
 }
