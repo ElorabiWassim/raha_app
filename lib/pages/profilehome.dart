@@ -10,7 +10,7 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  String _selectedActivityTab = 'upcoming';
+  final String _selectedActivityTab = 'upcoming';
 
   // Profile data
   ProfileData profileData = ProfileData(
@@ -193,7 +193,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {

@@ -606,6 +606,8 @@ class ServiceProviderHome extends StatelessWidget {
 }
 
 class DemandsScreen extends StatelessWidget {
+  const DemandsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -622,6 +624,8 @@ class DemandsScreen extends StatelessWidget {
 }
 
 class RequestsScreen extends StatelessWidget {
+  const RequestsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -638,6 +642,8 @@ class RequestsScreen extends StatelessWidget {
 }
 
 class MessagesScreen extends StatelessWidget {
+  const MessagesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -654,6 +660,8 @@ class MessagesScreen extends StatelessWidget {
 }
 
 class PlansScreen extends StatelessWidget {
+  const PlansScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

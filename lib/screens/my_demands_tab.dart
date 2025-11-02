@@ -4,7 +4,7 @@ import '/constants/app_text_style.dart';
 import 'provider_offers_screen.dart';
 
 class MyDemandsTab extends StatefulWidget {
-  const MyDemandsTab({Key? key}) : super(key: key);
+  const MyDemandsTab({super.key});
 
   @override
   State<MyDemandsTab> createState() => _MyDemandsTabState();
@@ -17,7 +17,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
 
   // Filter options
   String _sortBy = 'date'; // 'date', 'budget', 'status'
-  List<String> _selectedCategories = [];
+  final List<String> _selectedCategories = [];
   RangeValues _budgetRange = const RangeValues(0, 50000);
 
   @override

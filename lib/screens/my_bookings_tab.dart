@@ -4,7 +4,7 @@ import '/constants/app_text_style.dart';
 import 'rate_report_provider_screen.dart'; 
 
 class MyBookingsTab extends StatelessWidget {
-  const MyBookingsTab({Key? key}) : super(key: key);
+  const MyBookingsTab({super.key});
 
   @override
   Widget build(BuildContext context) {

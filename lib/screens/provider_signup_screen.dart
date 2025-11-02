@@ -255,7 +255,7 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
                         ],
                       ),
                       child: DropdownButtonFormField<String>(
-                        value: _selectedServiceType,
+                        initialValue: _selectedServiceType,
                         decoration: InputDecoration(
                           hintText: 'Select your service type',
                           hintStyle: GoogleFonts.poppins(

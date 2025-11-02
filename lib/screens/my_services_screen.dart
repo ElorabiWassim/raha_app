@@ -4,7 +4,7 @@ import 'my_bookings_tab.dart';
 import 'my_demands_tab.dart';
 
 class MyServicesScreen extends StatefulWidget {
-  const MyServicesScreen({Key? key}) : super(key: key);
+  const MyServicesScreen({super.key});
 
   @override
   State<MyServicesScreen> createState() => _MyServicesScreenState();

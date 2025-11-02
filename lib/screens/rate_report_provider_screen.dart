@@ -7,8 +7,7 @@ import '/constants/app_text_style.dart';
 class RateReportProviderScreen extends StatefulWidget {
   final Booking booking;
 
-  const RateReportProviderScreen({Key? key, required this.booking})
-    : super(key: key);
+  const RateReportProviderScreen({super.key, required this.booking});
 
   @override
   State<RateReportProviderScreen> createState() =>

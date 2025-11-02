@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import './home_screen_home_owner.dart';
 import './profilehome.dart';
+import '../screens/my_services_screen.dart';
+import '../screens/messages_screen.dart';
 
 class HomeBottomNav extends StatefulWidget {
   const HomeBottomNav({super.key});
@@ -13,10 +15,10 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    Center(child: HomeScreenHomeOwner()),
-    Center(child: Text(" Bookings")),
-    Center(child: Text(" Messages")),
-     MyProfileScreen(),
+    HomeScreenHomeOwner(),
+    MyServicesScreen(),
+    MessagesScreen(),
+    MyProfileScreen(),
   ];
 
   @override

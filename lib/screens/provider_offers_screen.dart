@@ -12,14 +12,14 @@ class ProviderOffersScreen extends StatefulWidget {
   final IconData demandIcon;
 
   const ProviderOffersScreen({
-    Key? key,
+    super.key,
     required this.demandTitle,
     required this.demandCategory,
     required this.demandDescription,
     required this.demandLocation,
     required this.postedDate,
     required this.demandIcon,
-  }) : super(key: key);
+  });
 
   @override
   State<ProviderOffersScreen> createState() => _ProviderOffersScreenState();
