@@ -133,12 +133,14 @@ class _AddDemand extends State<AddDemand> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      QuestionDemand(question: 'Date'),
-                      SimpleDatePicker(),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        QuestionDemand(question: 'Date'),
+                        SimpleDatePicker(),
+                      ],
+                    ),
                   ),
                   SizedBox(width: 10),
                   Column(

@@ -94,9 +94,11 @@ class _BookService extends State<BookService> {
                     children: [SimpleDatePicker()],
                   ),
                   SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [TimePickerField()],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [TimePickerField()],
+                    ),
                   ),
                 ],
               ),
