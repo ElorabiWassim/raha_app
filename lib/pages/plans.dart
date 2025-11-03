@@ -79,7 +79,9 @@ class _PlansPageState extends State<PlansPage> {
             ),
 
             // Plans List
-            Expanded(
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight, // ensures it fills remaining space smoothly
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: plans.length,

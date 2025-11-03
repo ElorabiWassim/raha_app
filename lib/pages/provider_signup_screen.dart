@@ -65,7 +65,7 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
       data: ThemeData(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: primaryColor,
-          selectionColor: primaryColor.withOpacity(0.3),
+          selectionColor: primaryColor.withValues(alpha: .3),
           selectionHandleColor: primaryColor,
         ),
       ),
@@ -155,7 +155,7 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
                             border: Border.all(color: Color(0xFFAEE599)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
+                                color: Colors.black.withValues(alpha: .03),
                                 blurRadius: 4,
                                 offset: Offset(0, 1),
                               ),
@@ -220,7 +220,7 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
                           // Get current location
                         },
                         style: OutlinedButton.styleFrom(
-                          backgroundColor: primaryColor.withOpacity(0.1),
+                          backgroundColor: primaryColor.withValues(alpha: .1),
                           side: BorderSide(color: primaryColor),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -248,7 +248,7 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
                         border: Border.all(color: Color(0xFFAEE599)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.03),
+                            color: Colors.black.withValues(alpha: .03),
                             blurRadius: 4,
                             offset: const Offset(0, 1),
                           ),
@@ -560,7 +560,7 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
             border: Border.all(color: Color(0xFFAEE599)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: .03),
                 blurRadius: 4,
                 offset: Offset(0, 1),
               ),
@@ -613,7 +613,7 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
             border: Border.all(color: Color(0xFFAEE599)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: .03),
                 blurRadius: 4,
                 offset: Offset(0, 1),
               ),

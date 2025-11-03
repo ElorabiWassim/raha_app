@@ -74,12 +74,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            _navigateToPage('Previous Screen');
-          },
-        ),
         backgroundColor: Colors.white,
         elevation: 2,
         shadowColor: Colors.black,

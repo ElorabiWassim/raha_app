@@ -25,10 +25,10 @@ class MyBookingsTab extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: .2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: .04),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -119,7 +119,7 @@ class MyBookingsTab extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: booking.status == BookingStatus.completed
                           ? AppColors.primary
-                          : AppColors.primary.withOpacity(0.3),
+                          : AppColors.primary.withValues(alpha: .3),
                       foregroundColor: booking.status == BookingStatus.completed
                           ? Colors.white
                           : AppColors.primary,

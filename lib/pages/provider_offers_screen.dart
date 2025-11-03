@@ -89,7 +89,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF7E6).withOpacity(0.8),
+        color: const Color(0xFFEAF7E6).withValues(alpha: .8),
       ),
       child: Row(
         children: [
@@ -121,10 +121,10 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: .2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: .05),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -136,7 +136,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: .1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(widget.demandIcon, color: AppColors.primary, size: 30),
@@ -199,12 +199,12 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
               ? AppColors.primary
               : isDisabled
               ? AppColors.border
-              : AppColors.primary.withOpacity(0.2),
+              : AppColors.primary.withValues(alpha: .2),
           width: isAccepted ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isAccepted ? 0.08 : 0.05),
+            color: Colors.black.withValues(alpha: isAccepted ? 0.08 : 0.05),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -295,11 +295,11 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: .1),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: .05),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -402,7 +402,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
       context: context,
       barrierDismissible: true,
       barrierLabel: '',
-      barrierColor: Colors.black.withOpacity(0.3),
+      barrierColor: Colors.black.withValues(alpha: .3),
       pageBuilder: (context, _, __) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -516,7 +516,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
       context: context,
       barrierDismissible: true,
       barrierLabel: '',
-      barrierColor: Colors.black.withOpacity(0.3),
+      barrierColor: Colors.black.withValues(alpha: .3),
       pageBuilder: (context, _, __) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -538,7 +538,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: AppColors.error.withOpacity(0.1),
+                        color: AppColors.error.withValues(alpha: .1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -662,7 +662,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
               width: 96,
               height: 96,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: .1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(

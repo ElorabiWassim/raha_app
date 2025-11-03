@@ -73,7 +73,7 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.green.withOpacity(0.1)
+                      ? Colors.green.withValues(alpha: .1)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                 ),

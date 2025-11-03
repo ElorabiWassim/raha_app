@@ -80,7 +80,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEAF7E6).withOpacity(0.8),
+                      color: const Color(0xFFEAF7E6).withValues(alpha: .8),
                     ),
                     child: Row(
                       children: [
@@ -125,11 +125,11 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: AppColors.primary.withOpacity(0.2),
+                              color: AppColors.primary.withValues(alpha: .2),
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
+                                color: Colors.black.withValues(alpha: .04),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -198,7 +198,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
+                                color: Colors.black.withValues(alpha: .04),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -248,11 +248,11 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: AppColors.primary.withOpacity(0.2),
+                              color: AppColors.primary.withValues(alpha: .2),
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
+                                color: Colors.black.withValues(alpha: .04),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -290,7 +290,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.04),
+                                  color: Colors.black.withValues(alpha: .04),
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
                                 ),
@@ -328,7 +328,9 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
                               elevation: 0,
-                              shadowColor: AppColors.primary.withOpacity(0.2),
+                              shadowColor: AppColors.primary.withValues(
+                                alpha: .2,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -359,7 +361,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: .5),
                       child: Center(
                         child: SingleChildScrollView(
                           child: GestureDetector(
@@ -373,7 +375,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
+                                    color: Colors.black.withValues(alpha: .2),
                                     blurRadius: 20,
                                     offset: const Offset(0, 10),
                                   ),
@@ -406,8 +408,8 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                        color: AppColors.primary.withOpacity(
-                                          0.3,
+                                        color: AppColors.primary.withValues(
+                                          alpha: 0.3,
                                         ),
                                       ),
                                     ),
@@ -507,7 +509,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
               // Success Modal
               if (_showSuccessModal)
                 Container(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: .4),
                   child: Center(
                     child: Container(
                       margin: const EdgeInsets.all(16),
@@ -518,7 +520,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withValues(alpha: .2),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -531,7 +533,7 @@ class _RateReportProviderScreenState extends State<RateReportProviderScreen> {
                             width: 64,
                             height: 64,
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
+                              color: AppColors.primary.withValues(alpha: .1),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
