@@ -27,10 +27,12 @@ class CategoryList extends StatelessWidget {
               label: 'Electrical',
               destination: WilayaScreen(category: "Electrical"),
             ),
-            CircleButton(
-              icon: 'assets/icons/gardening.png',
-              label: 'Gardening',
-              destination: WilayaScreen(category: "Gardening"),
+            Flexible(
+              child: CircleButton(
+                icon: 'assets/icons/gardening.png',
+                label: 'Gardening',
+                destination: WilayaScreen(category: "Gardening"),
+              ),
             ),
           ],
         ),
@@ -53,10 +55,12 @@ class CategoryList extends StatelessWidget {
               label: 'Moving',
               destination: WilayaScreen(category: "Moving"),
             ),
-            CircleButton(
-              icon: 'assets/icons/more.png',
-              label: 'More',
-              destination: WilayaScreen(category: "More"),
+            Flexible(
+              child: CircleButton(
+                icon: 'assets/icons/more.png',
+                label: 'More',
+                destination: WilayaScreen(category: "More"),
+              ),
             ),
           ],
         ),

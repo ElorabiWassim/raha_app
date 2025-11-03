@@ -18,28 +18,30 @@ class HomeDemand extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                "Can't find a service?",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 21,
-                  color: Color(0xFF8DC285),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "Can't find a service?",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 21,
+                    color: Color(0xFF8DC285),
+                  ),
                 ),
-              ),
-              SizedBox(height: 6),
+                SizedBox(height: 6),
 
-              Text(
-                "Let us know what you need, and we'll find\na professional for you.",
-                style: TextStyle(
-                  color: Color(0xFFBED7B3),
-                  fontSize: 14.5,
-                  height: 1.3,
+                Text(
+                  "Let us know what you need, and we'll find\na professional for you.",
+                  style: TextStyle(
+                    color: Color(0xFFBED7B3),
+                    fontSize: 14.5,
+                    height: 1.3,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           InkWell(
