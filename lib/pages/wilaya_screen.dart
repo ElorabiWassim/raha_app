@@ -28,7 +28,7 @@ class WilayaScreen extends StatelessWidget {
         itemCount: wilayas.length,
         itemBuilder: (context, index) {
           final wilaya = wilayas[index];
-          
+
           if (!wilaya.serviceProvidersByCategory.containsKey(category)) {
             return SizedBox.shrink();
           }

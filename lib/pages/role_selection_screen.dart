@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ra7a/screens/provider_signup_screen.dart';
+import 'package:ra7a/pages/provider_signup_screen.dart';
 import 'splash.dart';
-import 'homeowner_signup_screen.dart'; // ✅ Import your homeowner sign-up screen
+import 'homeowner_signup_screen.dart'; // Import your homeowner sign-up screen
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});

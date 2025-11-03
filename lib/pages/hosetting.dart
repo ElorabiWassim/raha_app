@@ -404,7 +404,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            
+
             activeTrackColor: Color(0xFF68E36C).withValues(alpha: 0.5),
           ),
         ],

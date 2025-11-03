@@ -40,9 +40,7 @@ class ServiceProviderScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => Providerprofile(
-                      serviceProvider: provider,
-                    ),
+                    builder: (_) => Providerprofile(serviceProvider: provider),
                   ),
                 );
               },

@@ -352,7 +352,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       ),
     );
   }
-
 }
 
 // Edit Profile Screen

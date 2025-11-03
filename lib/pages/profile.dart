@@ -337,35 +337,35 @@ class _ProviderprofileState extends State<Providerprofile> {
     );
   }
 
- Widget _buildServicesSection( GlobalKey key, List<Service> services) {
-  return Container(
-    key: key,
-    padding: EdgeInsets.all(16),
-    child: Column(
-      children: services.map((service) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: GestureDetector(
-            onTap: () {
-              // Navigate to the details page (replace with your actual page)
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BookService(service_name: service.title),
-                ),
-              );
-            },
-            child: _buildServiceCard(
-              service.title,
-              '${service.pricingModel} ${service.price}',
+  Widget _buildServicesSection(GlobalKey key, List<Service> services) {
+    return Container(
+      key: key,
+      padding: EdgeInsets.all(16),
+      child: Column(
+        children: services.map((service) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: GestureDetector(
+              onTap: () {
+                // Navigate to the details page (replace with your actual page)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        BookService(service_name: service.title),
+                  ),
+                );
+              },
+              child: _buildServiceCard(
+                service.title,
+                '${service.pricingModel} ${service.price}',
+              ),
             ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
-
+          );
+        }).toList(),
+      ),
+    );
+  }
 
   Widget _buildServiceCard(String title, String price) {
     return Container(

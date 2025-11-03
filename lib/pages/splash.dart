@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'onboarding.dart'; // make sure this path is correct
+import './onboarding.dart'; // make sure this path is correct
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,7 +9,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();

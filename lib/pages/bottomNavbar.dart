@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import './home_screen_home_owner.dart';
 import './profilehome.dart';
-import '../screens/my_services_screen.dart';
-import '../screens/messages_screen.dart';
+import './my_services_screen.dart';
+import './messages_screen.dart';
 
 class HomeBottomNav extends StatefulWidget {
   const HomeBottomNav({super.key});

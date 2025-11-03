@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../models/serviceprovider_data.dart';
 
@@ -382,10 +381,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
                 ],
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '/models/booking_model.dart';
 import '/constants/app_text_style.dart';
-import 'rate_report_provider_screen.dart'; 
+import 'rate_report_provider_screen.dart';
 
 class MyBookingsTab extends StatelessWidget {
   const MyBookingsTab({super.key});

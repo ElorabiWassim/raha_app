@@ -5,9 +5,13 @@ import './setting.dart';
 
 void main() {
   runApp(
-    MaterialApp(debugShowCheckedModeBanner: false, home: MainNavigationScreen()),
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MainNavigationScreen(),
+    ),
   );
 }
+
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
   @override
@@ -67,11 +71,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   List<Widget> _getPages() {
     return [
-      ServiceProviderHome(provider: provider, onServiceAdded: _onServiceAdded, onProfileUpdated: _onProfileUpdated),
-      DemandsScreen(), 
-      RequestsScreen(), 
-      MessagesScreen(), 
-      PlansScreen(), 
+      ServiceProviderHome(
+        provider: provider,
+        onServiceAdded: _onServiceAdded,
+        onProfileUpdated: _onProfileUpdated,
+      ),
+      DemandsScreen(),
+      RequestsScreen(),
+      MessagesScreen(),
+      PlansScreen(),
     ];
   }
 
@@ -153,9 +161,7 @@ class ServiceProviderHome extends StatelessWidget {
 
     switch (pageName) {
       case 'Add Service':
-        page = AddServiceScreen(
-          onServiceAdded: onServiceAdded,
-        );
+        page = AddServiceScreen(onServiceAdded: onServiceAdded);
         break;
       case 'Settings':
         page = SettingsScreen(
@@ -616,9 +622,7 @@ class DemandsScreen extends StatelessWidget {
         elevation: 2,
         title: Text('Pending Demands', style: TextStyle(color: Colors.black)),
       ),
-      body: Center(
-        child: Text('Demands Screen - Coming Soon'),
-      ),
+      body: Center(child: Text('Demands Screen - Coming Soon')),
     );
   }
 }
@@ -632,11 +636,12 @@ class RequestsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 2,
-        title: Text('Confirmed Requests', style: TextStyle(color: Colors.black)),
+        title: Text(
+          'Confirmed Requests',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-      body: Center(
-        child: Text('Requests Screen - Coming Soon'),
-      ),
+      body: Center(child: Text('Requests Screen - Coming Soon')),
     );
   }
 }
@@ -652,9 +657,7 @@ class MessagesScreen extends StatelessWidget {
         elevation: 2,
         title: Text('Messages', style: TextStyle(color: Colors.black)),
       ),
-      body: Center(
-        child: Text('Messages Screen - Coming Soon'),
-      ),
+      body: Center(child: Text('Messages Screen - Coming Soon')),
     );
   }
 }
@@ -668,11 +671,12 @@ class PlansScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 2,
-        title: Text('Subscription Plans', style: TextStyle(color: Colors.black)),
+        title: Text(
+          'Subscription Plans',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-      body: Center(
-        child: Text('Plans Screen - Coming Soon'),
-      ),
+      body: Center(child: Text('Plans Screen - Coming Soon')),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
-import 'package:ra7a/screens/splash.dart';
+import 'package:ra7a/pages/splash.dart';
 // import 'package:ra7a/constants/app_text_style.dart'; // your file with AppTextStyles & AppColors
 
 void main() {
