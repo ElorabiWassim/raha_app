@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_admin.dart';
+import './login.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -54,6 +55,65 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
+  void _handleLogout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.logout, color: Color(0xFF4CAF50)),
+              SizedBox(width: 8),
+              Text(
+                'Logout',
+                style: TextStyle(
+                  color: Color(0xFF388E3C),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Are you sure you want to logout?',
+            style: TextStyle(color: Color(0xFF333333)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Color(0xFF6B7280)),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4CAF50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,6 +161,11 @@ class _DashboardPageState extends State<DashboardPage> {
                             )
                           : const Icon(Icons.refresh, color: Color(0xFF4CAF50)),
                       onPressed: isLoading ? null : _refreshData,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.logout, color: Color(0xFF4CAF50)),
+                      onPressed: _handleLogout,
+                      tooltip: 'Logout',
                     ),
                   ],
                 ),
