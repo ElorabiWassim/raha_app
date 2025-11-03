@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/constants/app_text_style.dart';
-import 'onboarding.dart'; // or your correct home file
 
 // Message Model
 class Message {
@@ -68,30 +67,22 @@ class MessagesScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFEAF7E6).withValues(alpha: .8),
       ),
-      child: Row(
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Container(width: 48, height: 48, alignment: Alignment.centerLeft),
-          Expanded(
-            child: Text(
-              'Messages',
-              textAlign: TextAlign.center,
-              style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
-            ),
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                alignment: Alignment.centerLeft,
+                // You can add a back or menu icon here if needed
+              ),
+            ],
           ),
-          SizedBox(
-            width: 48,
-            height: 48,
-            child: IconButton(
-              icon: Icon(Icons.search, color: AppColors.textDark),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OnboardingScreen(),
-                  ),
-                );
-              },
-            ),
+          Text(
+            'Messages',
+            style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
           ),
         ],
       ),

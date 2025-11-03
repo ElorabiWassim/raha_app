@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ra7a/pages/bottomNavbar.dart';
 import 'role_selection_screen.dart';
 import 'splash.dart';
+import 'dashboard.dart';
+import 'homesp.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +16,51 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _handleLogin() {
+    String username = _usernameController.text.trim().toLowerCase();
+
+    // Route based on username
+    Widget destinationPage;
+
+    if (username == 'homeowner') {
+      destinationPage = const HomeBottomNav();
+    } else if (username == 'serviceprovider') {
+      destinationPage = const MainNavigationScreen();
+    } else if (username == 'admin') {
+      destinationPage = const DashboardPage();
+    } else {
+      // Show error for invalid username
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Invalid username. Please use: homeowner, serviceprovider, or admin',
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+      return;
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => destinationPage),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,18 +132,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Email Field
+                  // Username Field (changed from Email)
                   TextField(
+                    controller: _usernameController,
                     cursorColor: primaryColor,
                     decoration: InputDecoration(
-                      labelText: "Email",
+                      labelText: "Username",
                       labelStyle: GoogleFonts.poppins(color: textDark),
                       floatingLabelStyle: GoogleFonts.poppins(
                         color: primaryColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
-                      hintText: "Enter your email",
+                      hintText: "Enter your username",
                       hintStyle: GoogleFonts.poppins(color: Colors.grey[500]),
                       filled: true,
                       fillColor: Colors.white,
@@ -119,6 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Password Field
                   TextField(
+                    controller: _passwordController,
                     cursorColor: primaryColor,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
@@ -190,14 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeBottomNav(),
-                          ),
-                        );
-                      },
+                      onPressed: _handleLogin,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         shape: RoundedRectangleBorder(
@@ -296,7 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: Text.rich(
                       TextSpan(
-                        text: "Don’t have an account? ",
+                        text: "Don't have an account? ",
                         style: GoogleFonts.poppins(
                           color: textDark,
                           fontSize: 15,
