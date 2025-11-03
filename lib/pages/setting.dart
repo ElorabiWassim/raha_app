@@ -460,7 +460,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showLogoutDialog() {
+    void _showLogoutDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -473,12 +473,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Logged out successfully')),
+              Navigator.pop(context); 
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+                (route) => false, 
               );
             },
             child: Text('Logout', style: TextStyle(color: Colors.orange)),
