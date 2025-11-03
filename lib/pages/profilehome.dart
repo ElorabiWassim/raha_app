@@ -10,7 +10,7 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  final String _selectedActivityTab = 'upcoming';
+  
 
   // Profile data
   ProfileData profileData = ProfileData(
@@ -20,63 +20,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     address: '123 Main Draria, Algiers, Algeria',
   );
 
-  final Map<String, List<Map<String, String>>> _activityData = {
-    'upcoming': [
-      {
-        'title': 'Deep Cleaning Service',
-        'provider': 'with Maria Gaci',
-        'date': 'Nov 15, 2025',
-        'time': '2:00 PM',
-        'status': 'CONFIRMED',
-      },
-      {
-        'title': 'Plumbing Repair',
-        'provider': 'with Ahmed Sahil',
-        'date': 'Nov 28, 2025',
-        'time': '10:00 AM',
-        'status': 'CONFIRMED',
-      },
-    ],
-    'history': [
-      {
-        'title': 'Electrical Repair',
-        'provider': 'with Dounia Ledoua',
-        'date': 'Oct 10, 2025',
-        'time': '3:00 PM',
-        'status': 'COMPLETED',
-      },
-      {
-        'title': 'Carpet Cleaning',
-        'provider': 'with Sarah Welsi',
-        'date': 'Oct 5, 2025',
-        'time': '11:00 AM',
-        'status': 'COMPLETED',
-      },
-      {
-        'title': 'AC Maintenance',
-        'provider': 'with Raed elamine',
-        'date': 'Sep 20, 2025',
-        'time': '1:30 PM',
-        'status': 'COMPLETED',
-      },
-    ],
-    'saved': [
-      {
-        'title': 'Roof Inspection',
-        'provider': 'with racim Andero',
-        'date': 'Available',
-        'time': 'Flexible',
-        'status': 'SAVED',
-      },
-      {
-        'title': 'Garden Landscaping',
-        'provider': 'with Ali kamil',
-        'date': 'Available',
-        'time': 'Flexible',
-        'status': 'SAVED',
-      },
-    ],
-  };
+  
 
   void _navigateToPage(String pageName) async {
     if (pageName == 'Edit Profile') {
@@ -193,7 +137,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  SizedBox(
+                  Container(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
@@ -352,6 +296,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       ),
     );
   }
+
 }
 
 // Edit Profile Screen

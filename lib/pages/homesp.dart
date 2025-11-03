@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import '../models/serviceprovider_data.dart';
 import './addservicescreen.dart';
 import './setting.dart';
+import './demands.dart';
+import './requests.dart';
+import './plans.dart';
+import './messages_screen.dart';
+
 
 void main() {
   runApp(
@@ -622,7 +627,7 @@ class DemandsScreen extends StatelessWidget {
         elevation: 2,
         title: Text('Pending Demands', style: TextStyle(color: Colors.black)),
       ),
-      body: Center(child: Text('Demands Screen - Coming Soon')),
+      body: Center(child: DemandsPage()),
     );
   }
 }
@@ -641,13 +646,13 @@ class RequestsScreen extends StatelessWidget {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Center(child: Text('Requests Screen - Coming Soon')),
+      body: Center(child: RequestsPage()),
     );
   }
 }
 
-class MessagesScreen extends StatelessWidget {
-  const MessagesScreen({super.key});
+class MessagesScreenv extends StatelessWidget {
+  const MessagesScreenv({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -657,7 +662,7 @@ class MessagesScreen extends StatelessWidget {
         elevation: 2,
         title: Text('Messages', style: TextStyle(color: Colors.black)),
       ),
-      body: Center(child: Text('Messages Screen - Coming Soon')),
+      body: MessagesScreen(),
     );
   }
 }
@@ -676,7 +681,7 @@ class PlansScreen extends StatelessWidget {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Center(child: Text('Plans Screen - Coming Soon')),
+      body: Center(child: PlansPage()),
     );
   }
 }

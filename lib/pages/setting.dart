@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/serviceprovider_data.dart';
+import 'login.dart';
 
 class SettingsScreen extends StatefulWidget {
   final ServiceProvider provider;
@@ -472,7 +473,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Logged out successfully')),
               );
