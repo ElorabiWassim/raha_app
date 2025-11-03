@@ -50,22 +50,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
       ),
       child: Row(
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: AppColors.textDark),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OnboardingScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
+          Container(width: 48, height: 48, alignment: Alignment.centerLeft),
           Expanded(
             child: Text(
               'My Services',
