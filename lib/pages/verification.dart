@@ -64,7 +64,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   DocumentUploadCard(
                     icon: Icons.badge,
                     title: 'National ID / Passport',
-                    subtitle: 'Required for verification',
+                    subtitle: 'Required',
                     isUploaded: idUploaded,
                     onTap: () {
                       setState(() {
@@ -76,7 +76,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   DocumentUploadCard(
                     icon: Icons.school,
                     title: 'Professional Certificate',
-                    subtitle: 'Optional',
+                    subtitle: 'Required',
                     isUploaded: certUploaded,
                     onTap: () {
                       setState(() {
