@@ -1,7 +1,57 @@
 import 'package:flutter/material.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  int totalUsers = 1245;
+  int verifiedSPs = 218;
+  int activeBookings = 86;
+  int revenue = 1520;
+
+  List<Map<String, String>> activities = [
+    {'title': 'New user registered', 'time': '1 hour ago'},
+    {'title': 'Service completed', 'time': '2 hours ago'},
+    {'title': 'Payment received', 'time': '3 hours ago'},
+  ];
+
+  bool isLoading = false;
+
+  void _refreshData() {
+    setState(() {
+      isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        totalUsers += 5;
+        verifiedSPs += 1;
+        activeBookings -= 2;
+        revenue += 100;
+
+        activities.insert(0, {
+          'title': 'Dashboard refreshed',
+          'time': 'Just now',
+        });
+
+        isLoading = false;
+      });
+    });
+  }
+
+  void _addActivity(String title, String time) {
+    setState(() {
+      activities.insert(0, {'title': title, 'time': time});
+
+      if (activities.length > 5) {
+        activities.removeAt(activities.length - 1);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +70,36 @@ class DashboardPage extends StatelessWidget {
                   color: const Color(0xFFE8F5E9),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.space_dashboard,
                       color: Color(0xFF4CAF50),
                       size: 28,
                     ),
-                    SizedBox(width: 12),
-                    Text(
-                      'Dashboard',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF388E3C),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'Dashboard',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF388E3C),
+                        ),
                       ),
+                    ),
+                    IconButton(
+                      icon: isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Color(0xFF4CAF50),
+                              ),
+                            )
+                          : const Icon(Icons.refresh, color: Color(0xFF4CAF50)),
+                      onPressed: isLoading ? null : _refreshData,
                     ),
                   ],
                 ),
@@ -49,47 +114,82 @@ class DashboardPage extends StatelessWidget {
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
                 childAspectRatio: 1.3,
-                children: const [
+                children: [
                   StatCard(
                     title: 'Total Users',
-                    value: '1,245',
+                    value: totalUsers.toString(),
                     change: '+5.2%',
                     isPositive: true,
                     icon: Icons.people,
+                    onTap: () {
+                      _addActivity('Viewed Total Users', 'Just now');
+                    },
                   ),
                   StatCard(
                     title: 'Verified SPs',
-                    value: '218',
+                    value: verifiedSPs.toString(),
                     change: '+2.1%',
                     isPositive: true,
                     icon: Icons.verified_user,
+                    onTap: () {
+                      _addActivity('Viewed Verified SPs', 'Just now');
+                    },
                   ),
                   StatCard(
                     title: 'Active Bookings',
-                    value: '86',
+                    value: activeBookings.toString(),
                     change: '-1.5%',
                     isPositive: false,
                     icon: Icons.book_online,
+                    onTap: () {
+                      _addActivity('Viewed Active Bookings', 'Just now');
+                    },
                   ),
                   StatCard(
                     title: 'Revenue',
-                    value: '\$1,520',
+                    value: '\$${revenue.toString()}',
                     change: '+12.8%',
                     isPositive: true,
                     icon: Icons.attach_money,
+                    onTap: () {
+                      _addActivity('Viewed Revenue', 'Just now');
+                    },
                   ),
                 ],
               ),
               const SizedBox(height: 20),
 
               // Recent Activity Section
-              const Text(
-                'Recent Activity',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Recent Activity',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF333333),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF4CAF50),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${activities.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
 
@@ -107,11 +207,13 @@ class DashboardPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _buildActivityItem('New user registered', '1 hour ago'),
-                    const Divider(height: 1),
-                    _buildActivityItem('Service completed', '2 hours ago'),
-                    const Divider(height: 1),
-                    _buildActivityItem('Payment received', '3 hours ago'),
+                    for (int i = 0; i < activities.length; i++) ...[
+                      _buildActivityItem(
+                        activities[i]['title']!,
+                        activities[i]['time']!,
+                      ),
+                      if (i < activities.length - 1) const Divider(height: 1),
+                    ],
                   ],
                 ),
               ),
@@ -175,6 +277,7 @@ class StatCard extends StatelessWidget {
   final String change;
   final bool isPositive;
   final IconData icon;
+  final VoidCallback? onTap;
 
   const StatCard({
     super.key,
@@ -183,61 +286,65 @@ class StatCard extends StatelessWidget {
     required this.change,
     required this.isPositive,
     required this.icon,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF388E3C),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF388E3C),
+                  ),
                 ),
+                Icon(icon, color: const Color(0xFF4CAF50), size: 20),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF333333),
               ),
-              Icon(icon, color: const Color(0xFF4CAF50), size: 20),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
             ),
-          ),
-          Text(
-            change,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: isPositive
-                  ? const Color(0xFF4CAF50)
-                  : const Color(0xFFF44336),
+            Text(
+              change,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: isPositive
+                    ? const Color(0xFF4CAF50)
+                    : const Color(0xFFF44336),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
