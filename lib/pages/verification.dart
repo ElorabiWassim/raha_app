@@ -13,7 +13,7 @@ class _VerificationPageState extends State<VerificationPage> {
   bool photoUploaded = false;
   bool showSuccess = false;
 
-  bool get canSubmit => idUploaded && photoUploaded;
+  bool get canSubmit => idUploaded && certUploaded && photoUploaded;
 
   @override
   Widget build(BuildContext context) {
