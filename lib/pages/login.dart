@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       data: ThemeData(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: primaryColor,
-          selectionColor: primaryColor.withOpacity(0.3),
+          selectionColor: primaryColor.withValues(alpha: .3),
           selectionHandleColor: primaryColor,
         ),
         textTheme: GoogleFonts.poppinsTextTheme(),
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: primaryColor.withOpacity(0.5),
+                          color: primaryColor.withValues(alpha: .5),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: primaryColor.withOpacity(0.5),
+                          color: primaryColor.withValues(alpha: .5),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -204,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 4,
-                        shadowColor: primaryColor.withOpacity(0.3),
+                        shadowColor: primaryColor.withValues(alpha: .3),
                       ),
                       child: Text(
                         "Login",
@@ -253,7 +253,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: OutlinedButton(
                       onPressed: () {},
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: primaryColor.withOpacity(0.7)),
+                        side: BorderSide(
+                          color: primaryColor.withValues(alpha: .7),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),

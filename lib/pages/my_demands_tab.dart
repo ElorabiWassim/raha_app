@@ -130,7 +130,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 border: Border.all(color: AppColors.borderLight),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: .05),
                     blurRadius: 2,
                     offset: const Offset(0, 1),
                   ),
@@ -192,7 +192,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               border: Border.all(color: AppColors.borderLight),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: .05),
                   blurRadius: 2,
                   offset: const Offset(0, 1),
                 ),
@@ -396,7 +396,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.1)
+              ? AppColors.primary.withValues(alpha: .1)
               : AppColors.backgroundLight,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
@@ -431,7 +431,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.1)
+              ? AppColors.primary.withValues(alpha: .1)
               : AppColors.backgroundLight,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
@@ -492,7 +492,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppColors.primary.withOpacity(0.1)
+                      ? AppColors.primary.withValues(alpha: .1)
                       : AppColors.backgroundLight,
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -518,10 +518,10 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: .2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: .08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -539,7 +539,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: .1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(demand.icon, color: AppColors.primary, size: 30),

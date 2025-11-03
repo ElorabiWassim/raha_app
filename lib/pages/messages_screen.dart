@@ -66,7 +66,7 @@ class MessagesScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF7E6).withOpacity(0.8),
+        color: const Color(0xFFEAF7E6).withValues(alpha: .8),
       ),
       child: Row(
         children: [
@@ -114,12 +114,12 @@ class MessagesScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: message.isUnread
-              ? AppColors.primary.withOpacity(0.2)
+              ? AppColors.primary.withValues(alpha: .2)
               : const Color(0xFFE4E4E7),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: .04),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -262,7 +262,7 @@ class MessagesScreen extends StatelessWidget {
               width: 96,
               height: 96,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: .1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -544,7 +544,7 @@ class _ConversationState extends State<Conversation> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFFEAF7E6).withOpacity(0.8),
+          color: const Color(0xFFEAF7E6).withValues(alpha: .8),
         ),
         child: SafeArea(
           child: Row(

@@ -211,7 +211,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: .05),
                     blurRadius: 10,
                     spreadRadius: 0,
                   ),
@@ -515,7 +515,7 @@ class _ProviderprofileState extends State<Providerprofile> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: .05),
               blurRadius: 10,
               spreadRadius: 0,
             ),

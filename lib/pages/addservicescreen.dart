@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/serviceprovider_data.dart';
 
-
 class AddServiceScreen extends StatefulWidget {
   final Function(Service)? onServiceAdded;
 
@@ -104,11 +103,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.image_outlined,
-                  size: 48,
-                  color: Color(0xFF68E36C),
-                ),
+                Icon(Icons.image_outlined, size: 48, color: Color(0xFF68E36C)),
                 SizedBox(height: 16),
                 Text(
                   'Upload Images',
@@ -187,13 +182,19 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             isExpanded: true,
             underline: SizedBox(),
             icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey[600]),
-            items: ['Plumbing', 'Electrical', 'Carpentry', 'Cleaning', 'Painting']
-                .map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            items:
+                [
+                  'Plumbing',
+                  'Electrical',
+                  'Carpentry',
+                  'Cleaning',
+                  'Painting',
+                ].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
             onChanged: (String? newValue) {
               setState(() {
                 _selectedCategory = newValue!;
@@ -269,7 +270,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xFF68E36C).withOpacity(0.1) : Colors.white,
+          color: isSelected
+              ? Color(0xFF68E36C).withValues(alpha: .1)
+              : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? Color(0xFF68E36C) : Colors.grey[300]!,
@@ -482,10 +485,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 }

@@ -46,7 +46,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF7E6).withOpacity(0.8),
+        color: const Color(0xFFEAF7E6).withValues(alpha: .8),
       ),
       child: Row(
         children: [
@@ -96,7 +96,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
         height: 36,
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.6),
+          color: Colors.white.withValues(alpha: .6),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -135,7 +135,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: .08),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
