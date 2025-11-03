@@ -14,6 +14,7 @@ class _PlansPageState extends State<PlansPage> {
     {
       'name': 'Free',
       'price': '0 DA',
+      'period': '',
       'features': [
         'Create an account and list up to 3 services.',
         'List contact information.',
@@ -24,7 +25,8 @@ class _PlansPageState extends State<PlansPage> {
     },
     {
       'name': 'Pro',
-      'price': '700 DA / month  |  7,000 DA / year',
+      'price': '700 DA/month',
+      'period': '7,000 DA/year',
       'features': [
         'List up to 10 services.',
         'Receive bookings, requests, and client messages.',
@@ -32,11 +34,12 @@ class _PlansPageState extends State<PlansPage> {
         'Respond to user demands.',
         'Medium priority in search results.',
       ],
-      'isRecommended': true, // Recommended for most users
+      'isRecommended': true,
     },
     {
       'name': 'Elite',
-      'price': '1,500 DA / month  |  15,000 DA / year',
+      'price': '1,500 DA/month',
+      'period': '15,000 DA/year',
       'features': [
         'List up to 20 services.',
         'View detailed profile insights (profile views count).',
@@ -58,7 +61,7 @@ class _PlansPageState extends State<PlansPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
+            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
@@ -67,7 +70,7 @@ class _PlansPageState extends State<PlansPage> {
                   Icon(Icons.credit_card, color: Color(0xFF4CAF50), size: 28),
                   SizedBox(width: 12),
                   Text(
-                    'Subscription Plans',
+                    'Plans',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -79,9 +82,7 @@ class _PlansPageState extends State<PlansPage> {
             ),
 
             // Plans List
-            Flexible(
-              flex: 1,
-              fit: FlexFit.tight, // ensures it fills remaining space smoothly
+            Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: plans.length,
@@ -90,6 +91,7 @@ class _PlansPageState extends State<PlansPage> {
                   return PlanCard(
                     name: plan['name'],
                     price: plan['price'],
+                    period: plan['period'],
                     features: List<String>.from(plan['features']),
                     isRecommended: plan['isRecommended'],
                     isSelected: selectedPlan == plan['name'],
@@ -106,6 +108,16 @@ class _PlansPageState extends State<PlansPage> {
             // Upgrade Button
             Container(
               padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -121,6 +133,7 @@ class _PlansPageState extends State<PlansPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    elevation: 0,
                   ),
                   child: const Text(
                     'Upgrade Now',
@@ -139,6 +152,7 @@ class _PlansPageState extends State<PlansPage> {
 class PlanCard extends StatelessWidget {
   final String name;
   final String price;
+  final String period;
   final List<String> features;
   final bool isRecommended;
   final bool isSelected;
@@ -148,6 +162,7 @@ class PlanCard extends StatelessWidget {
     super.key,
     required this.name,
     required this.price,
+    required this.period,
     required this.features,
     required this.isRecommended,
     required this.isSelected,
@@ -215,33 +230,37 @@ class PlanCard extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
 
-            // Price
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   price,
                   style: const TextStyle(
-                    fontSize: 36,
+                    fontSize: 24,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF333333),
+                    color: Color(0xFF4CAF50),
                   ),
                 ),
-                const Text(
-                  '/month',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF6B7280),
-                    fontWeight: FontWeight.w600,
+                if (period.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      period,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF6B7280),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                ),
               ],
             ),
             const SizedBox(height: 20),
 
-            // Features
+            
             ...features.map(
               (feature) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),
@@ -260,6 +279,7 @@ class PlanCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           color: Color(0xFF333333),
+                          height: 1.4,
                         ),
                       ),
                     ),

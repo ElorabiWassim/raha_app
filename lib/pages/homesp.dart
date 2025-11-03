@@ -7,7 +7,6 @@ import './requests.dart';
 import './plans.dart';
 import './messages_screen.dart';
 
-
 void main() {
   runApp(
     MaterialApp(
@@ -26,7 +25,7 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
   late ServiceProvider provider;
-
+  
   @override
   void initState() {
     super.initState();
@@ -81,10 +80,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         onServiceAdded: _onServiceAdded,
         onProfileUpdated: _onProfileUpdated,
       ),
-      DemandsScreen(),
-      RequestsScreen(),
+      DemandsPage(),
+      RequestsPage(),
       MessagesScreen(),
-      PlansScreen(),
+      PlansPage(),
     ];
   }
 
@@ -200,9 +199,16 @@ class ServiceProviderHome extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.white,
-        elevation: 2,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF68E36C), Color(0xFF5CD660)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 0,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -211,7 +217,7 @@ class ServiceProviderHome extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
-                color: Colors.grey[600],
+                color: Colors.white.withValues(alpha: 0.9),
               ),
             ),
             Text(
@@ -219,7 +225,7 @@ class ServiceProviderHome extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ],
@@ -229,7 +235,7 @@ class ServiceProviderHome extends StatelessWidget {
             onPressed: () => _navigateToPage(context, 'Notifications'),
             icon: Stack(
               children: [
-                Icon(Icons.notifications_outlined, color: Colors.black),
+                Icon(Icons.notifications_outlined, color: Colors.white),
                 Positioned(
                   right: 0,
                   top: 0,
@@ -254,7 +260,7 @@ class ServiceProviderHome extends StatelessWidget {
           ),
           IconButton(
             onPressed: () => _navigateToPage(context, 'Settings'),
-            icon: Icon(Icons.settings_outlined, color: Colors.black),
+            icon: Icon(Icons.settings_outlined, color: Colors.white),
           ),
         ],
       ),
@@ -612,76 +618,6 @@ class ServiceProviderHome extends StatelessWidget {
         trailing: Icon(Icons.edit_outlined, color: Color(0xFF68E36C), size: 20),
         onTap: () => _navigateToPage(context, 'Edit Service: ${service.title}'),
       ),
-    );
-  }
-}
-
-class DemandsScreen extends StatelessWidget {
-  const DemandsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
-        title: Text('Pending Demands', style: TextStyle(color: Colors.black)),
-      ),
-      body: Center(child: DemandsPage()),
-    );
-  }
-}
-
-class RequestsScreen extends StatelessWidget {
-  const RequestsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
-        title: Text(
-          'Confirmed Requests',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: Center(child: RequestsPage()),
-    );
-  }
-}
-
-class MessagesScreenv extends StatelessWidget {
-  const MessagesScreenv({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
-        title: Text('Messages', style: TextStyle(color: Colors.black)),
-      ),
-      body: MessagesScreen(),
-    );
-  }
-}
-
-class PlansScreen extends StatelessWidget {
-  const PlansScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
-        title: Text(
-          'Subscription Plans',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: Center(child: PlansPage()),
     );
   }
 }
