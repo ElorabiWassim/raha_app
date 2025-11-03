@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_nav_admin.dart';
 
 class ApplicationsPage extends StatefulWidget {
   const ApplicationsPage({super.key});
@@ -110,6 +111,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
           ],
         ),
       ),
+      bottomNavigationBar: const Ra7aBottomNav(currentIndex: 1),
     );
   }
 

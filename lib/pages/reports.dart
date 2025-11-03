@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_nav_admin.dart';
 
 class ReportsPage extends StatefulWidget {
   const ReportsPage({super.key});
@@ -113,6 +114,7 @@ class _ReportsPageState extends State<ReportsPage> {
           ],
         ),
       ),
+      bottomNavigationBar: const Ra7aBottomNav(currentIndex: 2),
     );
   }
 
