@@ -70,15 +70,7 @@ class MessagesScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: AppColors.textDark),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
+          Container(width: 48, height: 48, alignment: Alignment.centerLeft),
           Expanded(
             child: Text(
               'Messages',
@@ -219,14 +211,6 @@ class MessagesScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        message.service,
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFF888888),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -328,10 +312,6 @@ class MessagesScreen extends StatelessWidget {
     ];
   }
 }
-
-// ============================================
-// CONVERSATION SCREEN (messages.dart)
-// ============================================
 
 class ChatMessage {
   final String id;
@@ -587,14 +567,6 @@ class _ConversationState extends State<Conversation> {
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textDark,
-                      ),
-                    ),
-                    Text(
-                      widget.service,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF888888),
                       ),
                     ),
                   ],
