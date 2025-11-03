@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_nav_admin.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -221,6 +222,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ),
       ),
+      bottomNavigationBar: const Ra7aBottomNav(currentIndex: 0),
     );
   }
 
