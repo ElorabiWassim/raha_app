@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/profile_data.dart';
 import './profilehome.dart';
+import './login.dart';
 
 class SettingsScreen extends StatefulWidget {
   final ProfileData profileData;
@@ -415,29 +416,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showLogoutDialog() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Log Out', style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Text('Are you sure you want to log out?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Log Out',
-                style: TextStyle(color: Color(0xFFFF9800)),
-              ),
-            ),
-          ],
-        );
-      },
+      builder: (context) => AlertDialog(
+        title: Text('Logout'),
+        content: Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); 
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+                (route) => false, 
+              );
+            },
+            child: Text('Logout', style: TextStyle(color: Colors.orange)),
+          ),
+        ],
+      ),
     );
   }
 }
