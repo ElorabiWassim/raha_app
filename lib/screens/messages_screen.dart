@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/constants/app_text_style.dart';
+import 'onboarding.dart'; // or your correct home file
 
 // Message Model
 class Message {
@@ -89,11 +90,15 @@ class MessagesScreen extends StatelessWidget {
             width: 48,
             height: 48,
             child: IconButton(
-              icon: Icon(
-                Icons.search,
-                color: AppColors.textDark,
-              ),
-              onPressed: () {},
+              icon: Icon(Icons.search, color: AppColors.textDark),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OnboardingScreen(),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -159,10 +164,7 @@ class MessagesScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.primary,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2,
-                            ),
+                            border: Border.all(color: Colors.white, width: 2),
                           ),
                         ),
                       ),
@@ -402,7 +404,8 @@ class _ConversationState extends State<Conversation> {
         ),
         ChatMessage(
           id: '4',
-          text: 'Perfect. Just to confirm, you have all the necessary tools for the faucet replacement, right?',
+          text:
+              'Perfect. Just to confirm, you have all the necessary tools for the faucet replacement, right?',
           isMe: true,
           time: '10:32 AM',
         ),
@@ -454,13 +457,13 @@ class _ConversationState extends State<Conversation> {
       if (index != -1) {
         final msg = _messages[index];
         final reactions = List<String>.from(msg.reactions);
-        
+
         if (reactions.contains(emoji)) {
           reactions.remove(emoji);
         } else {
           reactions.add(emoji);
         }
-        
+
         _messages[index] = ChatMessage(
           id: msg.id,
           text: msg.text,
@@ -474,9 +477,11 @@ class _ConversationState extends State<Conversation> {
 
   List<ChatMessage> get _filteredMessages {
     if (_searchQuery.isEmpty) return _messages;
-    return _messages.where((msg) => 
-      msg.text.toLowerCase().contains(_searchQuery.toLowerCase())
-    ).toList();
+    return _messages
+        .where(
+          (msg) => msg.text.toLowerCase().contains(_searchQuery.toLowerCase()),
+        )
+        .toList();
   }
 
   @override
@@ -513,8 +518,11 @@ class _ConversationState extends State<Conversation> {
                     return MessageBubble(
                       message: msg,
                       onReact: (emoji) => _addReaction(msg.id, emoji),
-                      isHighlighted: _searchQuery.isNotEmpty &&
-                          msg.text.toLowerCase().contains(_searchQuery.toLowerCase()),
+                      isHighlighted:
+                          _searchQuery.isNotEmpty &&
+                          msg.text.toLowerCase().contains(
+                            _searchQuery.toLowerCase(),
+                          ),
                     );
                   },
                 ),
@@ -643,7 +651,10 @@ class _ConversationState extends State<Conversation> {
           ),
           filled: true,
           fillColor: const Color(0xFFF4F4F4),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
         ),
         onChanged: (value) {
           setState(() {
@@ -672,8 +683,9 @@ class MessageBubble extends StatelessWidget {
     return Align(
       alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
-        crossAxisAlignment:
-            message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: message.isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           GestureDetector(
             onLongPress: () => _showReactionMenu(context),
@@ -711,7 +723,12 @@ class MessageBubble extends StatelessWidget {
                     Wrap(
                       spacing: 4,
                       children: message.reactions
-                          .map((emoji) => Text(emoji, style: const TextStyle(fontSize: 16)))
+                          .map(
+                            (emoji) => Text(
+                              emoji,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          )
                           .toList(),
                     ),
                   ],
@@ -733,7 +750,7 @@ class MessageBubble extends StatelessWidget {
 
   void _showReactionMenu(BuildContext context) {
     final reactions = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
-    
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -755,10 +772,7 @@ class MessageBubble extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               'React to message',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
@@ -775,10 +789,7 @@ class MessageBubble extends StatelessWidget {
                       color: Colors.grey[100],
                       shape: BoxShape.circle,
                     ),
-                    child: Text(
-                      emoji,
-                      style: const TextStyle(fontSize: 24),
-                    ),
+                    child: Text(emoji, style: const TextStyle(fontSize: 24)),
                   ),
                 );
               }).toList(),

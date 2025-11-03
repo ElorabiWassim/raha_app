@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/models/demand_model.dart';
 import '/constants/app_text_style.dart';
 import 'provider_offers_screen.dart';
+import 'package:ra7a/pages/add_demand.dart';
 
 class MyDemandsTab extends StatefulWidget {
   const MyDemandsTab({super.key});
@@ -86,7 +87,13 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
         width: double.infinity,
         height: 38,
         child: OutlinedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddDemand()),
+            );
+          },
+
           style: OutlinedButton.styleFrom(
             backgroundColor: AppColors.backgroundWhite,
             foregroundColor: AppColors.primary,

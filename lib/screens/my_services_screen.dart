@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/constants/app_text_style.dart';
 import 'my_bookings_tab.dart';
 import 'my_demands_tab.dart';
+import 'onboarding.dart';
 
 class MyServicesScreen extends StatefulWidget {
   const MyServicesScreen({super.key});
@@ -55,7 +56,14 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
             alignment: Alignment.centerLeft,
             child: IconButton(
               icon: Icon(Icons.arrow_back, color: AppColors.textDark),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OnboardingScreen(),
+                  ),
+                );
+              },
             ),
           ),
           Expanded(

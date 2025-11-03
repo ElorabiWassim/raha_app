@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login.dart';
-// import 'provider_verification_screen.dart'; // We'll create this next
+import 'package:ra7a/pages/verification.dart'; // We'll create this next
 import 'splash.dart';
 
 const primaryColor = Color(0xFF33AD04);
@@ -377,6 +377,12 @@ class _ProviderSignUpScreenState extends State<ProviderSignUpScreen> {
                           elevation: 2,
                         ),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const VerificationPage(),
+                            ),
+                          );
                           // if (_formKey.currentState!.validate() &&
                           //     _acceptTerms &&
                           //     _selectedServiceType != null) {
