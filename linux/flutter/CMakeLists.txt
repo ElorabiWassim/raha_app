@@ -4,7 +4,16 @@ cmake_minimum_required(VERSION 3.10)
 set(EPHEMERAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ephemeral")
 
 # Configuration provided via flutter tool.
-include(${EPHEMERAL_DIR}/generated_config.cmake)
+# Guard the include so editing on non-Linux hosts doesn't error when the file isn't generated.
+if(EXISTS ${EPHEMERAL_DIR}/generated_config.cmake)
+  include(${EPHEMERAL_DIR}/generated_config.cmake)
+else()
+  message(STATUS "Flutter ephemeral config not found: ${EPHEMERAL_DIR}/generated_config.cmake.\n"
+                 "This is expected on non-Linux hosts. Run 'flutter build linux' on a Linux environment to generate.")
+  # Provide minimal fallbacks to allow IDEs to parse this file without hard failure.
+  set(FLUTTER_TOOL_ENVIRONMENT "")
+  set(FLUTTER_TARGET_PLATFORM linux)
+endif()
 
 # TODO: Move the rest of this into files in ephemeral. See
 # https://github.com/flutter/flutter/issues/57146.

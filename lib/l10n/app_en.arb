@@ -1,0 +1,287 @@
+{
+  "appTitle": "Ra7a",
+  "splashWelcome": "Welcome",
+  "languageEnglish": "English",
+  "languageFrench": "French",
+  "languageArabic": "Arabic",
+  "chooseLanguage": "Choose Your Language",
+  "@chooseLanguage": {
+    "description": "Title for language selection screen"
+  },
+  "onboardingTitle1": "Find trusted service providers near you.",
+  "@onboardingTitle1": {
+    "description": "First onboarding screen title"
+  },
+  "onboardingSubtitle1": "Easily book verified local professionals for all your home needs.",
+  "@onboardingSubtitle1": {
+    "description": "First onboarding screen subtitle"
+  },
+  "onboardingTitle2": "Schedule & Track your bookings",
+  "@onboardingTitle2": {
+    "description": "Second onboarding screen title"
+  },
+  "onboardingSubtitle2": "Manage your appointments and stay updated on your service.",
+  "@onboardingSubtitle2": {
+    "description": "Second onboarding screen subtitle"
+  },
+  "onboardingTitle3": "Rate & Review Providers",
+  "@onboardingTitle3": {
+    "description": "Third onboarding screen title"
+  },
+  "onboardingSubtitle3": "Share your experience and help others make informed choices.",
+  "@onboardingSubtitle3": {
+    "description": "Third onboarding screen subtitle"
+  },
+  "onboardingSkip": "Skip",
+  "@onboardingSkip": {
+    "description": "Skip button text on onboarding"
+  },
+  "onboardingNext": "Next",
+  "@onboardingNext": {
+    "description": "Next button text on onboarding"
+  },
+  "loginWelcomeBack": "Welcome Back",
+  "@loginWelcomeBack": {
+    "description": "Welcome message on login screen"
+  },
+  "loginUsername": "Username",
+  "@loginUsername": {
+    "description": "Username field label"
+  },
+  "loginUsernameHint": "Enter your username",
+  "@loginUsernameHint": {
+    "description": "Username field hint text"
+  },
+  "loginPassword": "Password",
+  "@loginPassword": {
+    "description": "Password field label"
+  },
+  "loginPasswordHint": "Enter your password",
+  "@loginPasswordHint": {
+    "description": "Password field hint text"
+  },
+  "loginForgotPassword": "Forgot Password?",
+  "@loginForgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "loginButton": "Login",
+  "@loginButton": {
+    "description": "Login button text"
+  },
+  "loginOr": "or",
+  "@loginOr": {
+    "description": "Divider text between login options"
+  },
+  "loginContinueWithGoogle": "Continue with Google",
+  "@loginContinueWithGoogle": {
+    "description": "Google login button text"
+  },
+  "loginNoAccount": "Don't have an account? ",
+  "@loginNoAccount": {
+    "description": "Text before sign up link"
+  },
+  "loginSignUp": "Sign Up",
+  "@loginSignUp": {
+    "description": "Sign up link text"
+  },
+  "loginInvalidUsername": "Invalid username. Please use: homeowner, serviceprovider, or admin",
+  "@loginInvalidUsername": {
+    "description": "Error message for invalid username"
+  },
+  "roleSelectionTitle": "Continue as",
+  "@roleSelectionTitle": {
+    "description": "Title on role selection screen"
+  },
+  "roleSelectionSubtitle": "Choose your role to start using Raha",
+  "@roleSelectionSubtitle": {
+    "description": "Subtitle on role selection screen"
+  },
+  "roleHomeowner": "Homeowner",
+  "@roleHomeowner": {
+    "description": "Homeowner role button text"
+  },
+  "roleHomeownerDescription": "Looking for help",
+  "@roleHomeownerDescription": {
+    "description": "Homeowner role description"
+  },
+  "roleServiceProvider": "Service Provider",
+  "@roleServiceProvider": {
+    "description": "Service provider role button text"
+  },
+  "roleServiceProviderDescription": "Offering my skills",
+  "@roleServiceProviderDescription": {
+    "description": "Service provider role description"
+  },
+  "roleSelectionBackToLogin": "Back to Login",
+  "@roleSelectionBackToLogin": {
+    "description": "Back to login button text"
+  },
+  "signupCreateAccount": "Create Your Account",
+  "@signupCreateAccount": {
+    "description": "Title for homeowner signup screen"
+  },
+  "signupCreateProviderAccount": "Create Provider Account",
+  "@signupCreateProviderAccount": {
+    "description": "Title for provider signup screen"
+  },
+  "signupFullName": "Full Name",
+  "@signupFullName": {
+    "description": "Full name field label"
+  },
+  "signupFullNameHint": "Enter your full name",
+  "@signupFullNameHint": {
+    "description": "Full name field hint"
+  },
+  "signupEmail": "Email",
+  "@signupEmail": {
+    "description": "Email field label"
+  },
+  "signupEmailHint": "Enter your email",
+  "@signupEmailHint": {
+    "description": "Email field hint"
+  },
+  "signupDateOfBirth": "Date of Birth",
+  "@signupDateOfBirth": {
+    "description": "Date of birth label"
+  },
+  "signupDateHint": "mm/dd/yyyy",
+  "@signupDateHint": {
+    "description": "Date picker hint"
+  },
+  "signupPhoneNumber": "Phone Number",
+  "@signupPhoneNumber": {
+    "description": "Phone number field label"
+  },
+  "signupPhoneNumberHint": "Enter your phone number",
+  "@signupPhoneNumberHint": {
+    "description": "Phone number field hint"
+  },
+  "signupCity": "City",
+  "@signupCity": {
+    "description": "City field label"
+  },
+  "signupCityHint": "e.g. Algiers",
+  "@signupCityHint": {
+    "description": "City field hint"
+  },
+  "signupNeighborhood": "Neighborhood / Street",
+  "@signupNeighborhood": {
+    "description": "Neighborhood field label"
+  },
+  "signupNeighborhoodHint": "e.g. 123 Main St",
+  "@signupNeighborhoodHint": {
+    "description": "Neighborhood field hint"
+  },
+  "signupUseCurrentLocation": "Use My Current Location",
+  "@signupUseCurrentLocation": {
+    "description": "Use current location button"
+  },
+  "signupPropertyType": "Property Type (Optional)",
+  "@signupPropertyType": {
+    "description": "Property type label"
+  },
+  "signupSelectPropertyType": "Select property type",
+  "@signupSelectPropertyType": {
+    "description": "Property type dropdown hint"
+  },
+  "signupPropertyTypeApartment": "Apartment",
+  "@signupPropertyTypeApartment": {
+    "description": "Apartment property type"
+  },
+  "signupPropertyTypeVilla": "Villa",
+  "@signupPropertyTypeVilla": {
+    "description": "Villa property type"
+  },
+  "signupPropertyTypeStudio": "Studio",
+  "@signupPropertyTypeStudio": {
+    "description": "Studio property type"
+  },
+  "signupServiceType": "Service Type",
+  "@signupServiceType": {
+    "description": "Service type label"
+  },
+  "signupSelectServiceType": "Select your service type",
+  "@signupSelectServiceType": {
+    "description": "Service type dropdown hint"
+  },
+  "signupSelectServiceTypeError": "Please select a service type",
+  "@signupSelectServiceTypeError": {
+    "description": "Service type validation error"
+  },
+  "signupServiceTypePlumbing": "Plumbing",
+  "@signupServiceTypePlumbing": {
+    "description": "Plumbing service type"
+  },
+  "signupServiceTypeElectrical": "Electrical",
+  "@signupServiceTypeElectrical": {
+    "description": "Electrical service type"
+  },
+  "signupServiceTypeCleaning": "Cleaning",
+  "@signupServiceTypeCleaning": {
+    "description": "Cleaning service type"
+  },
+  "signupServiceTypePainting": "Painting",
+  "@signupServiceTypePainting": {
+    "description": "Painting service type"
+  },
+  "signupServiceTypeCarpentry": "Carpentry",
+  "@signupServiceTypeCarpentry": {
+    "description": "Carpentry service type"
+  },
+  "signupServiceTypeHVAC": "HVAC",
+  "@signupServiceTypeHVAC": {
+    "description": "HVAC service type"
+  },
+  "signupServiceTypeGardening": "Gardening",
+  "@signupServiceTypeGardening": {
+    "description": "Gardening service type"
+  },
+  "signupServiceTypeOther": "Other",
+  "@signupServiceTypeOther": {
+    "description": "Other service type"
+  },
+  "signupPassword": "Password",
+  "@signupPassword": {
+    "description": "Password field label"
+  },
+  "signupPasswordHint": "Enter your password",
+  "@signupPasswordHint": {
+    "description": "Password field hint"
+  },
+  "signupConfirmPassword": "Confirm Password",
+  "@signupConfirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "signupConfirmPasswordHint": "Confirm your password",
+  "@signupConfirmPasswordHint": {
+    "description": "Confirm password field hint"
+  },
+  "signupAcceptTerms": "I accept the ",
+  "@signupAcceptTerms": {
+    "description": "Terms acceptance text prefix"
+  },
+  "signupTermsAndConditions": "Terms & Conditions",
+  "@signupTermsAndConditions": {
+    "description": "Terms and conditions link text"
+  },
+  "signupButton": "Sign Up",
+  "@signupButton": {
+    "description": "Sign up button text"
+  },
+  "signupVerifyAccount": "Verify Your Account",
+  "@signupVerifyAccount": {
+    "description": "Verify account button text for provider"
+  },
+  "signupOr": "OR",
+  "@signupOr": {
+    "description": "Divider text"
+  },
+  "signupWithGoogle": "Sign up with Google",
+  "@signupWithGoogle": {
+    "description": "Google sign up button text"
+  },
+  "signupAlreadyHaveAccount": "Already have an account? ",
+  "@signupAlreadyHaveAccount": {
+    "description": "Text before login link"
+  }
+}
