@@ -235,4 +235,284 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get signupAlreadyHaveAccount => 'لديك حساب بالفعل؟ ';
+
+  @override
+  String get dashboardTitle => 'لوحة التحكم';
+
+  @override
+  String get dashboardTotalUsers => 'إجمالي المستخدمين';
+
+  @override
+  String get dashboardVerifiedSPs => 'مقدمو الخدمة المعتمدون';
+
+  @override
+  String get dashboardActiveBookings => 'الحجوزات النشطة';
+
+  @override
+  String get dashboardRevenue => 'الإيرادات';
+
+  @override
+  String get dashboardRecentActivity => 'النشاط الأخير';
+
+  @override
+  String get dashboardLogout => 'تسجيل الخروج';
+
+  @override
+  String get dashboardLogoutConfirm => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get dashboardCancel => 'إلغاء';
+
+  @override
+  String get demandsTitle => 'الوظائف المفتوحة';
+
+  @override
+  String get demandsSearchHint => 'ابحث عن الوظائف...';
+
+  @override
+  String get demandsCategory => 'الفئة';
+
+  @override
+  String get demandsWilaya => 'الولاية';
+
+  @override
+  String get demandsCategoryPlumbing => 'السباكة';
+
+  @override
+  String get demandsCategoryElectrical => 'الكهرباء';
+
+  @override
+  String get demandsCategoryGardening => 'البستنة';
+
+  @override
+  String get demandsCategoryCleaning => 'التنظيف';
+
+  @override
+  String get demandsPosted => 'تم النشر';
+
+  @override
+  String get demandsSendOffer => 'إرسال عرض';
+
+  @override
+  String get demandsOfferSent => 'تم إرسال العرض!';
+
+  @override
+  String get applicationsTitle => 'طلبات مقدمي الخدمة';
+
+  @override
+  String get applicationsSearchHint => 'ابحث في الطلبات...';
+
+  @override
+  String get applicationsApplied => 'تم التقديم';
+
+  @override
+  String get applicationsServicesOffered => 'الخدمات المقدمة:';
+
+  @override
+  String get applicationsAccept => 'قبول';
+
+  @override
+  String get applicationsDecline => 'رفض';
+
+  @override
+  String applicationsAccepted(String name) {
+    return 'تم قبول $name';
+  }
+
+  @override
+  String applicationsDeclined(String name) {
+    return 'تم رفض $name';
+  }
+
+  @override
+  String get plansTitle => 'الخطط';
+
+  @override
+  String get plansRecommended => 'موصى به';
+
+  @override
+  String get plansUpgradeNow => 'الترقية الآن';
+
+  @override
+  String plansSelectedPlan(String plan) {
+    return 'الخطة المحددة: $plan';
+  }
+
+  @override
+  String get plansFree => 'مجاني';
+
+  @override
+  String get plansFreePriceValue => '0 دج';
+
+  @override
+  String get plansFreeFeature1 => 'إنشاء حساب وإدراج ما يصل إلى 3 خدمات.';
+
+  @override
+  String get plansFreeFeature2 => 'إدراج معلومات الاتصال.';
+
+  @override
+  String get plansFreeFeature3 => 'أولوية أقل في قائمة الخدمات.';
+
+  @override
+  String get plansFreeFeature4 =>
+      'أول 20 مزود يحصلون على الخطة المجانية لمدة 6 أشهر.';
+
+  @override
+  String get plansPro => 'محترف';
+
+  @override
+  String get plansProPriceValue => '700 دج/شهر';
+
+  @override
+  String get plansProPeriodValue => '7,000 دج/سنة';
+
+  @override
+  String get plansProFeature1 => 'إدراج ما يصل إلى 10 خدمات.';
+
+  @override
+  String get plansProFeature2 => 'استقبال الحجوزات والطلبات ورسائل العملاء.';
+
+  @override
+  String get plansProFeature3 => 'إنشاء ونشر المنشورات.';
+
+  @override
+  String get plansProFeature4 => 'الرد على طلبات المستخدمين.';
+
+  @override
+  String get plansProFeature5 => 'أولوية متوسطة في نتائج البحث.';
+
+  @override
+  String get plansElite => 'نخبة';
+
+  @override
+  String get plansElitePriceValue => '1,500 دج/شهر';
+
+  @override
+  String get plansElitePeriodValue => '15,000 دج/سنة';
+
+  @override
+  String get plansEliteFeature1 => 'إدراج ما يصل إلى 20 خدمة.';
+
+  @override
+  String get plansEliteFeature2 =>
+      'عرض رؤى تفصيلية للملف الشخصي (عدد مشاهدات الملف الشخصي).';
+
+  @override
+  String get plansEliteFeature3 => 'أعلى أولوية في عرض نتائج البحث.';
+
+  @override
+  String get plansEliteFeature4 => 'الحصول على شارة التحقق لزيادة الثقة.';
+
+  @override
+  String get plansEliteFeature5 => 'استقبال الحجوزات والطلبات والرسائل.';
+
+  @override
+  String get plansEliteFeature6 => 'إنشاء ونشر المنشورات.';
+
+  @override
+  String get plansEliteFeature7 =>
+      'الترويج للخدمات من خلال الإعلانات في الخلاصة الرئيسية.';
+
+  @override
+  String get plansEliteFeature8 => 'الرد على طلبات المستخدمين.';
+
+  @override
+  String get verificationTitle => 'التحقق من المستندات';
+
+  @override
+  String get verificationSubtitle => 'قم بتحميل مستنداتك للتحقق';
+
+  @override
+  String get verificationNationalID => 'بطاقة الهوية الوطنية / جواز السفر';
+
+  @override
+  String get verificationCertificate => 'الشهادة المهنية';
+
+  @override
+  String get verificationProfilePicture => 'صورة الملف الشخصي';
+
+  @override
+  String get verificationRequired => 'مطلوب';
+
+  @override
+  String get verificationClearHeadshot => 'مطلوب صورة واضحة للرأس';
+
+  @override
+  String get verificationTapToUpload => 'اضغط للتحميل';
+
+  @override
+  String get verificationDocumentUploaded => 'تم تحميل المستند';
+
+  @override
+  String get verificationAcceptedFormats =>
+      'المقبول: JPG، PNG، PDF. الحد الأقصى: 5 ميجابايت';
+
+  @override
+  String get verificationSubmit => 'إرسال للمراجعة';
+
+  @override
+  String get verificationSuccess => 'تم إرسال الطلب!';
+
+  @override
+  String get verificationSuccessMessage =>
+      'نحن نراجع مستنداتك. ستتلقى إشعارًا خلال 2-3 أيام عمل.';
+
+  @override
+  String get verificationBackToVerification => 'العودة إلى التحقق';
+
+  @override
+  String get reportsTitle => 'إدارة التقارير';
+
+  @override
+  String get reportsSearchHint => 'ابحث في التقارير...';
+
+  @override
+  String reportsFilterNew(int count) {
+    return 'جديد ($count)';
+  }
+
+  @override
+  String get reportsFilterInProgress => 'قيد المعالجة';
+
+  @override
+  String get reportsFilterResolved => 'تم الحل';
+
+  @override
+  String get reportsHomeowner => 'صاحب المنزل';
+
+  @override
+  String get reportsProvider => 'مقدم الخدمة';
+
+  @override
+  String get reportsDetails => 'التفاصيل';
+
+  @override
+  String get reportsResolve => 'حل';
+
+  @override
+  String get requestsTitle => 'طلبات الخدمة';
+
+  @override
+  String get requestsTabRequests => 'الطلبات';
+
+  @override
+  String get requestsTabHistory => 'السجل';
+
+  @override
+  String get requestsStatusPending => 'قيد الانتظار';
+
+  @override
+  String get requestsStatusConfirmed => 'مؤكد';
+
+  @override
+  String get requestsStatusCompleted => 'مكتمل';
+
+  @override
+  String get requestsAccept => 'قبول';
+
+  @override
+  String get requestsDecline => 'رفض';
+
+  @override
+  String get requestsViewDetails => 'عرض التفاصيل';
 }

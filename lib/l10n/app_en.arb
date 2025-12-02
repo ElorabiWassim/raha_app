@@ -283,5 +283,134 @@
   "signupAlreadyHaveAccount": "Already have an account? ",
   "@signupAlreadyHaveAccount": {
     "description": "Text before login link"
-  }
+  },
+
+
+
+  "dashboardTitle": "Dashboard",
+  "dashboardTotalUsers": "Total Users",
+  "dashboardVerifiedSPs": "Verified SPs",
+  "dashboardActiveBookings": "Active Bookings",
+  "dashboardRevenue": "Revenue",
+  "dashboardRecentActivity": "Recent Activity",
+  "dashboardLogout": "Logout",
+  "dashboardLogoutConfirm": "Are you sure you want to logout?",
+  "dashboardCancel": "Cancel",
+  
+  "demandsTitle": "Open Jobs",
+  "demandsSearchHint": "Search jobs...",
+  "demandsCategory": "Category",
+  "demandsWilaya": "Wilaya",
+  "demandsCategoryPlumbing": "Plumbing",
+  "demandsCategoryElectrical": "Electrical",
+  "demandsCategoryGardening": "Gardening",
+  "demandsCategoryCleaning": "Cleaning",
+  "demandsPosted": "Posted",
+  "demandsSendOffer": "Send Offer",
+  "demandsOfferSent": "Offer sent!",
+  
+  "applicationsTitle": "Provider Applications",
+  "applicationsSearchHint": "Search applications...",
+  "applicationsApplied": "Applied",
+  "applicationsServicesOffered": "Services Offered:",
+  "applicationsAccept": "Accept",
+  "applicationsDecline": "Decline",
+  "applicationsAccepted": "Accepted {name}",
+  "@applicationsAccepted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "applicationsDeclined": "Declined {name}",
+  "@applicationsDeclined": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "plansTitle": "Plans",
+  "plansRecommended": "Recommended",
+  "plansUpgradeNow": "Upgrade Now",
+  "plansSelectedPlan": "Selected plan: {plan}",
+  "@plansSelectedPlan": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "plansFree": "Free",
+  "plansFreePriceValue": "0 DA",
+  "plansFreeFeature1": "Create an account and list up to 3 services.",
+  "plansFreeFeature2": "List contact information.",
+  "plansFreeFeature3": "Lower priority in the listing of services.",
+  "plansFreeFeature4": "First 20 providers get Free Plan for 6 months.",
+  
+  "plansPro": "Pro",
+  "plansProPriceValue": "700 DA/month",
+  "plansProPeriodValue": "7,000 DA/year",
+  "plansProFeature1": "List up to 10 services.",
+  "plansProFeature2": "Receive bookings, requests, and client messages.",
+  "plansProFeature3": "Create and publish posts.",
+  "plansProFeature4": "Respond to user demands.",
+  "plansProFeature5": "Medium priority in search results.",
+  
+  "plansElite": "Elite",
+  "plansElitePriceValue": "1,500 DA/month",
+  "plansElitePeriodValue": "15,000 DA/year",
+  "plansEliteFeature1": "List up to 20 services.",
+  "plansEliteFeature2": "View detailed profile insights (profile views count).",
+  "plansEliteFeature3": "Highest priority in displaying search results.",
+  "plansEliteFeature4": "Obtain a verified badge for increased trust.",
+  "plansEliteFeature5": "Receive bookings, requests, and messages.",
+  "plansEliteFeature6": "Create and publish posts.",
+  "plansEliteFeature7": "Promote services through advertisements in the main feed.",
+  "plansEliteFeature8": "Respond to user demands.",
+  
+  "verificationTitle": "Document Verification",
+  "verificationSubtitle": "Upload your documents for verification",
+  "verificationNationalID": "National ID / Passport",
+  "verificationCertificate": "Professional Certificate",
+  "verificationProfilePicture": "Profile Picture",
+  "verificationRequired": "Required",
+  "verificationClearHeadshot": "Clear headshot required",
+  "verificationTapToUpload": "Tap to Upload",
+  "verificationDocumentUploaded": "Document Uploaded",
+  "verificationAcceptedFormats": "Accepted: JPG, PNG, PDF. Max size: 5MB",
+  "verificationSubmit": "Submit for Review",
+  "verificationSuccess": "Application Submitted!",
+  "verificationSuccessMessage": "We're reviewing your documents. You'll receive a notification within 2-3 business days.",
+  "verificationBackToVerification": "Back to Verification",
+  
+  "reportsTitle": "Manage Reports",
+  "reportsSearchHint": "Search reports...",
+  "reportsFilterNew": "New ({count})",
+  "@reportsFilterNew": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reportsFilterInProgress": "In Progress",
+  "reportsFilterResolved": "Resolved",
+  "reportsHomeowner": "HOMEOWNER",
+  "reportsProvider": "PROVIDER",
+  "reportsDetails": "Details",
+  "reportsResolve": "Resolve",
+  
+  "requestsTitle": "Service Requests",
+  "requestsTabRequests": "Requests",
+  "requestsTabHistory": "History",
+  "requestsStatusPending": "Pending",
+  "requestsStatusConfirmed": "Confirmed",
+  "requestsStatusCompleted": "Completed",
+  "requestsAccept": "Accept",
+  "requestsDecline": "Decline",
+  "requestsViewDetails": "View Details"
 }
