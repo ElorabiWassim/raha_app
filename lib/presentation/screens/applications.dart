@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_admin.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class ApplicationsPage extends StatefulWidget {
   const ApplicationsPage({super.key});
@@ -32,6 +33,8 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -43,13 +46,17 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
               child: Column(
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.people, color: Color(0xFF4CAF50), size: 28),
-                      SizedBox(width: 12),
+                      const Icon(
+                        Icons.people,
+                        color: Color(0xFF4CAF50),
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
                       Text(
-                        'Provider Applications',
-                        style: TextStyle(
+                        localizations.applicationsTitle,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF388E3C),
@@ -66,7 +73,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                       });
                     },
                     decoration: InputDecoration(
-                      hintText: 'Search applications...',
+                      hintText: localizations.applicationsSearchHint,
                       prefixIcon: const Icon(
                         Icons.search,
                         color: Color(0xFF6B7280),
@@ -99,10 +106,16 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     services: List<String>.from(app['services']),
                     time: app['time'],
                     onAccept: () {
-                      _showSnackBar('Accepted ${app['name']}', true);
+                      _showSnackBar(
+                        localizations.applicationsAccepted(app['name']),
+                        true,
+                      );
                     },
                     onDecline: () {
-                      _showSnackBar('Declined ${app['name']}', false);
+                      _showSnackBar(
+                        localizations.applicationsDeclined(app['name']),
+                        false,
+                      );
                     },
                   );
                 },
@@ -145,6 +158,8 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -194,7 +209,7 @@ class ApplicationCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Applied: $time',
+                          '${localizations.applicationsApplied}: $time',
                           style: const TextStyle(
                             fontSize: 13,
                             color: Color(0xFF6B7280),
@@ -207,9 +222,9 @@ class ApplicationCard extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 // Services
-                const Text(
-                  'Services Offered:',
-                  style: TextStyle(
+                Text(
+                  localizations.applicationsServicesOffered,
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF333333),
@@ -247,9 +262,9 @@ class ApplicationCard extends StatelessWidget {
           // Action Buttons
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F8F8),
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              color: Color(0xFFF5F8F8),
+              borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(12),
                 bottomRight: Radius.circular(12),
               ),
@@ -268,9 +283,9 @@ class ApplicationCard extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text(
-                      'Decline',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                    child: Text(
+                      localizations.applicationsDecline,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -287,9 +302,9 @@ class ApplicationCard extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text(
-                      'Accept',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                    child: Text(
+                      localizations.applicationsAccept,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),

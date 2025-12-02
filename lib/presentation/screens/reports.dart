@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_admin.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class ReportsPage extends StatefulWidget {
   const ReportsPage({super.key});
@@ -34,6 +35,8 @@ class _ReportsPageState extends State<ReportsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -45,13 +48,17 @@ class _ReportsPageState extends State<ReportsPage> {
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
               child: Column(
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.flag, color: Color(0xFF4CAF50), size: 28),
-                      SizedBox(width: 12),
+                      const Icon(
+                        Icons.flag,
+                        color: Color(0xFF4CAF50),
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
                       Text(
-                        'Manage Reports',
-                        style: TextStyle(
+                        localizations.reportsTitle,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF388E3C),
@@ -63,7 +70,7 @@ class _ReportsPageState extends State<ReportsPage> {
                   // Search Bar
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Search reports...',
+                      hintText: localizations.reportsSearchHint,
                       prefixIcon: const Icon(
                         Icons.search,
                         color: Color(0xFF6B7280),
@@ -84,11 +91,17 @@ class _ReportsPageState extends State<ReportsPage> {
                   // Filter Tabs
                   Row(
                     children: [
-                      _buildFilterButton('New (3)', 0),
+                      _buildFilterButton(localizations.reportsFilterNew(3), 0),
                       const SizedBox(width: 8),
-                      _buildFilterButton('In Progress', 1),
+                      _buildFilterButton(
+                        localizations.reportsFilterInProgress,
+                        1,
+                      ),
                       const SizedBox(width: 8),
-                      _buildFilterButton('Resolved', 2),
+                      _buildFilterButton(
+                        localizations.reportsFilterResolved,
+                        2,
+                      ),
                     ],
                   ),
                 ],
@@ -172,6 +185,8 @@ class ReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -196,9 +211,9 @@ class ReportCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'HOMEOWNER',
-                      style: TextStyle(
+                    Text(
+                      localizations.reportsHomeowner,
+                      style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF4CAF50),
@@ -220,9 +235,9 @@ class ReportCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'PROVIDER',
-                      style: TextStyle(
+                    Text(
+                      localizations.reportsProvider,
+                      style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF4CAF50),
@@ -283,9 +298,9 @@ class ReportCard extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: const Text(
-                    'Details',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  child: Text(
+                    localizations.reportsDetails,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -301,9 +316,9 @@ class ReportCard extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: const Text(
-                    'Resolve',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  child: Text(
+                    localizations.reportsResolve,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
