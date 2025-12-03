@@ -344,86 +344,89 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get plansFree => 'Free';
+  String get plansFree => 'Gratuit';
 
   @override
   String get plansFreePriceValue => '0 DA';
 
   @override
   String get plansFreeFeature1 =>
-      'Create an account and list up to 3 services.';
+      'Créer un compte et répertorier jusqu\'à 3 services.';
 
   @override
-  String get plansFreeFeature2 => 'List contact information.';
+  String get plansFreeFeature2 => 'Répertorier les informations de contact.';
 
   @override
-  String get plansFreeFeature3 => 'Lower priority in the listing of services.';
+  String get plansFreeFeature3 =>
+      'Priorité inférieure dans la liste des services.';
 
   @override
   String get plansFreeFeature4 =>
-      'First 20 providers get Free Plan for 6 months.';
+      'Les 20 premiers prestataires obtiennent le plan gratuit pendant 6 mois.';
 
   @override
   String get plansPro => 'Pro';
 
   @override
-  String get plansProPriceValue => '700 DA/month';
+  String get plansProPriceValue => '700 DA/mois';
 
   @override
-  String get plansProPeriodValue => '7,000 DA/year';
+  String get plansProPeriodValue => '7 000 DA/an';
 
   @override
-  String get plansProFeature1 => 'List up to 10 services.';
+  String get plansProFeature1 => 'Répertorier jusqu\'à 10 services.';
 
   @override
   String get plansProFeature2 =>
-      'Receive bookings, requests, and client messages.';
+      'Recevoir des réservations, des demandes et des messages clients.';
 
   @override
-  String get plansProFeature3 => 'Create and publish posts.';
+  String get plansProFeature3 => 'Créer et publier des publications.';
 
   @override
-  String get plansProFeature4 => 'Respond to user demands.';
+  String get plansProFeature4 => 'Répondre aux demandes des utilisateurs.';
 
   @override
-  String get plansProFeature5 => 'Medium priority in search results.';
+  String get plansProFeature5 =>
+      'Priorité moyenne dans les résultats de recherche.';
 
   @override
-  String get plansElite => 'Elite';
+  String get plansElite => 'Élite';
 
   @override
-  String get plansElitePriceValue => '1,500 DA/month';
+  String get plansElitePriceValue => '1 500 DA/mois';
 
   @override
-  String get plansElitePeriodValue => '15,000 DA/year';
+  String get plansElitePeriodValue => '15 000 DA/an';
 
   @override
-  String get plansEliteFeature1 => 'List up to 20 services.';
+  String get plansEliteFeature1 => 'Répertorier jusqu\'à 20 services.';
 
   @override
   String get plansEliteFeature2 =>
-      'View detailed profile insights (profile views count).';
+      'Afficher des informations détaillées sur le profil (nombre de vues du profil).';
 
   @override
   String get plansEliteFeature3 =>
-      'Highest priority in displaying search results.';
+      'Priorité la plus élevée dans l\'affichage des résultats de recherche.';
 
   @override
   String get plansEliteFeature4 =>
-      'Obtain a verified badge for increased trust.';
+      'Obtenir un badge vérifié pour une confiance accrue.';
 
   @override
-  String get plansEliteFeature5 => 'Receive bookings, requests, and messages.';
+  String get plansEliteFeature5 =>
+      'Recevoir des réservations, des demandes et des messages.';
 
   @override
-  String get plansEliteFeature6 => 'Create and publish posts.';
+  String get plansEliteFeature6 => 'Créer et publier des publications.';
 
   @override
   String get plansEliteFeature7 =>
-      'Promote services through advertisements in the main feed.';
+      'Promouvoir les services par le biais de publicités dans le fil principal.';
 
   @override
-  String get plansEliteFeature8 => 'Respond to user demands.';
+  String get plansEliteFeature8 => 'Répondre aux demandes des utilisateurs.';
 
   @override
   String get verificationTitle => 'Vérification des documents';

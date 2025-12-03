@@ -356,5 +356,33 @@
   "requestsStatusCompleted": "Terminé",
   "requestsAccept": "Accepter",
   "requestsDecline": "Refuser",
-  "requestsViewDetails": "Voir les détails"
+  "requestsViewDetails": "Voir les détails",
+
+  "plansFree": "Gratuit",
+  "plansFreePriceValue": "0 DA",
+  "plansFreeFeature1": "Créer un compte et répertorier jusqu'à 3 services.",
+  "plansFreeFeature2": "Répertorier les informations de contact.",
+  "plansFreeFeature3": "Priorité inférieure dans la liste des services.",
+  "plansFreeFeature4": "Les 20 premiers prestataires obtiennent le plan gratuit pendant 6 mois.",
+  
+  "plansPro": "Pro",
+  "plansProPriceValue": "700 DA/mois",
+  "plansProPeriodValue": "7 000 DA/an",
+  "plansProFeature1": "Répertorier jusqu'à 10 services.",
+  "plansProFeature2": "Recevoir des réservations, des demandes et des messages clients.",
+  "plansProFeature3": "Créer et publier des publications.",
+  "plansProFeature4": "Répondre aux demandes des utilisateurs.",
+  "plansProFeature5": "Priorité moyenne dans les résultats de recherche.",
+  
+  "plansElite": "Élite",
+  "plansElitePriceValue": "1 500 DA/mois",
+  "plansElitePeriodValue": "15 000 DA/an",
+  "plansEliteFeature1": "Répertorier jusqu'à 20 services.",
+  "plansEliteFeature2": "Afficher des informations détaillées sur le profil (nombre de vues du profil).",
+  "plansEliteFeature3": "Priorité la plus élevée dans l'affichage des résultats de recherche.",
+  "plansEliteFeature4": "Obtenir un badge vérifié pour une confiance accrue.",
+  "plansEliteFeature5": "Recevoir des réservations, des demandes et des messages.",
+  "plansEliteFeature6": "Créer et publier des publications.",
+  "plansEliteFeature7": "Promouvoir les services par le biais de publicités dans le fil principal.",
+  "plansEliteFeature8": "Répondre aux demandes des utilisateurs."
 }
