@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class RequestsPage extends StatefulWidget {
   const RequestsPage({super.key});
@@ -39,6 +40,8 @@ class _RequestsPageState extends State<RequestsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -48,13 +51,17 @@ class _RequestsPageState extends State<RequestsPage> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.description, color: Color(0xFF4CAF50), size: 28),
-                  SizedBox(width: 12),
+                  const Icon(
+                    Icons.description,
+                    color: Color(0xFF4CAF50),
+                    size: 28,
+                  ),
+                  const SizedBox(width: 12),
                   Text(
-                    'Service Requests',
-                    style: TextStyle(
+                    localizations.requestsTitle,
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF388E3C),
@@ -69,9 +76,9 @@ class _RequestsPageState extends State<RequestsPage> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  _buildTab('Requests', 0),
+                  _buildTab(localizations.requestsTabRequests, 0),
                   const SizedBox(width: 8),
-                  _buildTab('History', 1),
+                  _buildTab(localizations.requestsTabHistory, 1),
                 ],
               ),
             ),
@@ -172,8 +179,24 @@ class RequestCard extends StatelessWidget {
     }
   }
 
+  String getLocalizedStatus(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (status) {
+      case 'Pending':
+        return localizations.requestsStatusPending;
+      case 'Confirmed':
+        return localizations.requestsStatusConfirmed;
+      case 'Completed':
+        return localizations.requestsStatusCompleted;
+      default:
+        return status;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -230,7 +253,7 @@ class RequestCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            status,
+                            getLocalizedStatus(context),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -312,9 +335,9 @@ class RequestCard extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text(
-                      'Decline',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: Text(
+                      localizations.requestsDecline,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -331,9 +354,9 @@ class RequestCard extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text(
-                      'Accept',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: Text(
+                      localizations.requestsAccept,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -345,9 +368,9 @@ class RequestCard extends StatelessWidget {
           const SizedBox(height: 8),
           TextButton(
             onPressed: () {},
-            child: const Text(
-              'View Details',
-              style: TextStyle(
+            child: Text(
+              localizations.requestsViewDetails,
+              style: const TextStyle(
                 color: Color(0xFF4CAF50),
                 fontWeight: FontWeight.bold,
               ),

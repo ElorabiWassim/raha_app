@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({super.key});
@@ -21,6 +22,8 @@ class _VerificationPageState extends State<VerificationPage> {
       return _buildSuccessScreen();
     }
 
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -32,13 +35,17 @@ class _VerificationPageState extends State<VerificationPage> {
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
               child: Column(
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.verified, color: Color(0xFF4CAF50), size: 28),
-                      SizedBox(width: 12),
+                      const Icon(
+                        Icons.verified,
+                        color: Color(0xFF4CAF50),
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
                       Text(
-                        'Document Verification',
-                        style: TextStyle(
+                        localizations.verificationTitle,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF388E3C),
@@ -48,7 +55,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Upload your documents for verification',
+                    localizations.verificationSubtitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
@@ -63,8 +70,8 @@ class _VerificationPageState extends State<VerificationPage> {
                 children: [
                   DocumentUploadCard(
                     icon: Icons.badge,
-                    title: 'National ID / Passport',
-                    subtitle: 'Required',
+                    title: localizations.verificationNationalID,
+                    subtitle: localizations.verificationRequired,
                     isUploaded: idUploaded,
                     onTap: () {
                       setState(() {
@@ -75,8 +82,8 @@ class _VerificationPageState extends State<VerificationPage> {
                   const SizedBox(height: 16),
                   DocumentUploadCard(
                     icon: Icons.school,
-                    title: 'Professional Certificate',
-                    subtitle: 'Required',
+                    title: localizations.verificationCertificate,
+                    subtitle: localizations.verificationRequired,
                     isUploaded: certUploaded,
                     onTap: () {
                       setState(() {
@@ -87,8 +94,8 @@ class _VerificationPageState extends State<VerificationPage> {
                   const SizedBox(height: 16),
                   DocumentUploadCard(
                     icon: Icons.account_circle,
-                    title: 'Profile Picture',
-                    subtitle: 'Clear headshot required',
+                    title: localizations.verificationProfilePicture,
+                    subtitle: localizations.verificationClearHeadshot,
                     isUploaded: photoUploaded,
                     onTap: () {
                       setState(() {
@@ -132,9 +139,12 @@ class _VerificationPageState extends State<VerificationPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Submit for Review',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Text(
+                    localizations.verificationSubmit,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -146,6 +156,8 @@ class _VerificationPageState extends State<VerificationPage> {
   }
 
   Widget _buildSuccessScreen() {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -169,9 +181,9 @@ class _VerificationPageState extends State<VerificationPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Application Submitted!',
-                  style: TextStyle(
+                Text(
+                  localizations.verificationSuccess,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF333333),
@@ -179,7 +191,7 @@ class _VerificationPageState extends State<VerificationPage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  "We're reviewing your documents. You'll receive a notification within 2-3 business days.",
+                  localizations.verificationSuccessMessage,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -207,9 +219,9 @@ class _VerificationPageState extends State<VerificationPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Back to Verification',
-                      style: TextStyle(
+                    child: Text(
+                      localizations.verificationBackToVerification,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -243,6 +255,8 @@ class DocumentUploadCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -324,7 +338,9 @@ class DocumentUploadCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    isUploaded ? 'Document Uploaded' : 'Tap to Upload',
+                    isUploaded
+                        ? localizations.verificationDocumentUploaded
+                        : localizations.verificationTapToUpload,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -339,7 +355,7 @@ class DocumentUploadCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Accepted: JPG, PNG, PDF. Max size: 5MB',
+            localizations.verificationAcceptedFormats,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),

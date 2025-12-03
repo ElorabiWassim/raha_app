@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class DemandsPage extends StatefulWidget {
   const DemandsPage({super.key});
@@ -38,6 +39,8 @@ class _DemandsPageState extends State<DemandsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -49,13 +52,17 @@ class _DemandsPageState extends State<DemandsPage> {
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
               child: Column(
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.work, color: Color(0xFF4CAF50), size: 28),
-                      SizedBox(width: 12),
+                      const Icon(
+                        Icons.work,
+                        color: Color(0xFF4CAF50),
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
                       Text(
-                        'Open Jobs',
-                        style: TextStyle(
+                        localizations.demandsTitle,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF388E3C),
@@ -67,7 +74,7 @@ class _DemandsPageState extends State<DemandsPage> {
                   // Search Bar
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Search jobs...',
+                      hintText: localizations.demandsSearchHint,
                       prefixIcon: const Icon(
                         Icons.search,
                         color: Color(0xFF6B7280),
@@ -100,13 +107,13 @@ class _DemandsPageState extends State<DemandsPage> {
                             value: selectedCategory,
                             isExpanded: true,
                             underline: const SizedBox(),
-                            hint: const Text('Category'),
+                            hint: Text(localizations.demandsCategory),
                             items:
                                 [
-                                      'Plumbing',
-                                      'Electrical',
-                                      'Gardening',
-                                      'Cleaning',
+                                      localizations.demandsCategoryPlumbing,
+                                      localizations.demandsCategoryElectrical,
+                                      localizations.demandsCategoryGardening,
+                                      localizations.demandsCategoryCleaning,
                                     ]
                                     .map(
                                       (category) => DropdownMenuItem(
@@ -136,7 +143,7 @@ class _DemandsPageState extends State<DemandsPage> {
                             value: selectedWilaya,
                             isExpanded: true,
                             underline: const SizedBox(),
-                            hint: const Text('Wilaya'),
+                            hint: Text(localizations.demandsWilaya),
                             items: ['Algiers', 'Oran', 'Constantine', 'Annaba']
                                 .map(
                                   (wilaya) => DropdownMenuItem(
@@ -198,6 +205,8 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -247,7 +256,7 @@ class JobCard extends StatelessWidget {
               const Icon(Icons.access_time, size: 16, color: Color(0xFF6B7280)),
               const SizedBox(width: 4),
               Text(
-                'Posted $time',
+                '${localizations.demandsPosted} $time',
                 style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
               ),
             ],
@@ -257,9 +266,9 @@ class JobCard extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text('Offer sent!')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(localizations.demandsOfferSent)),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4CAF50),
@@ -270,9 +279,9 @@ class JobCard extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              child: const Text(
-                'Send Offer',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              child: Text(
+                localizations.demandsSendOffer,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ),

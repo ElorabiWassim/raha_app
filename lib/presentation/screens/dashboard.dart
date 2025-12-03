@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_admin.dart';
 import '../../modules/authentication/screens/login.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -56,6 +57,8 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _handleLogout() {
+    final localizations = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -63,29 +66,29 @@ class _DashboardPageState extends State<DashboardPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.logout, color: Color(0xFF4CAF50)),
-              SizedBox(width: 8),
+              const Icon(Icons.logout, color: Color(0xFF4CAF50)),
+              const SizedBox(width: 8),
               Text(
-                'Logout',
-                style: TextStyle(
+                localizations.dashboardLogout,
+                style: const TextStyle(
                   color: Color(0xFF388E3C),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          content: const Text(
-            'Are you sure you want to logout?',
-            style: TextStyle(color: Color(0xFF333333)),
+          content: Text(
+            localizations.dashboardLogoutConfirm,
+            style: const TextStyle(color: Color(0xFF333333)),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Color(0xFF6B7280)),
+              child: Text(
+                localizations.dashboardCancel,
+                style: const TextStyle(color: Color(0xFF6B7280)),
               ),
             ),
             ElevatedButton(
@@ -101,9 +104,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                'Logout',
-                style: TextStyle(color: Colors.white),
+              child: Text(
+                localizations.dashboardLogout,
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -114,6 +117,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -137,10 +142,10 @@ class _DashboardPageState extends State<DashboardPage> {
                       size: 28,
                     ),
                     const SizedBox(width: 12),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Dashboard',
-                        style: TextStyle(
+                        localizations.dashboardTitle,
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF388E3C),
@@ -163,7 +168,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     IconButton(
                       icon: const Icon(Icons.logout, color: Color(0xFF4CAF50)),
                       onPressed: _handleLogout,
-                      tooltip: 'Logout',
+                      tooltip: localizations.dashboardLogout,
                     ),
                   ],
                 ),
@@ -180,7 +185,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 childAspectRatio: 1.3,
                 children: [
                   StatCard(
-                    title: 'Total Users',
+                    title: localizations.dashboardTotalUsers,
                     value: totalUsers.toString(),
                     change: '+5.2%',
                     isPositive: true,
@@ -190,7 +195,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     },
                   ),
                   StatCard(
-                    title: 'Verified SPs',
+                    title: localizations.dashboardVerifiedSPs,
                     value: verifiedSPs.toString(),
                     change: '+2.1%',
                     isPositive: true,
@@ -200,7 +205,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     },
                   ),
                   StatCard(
-                    title: 'Active Bookings',
+                    title: localizations.dashboardActiveBookings,
                     value: activeBookings.toString(),
                     change: '-1.5%',
                     isPositive: false,
@@ -210,7 +215,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     },
                   ),
                   StatCard(
-                    title: 'Revenue',
+                    title: localizations.dashboardRevenue,
                     value: '\$${revenue.toString()}',
                     change: '+12.8%',
                     isPositive: true,
@@ -227,9 +232,9 @@ class _DashboardPageState extends State<DashboardPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Recent Activity',
-                    style: TextStyle(
+                  Text(
+                    localizations.dashboardRecentActivity,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF333333),
