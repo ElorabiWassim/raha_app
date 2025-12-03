@@ -1369,6 +1369,132 @@ abstract class AppLocalizations {
   /// **'Gardening & Landscaping'**
   String get professionGardeningLandscaping;
 
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @myProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get myProfile;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @verifiedHomeowner.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Homeowner'**
+  String get verifiedHomeowner;
+
+  /// No description provided for @paymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Methods'**
+  String get paymentMethods;
+
+  /// No description provided for @helpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpSupport;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @homeAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Address'**
+  String get homeAddress;
+
+  /// No description provided for @profileUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully!'**
+  String get profileUpdatedSuccess;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get comingSoon;
+
+  /// No description provided for @navigationTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigating to {page}'**
+  String navigationTo(String page);
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @french.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get french;
+
+  /// No description provided for @arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get arabic;
+
+  /// No description provided for @changeLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Language'**
+  String get changeLanguage;
+
+  /// No description provided for @languageChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed to {language}'**
+  String languageChanged(String language);
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
@@ -1378,7 +1504,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviews.
   ///
   /// In en, this message translates to:
-  /// **'reviews'**
+  /// **'Reviews'**
   String get reviews;
 
   /// No description provided for @message.
@@ -1495,18 +1621,6 @@ abstract class AppLocalizations {
   /// **'Notifications - Coming Soon'**
   String get notificationsComingSoon;
 
-  /// No description provided for @navigationTo.
-  ///
-  /// In en, this message translates to:
-  /// **'Navigation to'**
-  String navigationTo(Object page);
-
-  /// No description provided for @comingSoon.
-  ///
-  /// In en, this message translates to:
-  /// **'Coming Soon'**
-  String get comingSoon;
-
   /// No description provided for @welcomeBack.
   ///
   /// In en, this message translates to:
@@ -1564,7 +1678,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountDeletion.
   ///
   /// In en, this message translates to:
-  /// **'Account deletion'**
+  /// **'Account Deletion'**
   String get accountDeletion;
 
   /// No description provided for @languageChangedTo.
@@ -1666,31 +1780,31 @@ abstract class AppLocalizations {
   /// No description provided for @cantFindService.
   ///
   /// In en, this message translates to:
-  /// **'Can\'t find a service?'**
+  /// **'Can\'t find the right service?'**
   String get cantFindService;
 
   /// No description provided for @cantFindServiceDescription.
   ///
   /// In en, this message translates to:
-  /// **'Let us know what you need, and we\'ll find\na professional for you.'**
+  /// **'Tell us what you need, and we\'ll find\nyou the right professional.'**
   String get cantFindServiceDescription;
 
   /// No description provided for @searchHint.
   ///
   /// In en, this message translates to:
-  /// **'Search for a service or a provider'**
+  /// **'Search for a service or provider'**
   String get searchHint;
 
   /// No description provided for @tfa.
   ///
   /// In en, this message translates to:
-  /// **'Two Factor Authentication'**
+  /// **'Two-Factor Authentication'**
   String get tfa;
 
   /// No description provided for @myaddress.
   ///
   /// In en, this message translates to:
-  /// **'Myaddress'**
+  /// **'My Address'**
   String get myaddress;
 
   /// No description provided for @messagesTitle.
@@ -1702,13 +1816,13 @@ abstract class AppLocalizations {
   /// No description provided for @noConversationsYet.
   ///
   /// In en, this message translates to:
-  /// **'No Conversations Yet'**
+  /// **'No conversations yet'**
   String get noConversationsYet;
 
   /// No description provided for @startBooking.
   ///
   /// In en, this message translates to:
-  /// **'Start booking a service to begin\nchatting with a provider.'**
+  /// **'Start by booking a service to begin\nchatting with a provider.'**
   String get startBooking;
 
   /// No description provided for @searchInConversation.
@@ -1732,7 +1846,7 @@ abstract class AppLocalizations {
   /// No description provided for @letUsKnowWhatYouNeed.
   ///
   /// In en, this message translates to:
-  /// **'Let us know what you need, and we\'ll find\na professional for you.'**
+  /// **'Let us know what you need, and we\'ll find\na professional to help you.'**
   String get letUsKnowWhatYouNeed;
 
   /// No description provided for @openJobs.
@@ -1774,7 +1888,7 @@ abstract class AppLocalizations {
   /// No description provided for @offerSent.
   ///
   /// In en, this message translates to:
-  /// **'Offer sent!'**
+  /// **'Offer Sent!'**
   String get offerSent;
 
   /// No description provided for @myBookings.
@@ -1906,8 +2020,8 @@ abstract class AppLocalizations {
   /// No description provided for @serviceProvidersApplied.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 Service Provider Applied} other{{count} Service Providers Applied}}'**
-  String serviceProvidersApplied(num count);
+  /// **'{count, plural, =1{1 service provider applied} other{{count} service providers applied}}'**
+  String serviceProvidersApplied(int count);
 
   /// No description provided for @viewRequests.
   ///
@@ -1930,7 +2044,7 @@ abstract class AppLocalizations {
   /// No description provided for @providerHired.
   ///
   /// In en, this message translates to:
-  /// **'Provider hired'**
+  /// **'Provider Hired'**
   String get providerHired;
 
   /// No description provided for @viewDetails.
@@ -1942,7 +2056,7 @@ abstract class AppLocalizations {
   /// No description provided for @jobFinished.
   ///
   /// In en, this message translates to:
-  /// **'Job finished'**
+  /// **'Job Finished'**
   String get jobFinished;
 
   /// No description provided for @viewInvoice.
