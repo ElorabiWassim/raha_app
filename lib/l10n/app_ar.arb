@@ -286,8 +286,6 @@
 
   } ,
 
-
-
   "dashboardTitle": "لوحة التحكم",
   "dashboardTotalUsers": "إجمالي المستخدمين",
   "dashboardVerifiedSPs": "مقدمو الخدمة المعتمدون",
@@ -385,8 +383,7 @@
   "requestsStatusCompleted": "مكتمل",
   "requestsAccept": "قبول",
   "requestsDecline": "رفض",
-  "requestsViewDetails": "عرض التفاصيل"
-,
+  "requestsViewDetails": "عرض التفاصيل",
   "myProfile": "ملفي الشخصي",
   "editProfile": "تعديل الملف الشخصي",
   "settings": "الإعدادات",
@@ -554,5 +551,6 @@
   "upcoming": "قادم",
   "rate": "تقييم",
   "details": "التفاصيل"
+ 
 
 }
