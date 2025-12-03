@@ -43,7 +43,10 @@ class _DemandsPageState extends State<DemandsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
+
+    // Filter jobs (optional: you can add real filtering later)
+    final filteredJobs = jobs; // TODO: apply selectedCategory & selectedWilaya
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
@@ -58,14 +61,10 @@ class _DemandsPageState extends State<DemandsPage> {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.work,
-                        color: Color(0xFF4CAF50),
-                        size: 28,
-                      ),
+                      const Icon(Icons.work, color: Color(0xFF4CAF50), size: 28),
                       const SizedBox(width: 12),
                       Text(
-                        localizations.demandsTitle,
+                        l10n.openJobs, // ← LOCALIZED
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -78,7 +77,7 @@ class _DemandsPageState extends State<DemandsPage> {
                   // Search Bar
                   TextField(
                     decoration: InputDecoration(
-                      hintText: localizations.demandsSearchHint,
+                      hintText: l10n.searchJobs, // ← LOCALIZED
                       prefixIcon: const Icon(
                         Icons.search,
                         color: Color(0xFF6B7280),
@@ -111,23 +110,17 @@ class _DemandsPageState extends State<DemandsPage> {
                             value: selectedCategory,
                             isExpanded: true,
                             underline: const SizedBox(),
-                            hint: Text(localizations.demandsCategory),
-                            items:
-                                [
-                                      localizations.demandsCategoryElectrical,
-                                      localizations.demandsCategoryGardening,
-                                      localizations.demandsCategoryCleaning,
-                                    ]
-                                    .map(
-                                      (category) => DropdownMenuItem(
-                                        value: category,
-                                        child: Text(category),
-                                      ),
-                                    )
-                                    .toList(),
                             hint: Text(l10n.category), // ← LOCALIZED
                             items: categories.map((category) {
                               return DropdownMenuItem(
+                                value: category,
+                                child: Text(_getLocalizedCategory(category, l10n)),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCategory = value;
+                              });
                             },
                           ),
                         ),
@@ -145,15 +138,13 @@ class _DemandsPageState extends State<DemandsPage> {
                             value: selectedWilaya,
                             isExpanded: true,
                             underline: const SizedBox(),
-                            hint: Text(localizations.demandsWilaya),
-                            items: ['Algiers', 'Oran', 'Constantine', 'Annaba']
-                                .map(
-                                  (wilaya) => DropdownMenuItem(
-                                    value: wilaya,
-                                    child: Text(wilaya),
-                                  ),
-                                )
-                                .toList(),
+                            hint: Text(l10n.wilaya), // ← LOCALIZED
+                            items: wilayas.map((wilaya) {
+                              return DropdownMenuItem(
+                                value: wilaya,
+                                child: Text(wilaya), // Wilaya names stay as-is (proper nouns)
+                              );
+                            }).toList(),
                             onChanged: (value) {
                               setState(() {
                                 selectedWilaya = value;
@@ -161,6 +152,15 @@ class _DemandsPageState extends State<DemandsPage> {
                             },
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Jobs List
+            Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: filteredJobs.length,
@@ -212,8 +212,6 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -264,7 +262,7 @@ class JobCard extends StatelessWidget {
               const Icon(Icons.access_time, size: 16, color: Color(0xFF6B7280)),
               const SizedBox(width: 4),
               Text(
-                '${localizations.demandsPosted} $time',
+                '${l10n.posted} $time', // ← LOCALIZED prefix
                 style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
               ),
             ],
@@ -275,7 +273,7 @@ class JobCard extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(localizations.demandsOfferSent)),
+                  SnackBar(content: Text(l10n.offerSent)), // ← LOCALIZED
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -288,7 +286,7 @@ class JobCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
               child: Text(
-                localizations.demandsSendOffer,
+                l10n.sendOffer, // ← LOCALIZED
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
