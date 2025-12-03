@@ -33,7 +33,7 @@ class ProfileError extends ProfileState {
   List<Object> get props => [profileData, message];
 }
 
-// Profile Cubit
+
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit()
       : super(ProfileInitial(ProfileData(
@@ -46,7 +46,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   void updateProfile(ProfileData newProfileData) {
     emit(ProfileLoading(state.profileData));
     
-    // Simulate API call delay
+    
     Future.delayed(Duration(milliseconds: 500), () {
       emit(ProfileUpdated(newProfileData));
     });

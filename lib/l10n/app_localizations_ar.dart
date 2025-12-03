@@ -620,4 +620,129 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get letUsKnowWhatYouNeed => 'أخبرنا بما تحتاجه، وسنجد لك\nمحترفًا لمساعدتك.';
+
+  @override
+  String get openJobs => 'الوظائف المفتوحة';
+
+  @override
+  String get searchJobs => 'البحث عن وظائف...';
+
+  @override
+  String get category => 'التصنيف';
+
+  @override
+  String get wilaya => 'الولاية';
+
+  @override
+  String get posted => 'تم النشر منذ';
+
+  @override
+  String get sendOffer => 'إرسال عرض';
+
+  @override
+  String get offerSent => 'تم إرسال العرض!';
+
+  @override
+  String get myBookings => 'حجوزاتي';
+
+  @override
+  String get myDemands => 'طلباتي';
+
+  @override
+  String get noDemandsFound => 'لا توجد طلبات';
+
+  @override
+  String get tryAdjustingSearch => 'حاول تعديل بحثك أو المرشحات';
+
+  @override
+  String get postNewDemand => 'نشر طلب جديد';
+
+  @override
+  String get searchByTitleOrCategory => 'البحث حسب العنوان أو التصنيف...';
+
+  @override
+  String get filterAndSort => 'تصفية وفرز';
+
+  @override
+  String get reset => 'إعادة تعيين';
+
+  @override
+  String get sortBy => 'فرز حسب';
+
+  @override
+  String get date => 'التاريخ';
+
+  @override
+  String get budget => 'الميزانية';
+
+  @override
+  String get status => 'الحالة';
+
+  @override
+  String get categories => 'التصنيفات';
+
+  @override
+  String get carpentry => 'نجارة';
+
+  @override
+  String get budgetRange => 'نطاق الميزانية';
+
+  @override
+  String get applyFilters => 'تطبيق المرشحات';
+
+  @override
+  String get all => 'الكل';
+
+  @override
+  String get pending => 'قيد الانتظار';
+
+  @override
+  String get inProgress => 'قيد التنفيذ';
+
+  @override
+  String get completed => 'مكتمل';
+
+  @override
+  String get cancelled => 'ملغى';
+
+  @override
+  String serviceProvidersApplied(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مزودي خدمة تقدموا',
+      one: 'مزود خدمة واحد تقدم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get viewRequests => 'عرض الطلبات';
+
+  @override
+  String get editDemand => 'تعديل الطلب';
+
+  @override
+  String get cancelDemand => 'إلغاء الطلب';
+
+  @override
+  String get providerHired => 'تم تعيين المزود';
+
+  @override
+  String get viewDetails => 'عرض التفاصيل';
+
+  @override
+  String get jobFinished => 'تم الانتهاء من العمل';
+
+  @override
+  String get viewInvoice => 'عرض الفاتورة';
+
+  @override
+  String get upcoming => 'قادم';
+
+  @override
+  String get rate => 'تقييم';
+
+  @override
+  String get details => 'التفاصيل';
 }

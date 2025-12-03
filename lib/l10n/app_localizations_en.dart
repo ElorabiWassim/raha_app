@@ -620,4 +620,129 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get letUsKnowWhatYouNeed => 'Let us know what you need, and we\'ll find\na professional for you.';
+
+  @override
+  String get openJobs => 'Open Jobs';
+
+  @override
+  String get searchJobs => 'Search jobs...';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get wilaya => 'Wilaya';
+
+  @override
+  String get posted => 'Posted';
+
+  @override
+  String get sendOffer => 'Send Offer';
+
+  @override
+  String get offerSent => 'Offer sent!';
+
+  @override
+  String get myBookings => 'My Bookings';
+
+  @override
+  String get myDemands => 'My Demands';
+
+  @override
+  String get noDemandsFound => 'No demands found';
+
+  @override
+  String get tryAdjustingSearch => 'Try adjusting your search or filters';
+
+  @override
+  String get postNewDemand => 'Post New Demand';
+
+  @override
+  String get searchByTitleOrCategory => 'Search by title or category...';
+
+  @override
+  String get filterAndSort => 'Filter & Sort';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get budget => 'Budget';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get carpentry => 'Carpentry';
+
+  @override
+  String get budgetRange => 'Budget Range';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get inProgress => 'In Progress';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String serviceProvidersApplied(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Service Providers Applied',
+      one: '1 Service Provider Applied',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get viewRequests => 'View Requests';
+
+  @override
+  String get editDemand => 'Edit Demand';
+
+  @override
+  String get cancelDemand => 'Cancel Demand';
+
+  @override
+  String get providerHired => 'Provider hired';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get jobFinished => 'Job finished';
+
+  @override
+  String get viewInvoice => 'View Invoice';
+
+  @override
+  String get upcoming => 'Upcoming';
+
+  @override
+  String get rate => 'Rate';
+
+  @override
+  String get details => 'Details';
 }

@@ -1314,6 +1314,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Let us know what you need, and we\'ll find\na professional for you.'**
   String get letUsKnowWhatYouNeed;
+
+  /// No description provided for @openJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Jobs'**
+  String get openJobs;
+
+  /// No description provided for @searchJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Search jobs...'**
+  String get searchJobs;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @wilaya.
+  ///
+  /// In en, this message translates to:
+  /// **'Wilaya'**
+  String get wilaya;
+
+  /// No description provided for @posted.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted'**
+  String get posted;
+
+  /// No description provided for @sendOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Offer'**
+  String get sendOffer;
+
+  /// No description provided for @offerSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer sent!'**
+  String get offerSent;
+
+  /// No description provided for @myBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookings'**
+  String get myBookings;
+
+  /// No description provided for @myDemands.
+  ///
+  /// In en, this message translates to:
+  /// **'My Demands'**
+  String get myDemands;
+
+  /// No description provided for @noDemandsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No demands found'**
+  String get noDemandsFound;
+
+  /// No description provided for @tryAdjustingSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search or filters'**
+  String get tryAdjustingSearch;
+
+  /// No description provided for @postNewDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'Post New Demand'**
+  String get postNewDemand;
+
+  /// No description provided for @searchByTitleOrCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by title or category...'**
+  String get searchByTitleOrCategory;
+
+  /// No description provided for @filterAndSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter & Sort'**
+  String get filterAndSort;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @budget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get budget;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @carpentry.
+  ///
+  /// In en, this message translates to:
+  /// **'Carpentry'**
+  String get carpentry;
+
+  /// No description provided for @budgetRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Range'**
+  String get budgetRange;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get applyFilters;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgress;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
+
+  /// No description provided for @serviceProvidersApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 Service Provider Applied} other{{count} Service Providers Applied}}'**
+  String serviceProvidersApplied(num count);
+
+  /// No description provided for @viewRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'View Requests'**
+  String get viewRequests;
+
+  /// No description provided for @editDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Demand'**
+  String get editDemand;
+
+  /// No description provided for @cancelDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Demand'**
+  String get cancelDemand;
+
+  /// No description provided for @providerHired.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider hired'**
+  String get providerHired;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @jobFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Job finished'**
+  String get jobFinished;
+
+  /// No description provided for @viewInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'View Invoice'**
+  String get viewInvoice;
+
+  /// No description provided for @upcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcoming;
+
+  /// No description provided for @rate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get rate;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -620,4 +620,129 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get letUsKnowWhatYouNeed => 'Dites-nous ce dont vous avez besoin, et nous trouverons\nun professionnel pour vous.';
+
+  @override
+  String get openJobs => 'Offres ouvertes';
+
+  @override
+  String get searchJobs => 'Rechercher des offres...';
+
+  @override
+  String get category => 'Catégorie';
+
+  @override
+  String get wilaya => 'Wilaya';
+
+  @override
+  String get posted => 'Publié il y a';
+
+  @override
+  String get sendOffer => 'Envoyer une offre';
+
+  @override
+  String get offerSent => 'Offre envoyée !';
+
+  @override
+  String get myBookings => 'Mes réservations';
+
+  @override
+  String get myDemands => 'Mes demandes';
+
+  @override
+  String get noDemandsFound => 'Aucune demande trouvée';
+
+  @override
+  String get tryAdjustingSearch => 'Essayez d\'ajuster votre recherche ou vos filtres';
+
+  @override
+  String get postNewDemand => 'Publier une nouvelle demande';
+
+  @override
+  String get searchByTitleOrCategory => 'Rechercher par titre ou catégorie...';
+
+  @override
+  String get filterAndSort => 'Filtrer et trier';
+
+  @override
+  String get reset => 'Réinitialiser';
+
+  @override
+  String get sortBy => 'Trier par';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get budget => 'Budget';
+
+  @override
+  String get status => 'Statut';
+
+  @override
+  String get categories => 'Catégories';
+
+  @override
+  String get carpentry => 'Menuiserie';
+
+  @override
+  String get budgetRange => 'Plage de budget';
+
+  @override
+  String get applyFilters => 'Appliquer les filtres';
+
+  @override
+  String get all => 'Tout';
+
+  @override
+  String get pending => 'En attente';
+
+  @override
+  String get inProgress => 'En cours';
+
+  @override
+  String get completed => 'Terminé';
+
+  @override
+  String get cancelled => 'Annulé';
+
+  @override
+  String serviceProvidersApplied(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count prestataires ont postulé',
+      one: '1 prestataire a postulé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get viewRequests => 'Voir les demandes';
+
+  @override
+  String get editDemand => 'Modifier la demande';
+
+  @override
+  String get cancelDemand => 'Annuler la demande';
+
+  @override
+  String get providerHired => 'Prestataire engagé';
+
+  @override
+  String get viewDetails => 'Voir les détails';
+
+  @override
+  String get jobFinished => 'Travail terminé';
+
+  @override
+  String get viewInvoice => 'Voir la facture';
+
+  @override
+  String get upcoming => 'À venir';
+
+  @override
+  String get rate => 'Noter';
+
+  @override
+  String get details => 'Détails';
 }
