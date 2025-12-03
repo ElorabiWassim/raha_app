@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/Wilayas.dart';
 import './service_provider_screen.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class WilayaScreen extends StatelessWidget {
   final String category;
@@ -8,12 +9,14 @@ class WilayaScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.only(left: 50),
           child: Text(
-            'Select Wilaya',
+            l10n.selectWilaya,
             style: TextStyle(
               color: Color(0xFF1E293B),
               fontWeight: FontWeight.bold,

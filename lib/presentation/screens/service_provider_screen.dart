@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/proffesionalCardWidget.dart';
 import '../../data/models/service_provider_model.dart';
 import './profile.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class ServiceProviderScreen extends StatelessWidget {
   final List<ServiceProvider> serviceProviders;
@@ -10,12 +11,14 @@ class ServiceProviderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Text(
-            'Available Service Providers',
+            l10n.availableServiceProviders,
             style: TextStyle(
               color: Color(0xFF1E293B),
               fontWeight: FontWeight.bold,

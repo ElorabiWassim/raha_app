@@ -1,68 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import './hosetting.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 import '../../data/models/profile_data.dart';
+import '../../cubits/profile_cubit.dart';
 
-class MyProfileScreen extends StatefulWidget {
-  const MyProfileScreen({super.key});
 
-  @override
-  State<MyProfileScreen> createState() => _MyProfileScreenState();
-}
-
-class _MyProfileScreenState extends State<MyProfileScreen> {
+class MyProfileScreen extends StatelessWidget {
   
-
-  // Profile data
-  ProfileData profileData = ProfileData(
+    ProfileData profileData = ProfileData(
     name: 'Mohamed RGB',
     email: 'Mohammedrgb89@email.com',
     phone: '0555897465',
     address: '123 Main Draria, Algiers, Algeria',
   );
-
   
-
-  void _navigateToPage(String pageName) async {
+  void _navigateToPage(BuildContext context, String pageName) async {
+    final l10n = AppLocalizations.of(context)!;
+    
     if (pageName == 'Edit Profile') {
-      // Navigate to Edit Profile and wait for result
+      final profileCubit = context.read<ProfileCubit>();
       final result = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EditProfileScreen(profileData: profileData),
+          builder: (context) => BlocProvider.value(
+            value: profileCubit,
+            child: EditProfileScreen(profileData: profileData,),
+          ),
         ),
       );
 
-      // If result is returned, update the profile data
       if (result != null && result is ProfileData) {
-        setState(() {
-          profileData = result;
-        });
+        profileCubit.updateProfile(result);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Profile updated successfully!'),
+            content: Text(l10n.profileUpdatedSuccess),
             backgroundColor: Color(0xFF68E36C),
             duration: Duration(seconds: 2),
           ),
         );
       }
     } else if (pageName == 'Settings') {
-      final result = await Navigator.push(
+      final profileCubit = context.read<ProfileCubit>();
+      await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SettingsScreen(profileData: profileData),
+          builder: (context) => BlocProvider.value(
+            value: profileCubit,
+            child: SettingsScreen(profileData:profileData),
+          ),
         ),
       );
-
-      // If result is returned, update the profile data
-      if (result != null && result is ProfileData) {
-        setState(() {
-          profileData = result;
-        });
-      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Navigation to $pageName - Coming Soon'),
+          content: Text('${l10n.navigationTo(pageName)} - ${l10n.comingSoon}'),
           duration: Duration(seconds: 1),
         ),
       );
@@ -71,6 +63,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -79,7 +72,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         shadowColor: Colors.black,
         surfaceTintColor: Colors.transparent,
         title: Text(
-          'My Profile',
+          l10n.myProfile,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
@@ -89,7 +82,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              _navigateToPage('Settings');
+              _navigateToPage(context, 'Settings');
             },
             icon: Icon(Icons.settings_outlined),
             color: Colors.black,
@@ -97,129 +90,135 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         ],
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 55,
-                    backgroundColor: Colors.grey[300],
-                    backgroundImage: AssetImage(
-                      'assets/images/MohammedPicture.png',
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    profileData.name,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    'Verified Homeowner',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Color(0xFF68E36C),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _navigateToPage('Edit Profile');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[200],
-                        foregroundColor: const Color.fromARGB(255, 34, 204, 85),
-                        elevation: 0,
-                        padding: EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+      body: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          final profileData = state.profileData;
+
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 55,
+                        backgroundColor: Colors.grey[300],
+                        backgroundImage: AssetImage(
+                          'assets/images/MohammedPicture.png',
                         ),
                       ),
-                      child: Text(
-                        'Edit Profile',
+                      SizedBox(height: 16),
+                      Text(
+                        profileData.name,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        l10n.verifiedHomeowner,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color(0xFF68E36C),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
+                      SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _navigateToPage(context, 'Edit Profile');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey[200],
+                            foregroundColor: const Color.fromARGB(255, 34, 204, 85),
+                            elevation: 0,
+                            padding: EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            l10n.editProfile,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+
+                SizedBox(height: 12),
+
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Column(
+                    children: [
+                      _buildInfoTile(
+                        icon: Icons.email_outlined,
+                        text: profileData.email,
+                        iconColor: Color(0xFF68E36C),
+                        onTap: () {},
+                      ),
+                      Divider(height: 1, thickness: 1, color: Colors.grey[200]),
+                      _buildInfoTile(
+                        icon: Icons.phone_outlined,
+                        text: profileData.phone,
+                        iconColor: Color(0xFF68E36C),
+                        onTap: () {},
+                      ),
+                      Divider(height: 1, thickness: 1, color: Colors.grey[200]),
+                      _buildInfoTile(
+                        icon: Icons.home_outlined,
+                        text: profileData.address,
+                        iconColor: Color(0xFF68E36C),
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 12),
+
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      _buildMenuTile(
+                        icon: Icons.credit_card_outlined,
+                        text: l10n.paymentMethods,
+                        iconColor: Color(0xFF68E36C),
+                        onTap: () {
+                          _navigateToPage(context, l10n.paymentMethods);
+                        },
+                      ),
+                      Divider(height: 1, thickness: 1, color: Colors.grey[200]),
+                      _buildMenuTile(
+                        icon: Icons.help_outline,
+                        text: l10n.helpSupport,
+                        iconColor: Color(0xFF68E36C),
+                        onTap: () {
+                          _navigateToPage(context, l10n.helpSupport);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 24),
+              ],
             ),
-
-            SizedBox(height: 12),
-
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                children: [
-                  _buildInfoTile(
-                    icon: Icons.email_outlined,
-                    text: profileData.email,
-                    iconColor: Color(0xFF68E36C),
-                    onTap: () {},
-                  ),
-                  Divider(height: 1, thickness: 1, color: Colors.grey[200]),
-                  _buildInfoTile(
-                    icon: Icons.phone_outlined,
-                    text: profileData.phone,
-                    iconColor: Color(0xFF68E36C),
-                    onTap: () {},
-                  ),
-                  Divider(height: 1, thickness: 1, color: Colors.grey[200]),
-                  _buildInfoTile(
-                    icon: Icons.home_outlined,
-                    text: profileData.address,
-                    iconColor: Color(0xFF68E36C),
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 12),
-
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  _buildMenuTile(
-                    icon: Icons.credit_card_outlined,
-                    text: 'Payment Methods',
-                    iconColor: Color(0xFF68E36C),
-                    onTap: () {
-                      _navigateToPage('Payment Methods');
-                    },
-                  ),
-                  Divider(height: 1, thickness: 1, color: Colors.grey[200]),
-                  _buildMenuTile(
-                    icon: Icons.help_outline,
-                    text: 'Help & Support',
-                    iconColor: Color(0xFF68E36C),
-                    onTap: () {
-                      _navigateToPage('Help & Support');
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 24),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -290,13 +289,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       ),
     );
   }
-
 }
 
 // Edit Profile Screen
 class EditProfileScreen extends StatefulWidget {
   final ProfileData profileData;
-
   const EditProfileScreen({super.key, required this.profileData});
 
   @override
@@ -312,13 +309,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with current profile data
-    _nameController = TextEditingController(text: widget.profileData.name);
-    _emailController = TextEditingController(text: widget.profileData.email);
-    _phoneController = TextEditingController(text: widget.profileData.phone);
-    _addressController = TextEditingController(
-      text: widget.profileData.address,
-    );
+    final profileData = context.read<ProfileCubit>().state.profileData;
+    _nameController = TextEditingController(text: profileData.name);
+    _emailController = TextEditingController(text: profileData.email);
+    _phoneController = TextEditingController(text: profileData.phone);
+    _addressController = TextEditingController(text: profileData.address);
   }
 
   @override
@@ -332,6 +327,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -344,7 +341,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          'Edit Profile',
+          l10n.editProfile,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
@@ -360,8 +357,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 20),
-
-              // Profile Picture with Edit Button
               Stack(
                 children: [
                   CircleAvatar(
@@ -386,36 +381,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ],
               ),
-
               SizedBox(height: 40),
-
-              _buildInputField(label: 'Full Name', controller: _nameController),
-
+              _buildInputField(label: l10n.fullName, controller: _nameController),
               SizedBox(height: 24),
               _buildInputField(
-                label: 'Email',
+                label: l10n.email,
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
               ),
-
               SizedBox(height: 24),
-
               _buildInputField(
-                label: 'Phone Number',
+                label: l10n.phoneNumber,
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
               ),
-
               SizedBox(height: 24),
-
               _buildInputField(
-                label: 'Home Address',
+                label: l10n.homeAddress,
                 controller: _addressController,
                 maxLines: 3,
               ),
-
               SizedBox(height: 40),
-
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -431,7 +417,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   child: Text(
-                    'Save Changes',
+                    l10n.saveChanges,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -440,9 +426,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
-
               SizedBox(height: 16),
-
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
@@ -450,7 +434,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    'Cancel',
+                    l10n.cancel,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -459,7 +443,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
-
               SizedBox(height: 20),
             ],
           ),

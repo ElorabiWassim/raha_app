@@ -6,6 +6,7 @@ import './demands.dart';
 import './requests.dart';
 import '../../modules/upgrades/screens/plans.dart';
 import './messages_screen.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 void main() {
   runApp(
@@ -89,6 +90,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: _getPages()[_currentIndex],
       bottomNavigationBar: Container(
@@ -119,27 +122,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               activeIcon: Icon(Icons.home),
-              label: 'Home',
+              label: l10n.home,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.inbox_outlined),
               activeIcon: Icon(Icons.inbox),
-              label: 'Demands',
+              label: l10n.demands,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.check_circle_outline),
               activeIcon: Icon(Icons.check_circle),
-              label: 'Requests',
+              label: l10n.requests,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.message_outlined),
               activeIcon: Icon(Icons.message),
-              label: 'Messages',
+              label: l10n.messages,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.card_membership_outlined),
               activeIcon: Icon(Icons.card_membership),
-              label: 'Plans',
+              label: l10n.plans,
             ),
           ],
         ),
@@ -161,6 +164,7 @@ class ServiceProviderHome extends StatelessWidget {
   });
 
   void _navigateToPage(BuildContext context, String pageName) {
+    final l10n = AppLocalizations.of(context)!;
     Widget? page;
 
     switch (pageName) {
@@ -176,7 +180,7 @@ class ServiceProviderHome extends StatelessWidget {
       case 'Notifications':
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Notifications - Coming Soon'),
+            content: Text(l10n.notificationsComingSoon),
             duration: Duration(seconds: 1),
           ),
         );
@@ -184,7 +188,7 @@ class ServiceProviderHome extends StatelessWidget {
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Navigation to $pageName - Coming Soon'),
+            content: Text('${l10n.navigationTo} $pageName - ${l10n.comingSoon}'),
             duration: Duration(seconds: 1),
           ),
         );
@@ -196,6 +200,8 @@ class ServiceProviderHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -213,7 +219,7 @@ class ServiceProviderHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome back,',
+              l10n.welcomeBack,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
@@ -269,7 +275,7 @@ class ServiceProviderHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProfileCard(context),
-            _buildStatsRow(),
+            _buildStatsRow(context),
             SizedBox(height: 24),
             _buildQuickActions(context),
             SizedBox(height: 24),
@@ -282,6 +288,8 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildProfileCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(20),
@@ -331,7 +339,7 @@ class ServiceProviderHome extends StatelessWidget {
                     ),
                     SizedBox(width: 4),
                     Text(
-                      '(${provider.reviewCount} reviews)',
+                      '(${provider.reviewCount} ${l10n.reviews})',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white.withValues(alpha: 0.9),
@@ -351,7 +359,9 @@ class ServiceProviderHome extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsRow() {
+  Widget _buildStatsRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -360,7 +370,7 @@ class ServiceProviderHome extends StatelessWidget {
             child: _buildStatCard(
               icon: Icons.attach_money,
               value: '${provider.totalEarnings} DA',
-              label: 'Total Earnings',
+              label: l10n.totalEarnings,
               color: Colors.blue,
             ),
           ),
@@ -369,7 +379,7 @@ class ServiceProviderHome extends StatelessWidget {
             child: _buildStatCard(
               icon: Icons.work_outline,
               value: provider.jobsDone,
-              label: 'Jobs Done',
+              label: l10n.jobsDone,
               color: Colors.orange,
             ),
           ),
@@ -425,13 +435,15 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildQuickActions(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'Quick Actions',
+            l10n.quickActions,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -447,7 +459,7 @@ class ServiceProviderHome extends StatelessWidget {
               Expanded(
                 child: _buildActionButton(
                   icon: Icons.add_circle_outline,
-                  label: 'Add Service',
+                  label: l10n.addService,
                   color: Color(0xFF68E36C),
                   onTap: () => _navigateToPage(context, 'Add Service'),
                 ),
@@ -456,7 +468,7 @@ class ServiceProviderHome extends StatelessWidget {
               Expanded(
                 child: _buildActionButton(
                   icon: Icons.edit_outlined,
-                  label: 'Edit Profile',
+                  label: l10n.editProfile,
                   color: Colors.blue,
                   onTap: () => _navigateToPage(context, 'Edit Profile'),
                 ),
@@ -516,6 +528,8 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildServicesSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -525,7 +539,7 @@ class ServiceProviderHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'My Services',
+                l10n.myServices,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -535,7 +549,7 @@ class ServiceProviderHome extends StatelessWidget {
               TextButton(
                 onPressed: () => _navigateToPage(context, 'All Services'),
                 child: Text(
-                  'View All',
+                  l10n.viewAll,
                   style: TextStyle(
                     color: Color(0xFF68E36C),
                     fontWeight: FontWeight.w600,
@@ -562,6 +576,8 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildServiceCard(BuildContext context, Service service) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -602,7 +618,7 @@ class ServiceProviderHome extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  service.isActive ? 'Active' : 'Inactive',
+                  service.isActive ? l10n.active : l10n.inactive,
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
