@@ -12,11 +12,11 @@ class _DemandsPageState extends State<DemandsPage> {
   String? selectedCategory;
   String? selectedWilaya;
 
+  // Hardcoded job data (not localized – dynamic content)
   final List<Map<String, String>> jobs = [
     {
       'title': 'Leaky Kitchen Faucet Repair',
-      'description':
-          'The faucet has been dripping. Needs fixing or replacement.',
+      'description': 'The faucet has been dripping. Needs fixing or replacement.',
       'location': 'Algiers',
       'time': '2h ago',
       'category': 'Plumbing',
@@ -36,6 +36,10 @@ class _DemandsPageState extends State<DemandsPage> {
       'category': 'Electrical',
     },
   ];
+
+  // Static filter options – we’ll localize their display names
+  final List<String> categories = ['Plumbing', 'Electrical', 'Gardening', 'Cleaning'];
+  final List<String> wilayas = ['Algiers', 'Oran', 'Constantine', 'Annaba'];
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +114,6 @@ class _DemandsPageState extends State<DemandsPage> {
                             hint: Text(localizations.demandsCategory),
                             items:
                                 [
-                                      localizations.demandsCategoryPlumbing,
                                       localizations.demandsCategoryElectrical,
                                       localizations.demandsCategoryGardening,
                                       localizations.demandsCategoryCleaning,
@@ -122,10 +125,9 @@ class _DemandsPageState extends State<DemandsPage> {
                                       ),
                                     )
                                     .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCategory = value;
-                              });
+                            hint: Text(l10n.category), // ← LOCALIZED
+                            items: categories.map((category) {
+                              return DropdownMenuItem(
                             },
                           ),
                         ),
@@ -159,25 +161,17 @@ class _DemandsPageState extends State<DemandsPage> {
                             },
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Jobs List
-            Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: jobs.length,
+                itemCount: filteredJobs.length,
                 itemBuilder: (context, index) {
-                  final job = jobs[index];
+                  final job = filteredJobs[index];
                   return JobCard(
                     title: job['title']!,
                     description: job['description']!,
                     location: job['location']!,
                     time: job['time']!,
+                    l10n: l10n,
                   );
                 },
               ),
@@ -187,6 +181,17 @@ class _DemandsPageState extends State<DemandsPage> {
       ),
     );
   }
+
+ 
+  String _getLocalizedCategory(String category, AppLocalizations l10n) {
+    switch (category) {
+      case 'Plumbing': return l10n.plumbing;
+      case 'Electrical': return l10n.electrical;
+      case 'Gardening': return l10n.gardening;
+      case 'Cleaning': return l10n.cleaning;
+      default: return category;
+    }
+  }
 }
 
 class JobCard extends StatelessWidget {
@@ -194,6 +199,7 @@ class JobCard extends StatelessWidget {
   final String description;
   final String location;
   final String time;
+  final AppLocalizations l10n;
 
   const JobCard({
     super.key,
@@ -201,6 +207,7 @@ class JobCard extends StatelessWidget {
     required this.description,
     required this.location,
     required this.time,
+    required this.l10n,
   });
 
   @override
@@ -231,6 +238,7 @@ class JobCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Color(0xFF333333),
             ),
+            softWrap: true,
           ),
           const SizedBox(height: 8),
           Text(

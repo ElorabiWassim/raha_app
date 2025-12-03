@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 import '../../data/models/booking_model.dart';
 import '../themes/app_text_style.dart';
 import 'rate_report_provider_screen.dart';
@@ -8,18 +9,19 @@ class MyBookingsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bookings = _getBookings();
 
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       itemCount: bookings.length,
       itemBuilder: (context, index) {
-        return _buildBookingCard(context, bookings[index]);
+        return _buildBookingCard(context, bookings[index], l10n);
       },
     );
   }
 
-  Widget _buildBookingCard(BuildContext context, Booking booking) {
+  Widget _buildBookingCard(BuildContext context, Booking booking, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -44,7 +46,7 @@ class MyBookingsTab extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(booking.providerImage),
+                  backgroundImage: NetworkImage(booking.providerImage.trim()),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -56,6 +58,7 @@ class MyBookingsTab extends StatelessWidget {
                         style: AppTextStyles.heading5.copyWith(
                           color: AppColors.textDark,
                         ),
+                        softWrap: true,
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -63,12 +66,13 @@ class MyBookingsTab extends StatelessWidget {
                         style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textLight,
                         ),
+                        softWrap: true,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 16),
-                _buildStatusBadge(booking.status),
+                _buildStatusBadge(booking.status, l10n),
               ],
             ),
             Container(
@@ -98,12 +102,10 @@ class MyBookingsTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  height: 36,
-                  constraints: const BoxConstraints(minWidth: 84),
+                SizedBox(
+                  width: 100,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Navigate to Rate screen if booking is completed
                       if (booking.status == BookingStatus.completed) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -112,8 +114,7 @@ class MyBookingsTab extends StatelessWidget {
                           ),
                         );
                       } else {
-                        // Navigate to details screen for other statuses
-                        // TODO: Implement details screen navigation
+                        // TODO: Navigate to booking details
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -127,13 +128,15 @@ class MyBookingsTab extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
-                    child: Text(
-                      booking.status == BookingStatus.completed
-                          ? 'Rate'
-                          : 'Details',
-                      style: AppTextStyles.buttonMedium,
+                    child: FittedBox(
+                      child: Text(
+                        booking.status == BookingStatus.completed
+                            ? l10n.rate
+                            : l10n.details,
+                        style: AppTextStyles.buttonMedium,
+                      ),
                     ),
                   ),
                 ),
@@ -145,7 +148,7 @@ class MyBookingsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(BookingStatus status) {
+  Widget _buildStatusBadge(BookingStatus status, AppLocalizations l10n) {
     Color backgroundColor;
     Color textColor;
     String label;
@@ -154,17 +157,17 @@ class MyBookingsTab extends StatelessWidget {
       case BookingStatus.upcoming:
         backgroundColor = AppColors.statusUpcomingBg;
         textColor = AppColors.statusUpcoming;
-        label = 'Upcoming';
+        label = l10n.upcoming;
         break;
       case BookingStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = 'Completed';
+        label = l10n.completed;
         break;
       case BookingStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = 'Cancelled';
+        label = l10n.cancelled;
         break;
     }
 
@@ -176,6 +179,8 @@ class MyBookingsTab extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: AppTextStyles.caption.copyWith(color: textColor),
       ),
     );
