@@ -509,456 +509,515 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsViewDetails => 'عرض التفاصيل';
 
   @override
-  String get account => 'الحساب';
+  String get account => 'Account';
 
   @override
-  String get updatePersonalInfo => 'تحديث معلوماتك الشخصية';
+  String get updatePersonalInfo => 'Update your personal information';
 
   @override
-  String get changePassword => 'تغيير كلمة المرور';
+  String get changePassword => 'Change Password';
 
   @override
-  String get updatePassword => 'تحديث كلمة المرور الخاصة بك';
+  String get updatePassword => 'Update your password';
 
   @override
-  String get verification => 'التحقق';
+  String get verification => 'Verification';
 
   @override
-  String get verifyAccount => 'تحقق من حسابك';
+  String get verifyAccount => 'Verify your account';
 
   @override
-  String get verified => 'موثق';
+  String get verified => 'Verified';
 
   @override
-  String get notifications => 'الإشعارات';
+  String get notifications => 'Notifications';
 
   @override
-  String get pushNotifications => 'الإشعارات الفورية';
+  String get pushNotifications => 'Push Notifications';
 
   @override
-  String get receivePushNotifications => 'تلقي الإشعارات الفورية';
+  String get receivePushNotifications => 'Receive push notifications';
 
   @override
-  String get emailNotifications => 'إشعارات البريد الإلكتروني';
+  String get emailNotifications => 'Email Notifications';
 
   @override
-  String get receiveEmailNotifications => 'تلقي الإشعارات عبر البريد الإلكتروني';
+  String get receiveEmailNotifications => 'Receive notifications via email';
 
   @override
-  String get smsNotifications => 'إشعارات الرسائل النصية';
+  String get smsNotifications => 'SMS Notifications';
 
   @override
-  String get receiveSmsNotifications => 'تلقي الإشعارات عبر الرسائل النصية';
+  String get receiveSmsNotifications => 'Receive notifications via SMS';
 
   @override
-  String get preferences => 'التفضيلات';
+  String get preferences => 'Preferences';
 
   @override
-  String get darkMode => 'الوضع الداكن';
+  String get darkMode => 'Dark Mode';
 
   @override
-  String get enableDarkTheme => 'تفعيل السمة الداكنة';
+  String get enableDarkTheme => 'Enable dark theme';
 
   @override
-  String get serviceArea => 'منطقة الخدمة';
+  String get serviceArea => 'Service Area';
 
   @override
-  String get supportAbout => 'الدعم والمعلومات';
+  String get supportAbout => 'Support & About';
 
   @override
-  String get helpCenter => 'مركز المساعدة';
+  String get helpCenter => 'Help Center';
 
   @override
-  String get getHelpSupport => 'الحصول على المساعدة والدعم';
+  String get getHelpSupport => 'Get help and support';
 
   @override
-  String get privacyPolicy => 'سياسة الخصوصية';
+  String get privacyPolicy => 'Privacy Policy';
 
   @override
-  String get readPrivacyPolicy => 'اقرأ سياسة الخصوصية الخاصة بنا';
+  String get readPrivacyPolicy => 'Read our privacy policy';
 
   @override
-  String get termsOfService => 'شروط الخدمة';
+  String get termsOfService => 'Terms of Service';
 
   @override
-  String get readTermsOfService => 'اقرأ شروط الخدمة الخاصة بنا';
+  String get readTermsOfService => 'Read our terms of service';
 
   @override
-  String get about => 'حول';
+  String get about => 'About';
 
   @override
-  String get version => 'الإصدار 1.0.0';
+  String get version => 'Version 1.0.0';
 
   @override
-  String get dangerZone => 'منطقة الخطر';
+  String get dangerZone => 'Danger Zone';
 
   @override
-  String get logout => 'تسجيل الخروج';
+  String get logout => 'Logout';
 
   @override
-  String get signOutAccount => 'الخروج من حسابك';
+  String get signOutAccount => 'Sign out of your account';
 
   @override
-  String get deleteAccount => 'حذف الحساب';
+  String get deleteAccount => 'Delete Account';
 
   @override
-  String get permanentlyDeleteAccount => 'حذف حسابك نهائياً';
+  String get permanentlyDeleteAccount => 'Permanently delete your account';
 
   @override
-  String get logoutConfirm => 'هل أنت متأكد من أنك تريد تسجيل الخروج؟';
+  String get logoutConfirm => 'Are you sure you want to logout?';
 
   @override
-  String get deleteAccountConfirm => 'هل أنت متأكد من أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.';
+  String get deleteAccountConfirm => 'Are you sure you want to delete your account? This action cannot be undone.';
 
   @override
-  String get accountDeletionComingSoon => 'حذف الحساب - قريباً';
+  String get accountDeletionComingSoon => 'Account deletion - Coming Soon';
 
   @override
-  String get myAddresses => 'عناويني';
+  String get myAddresses => 'My Addresses';
 
   @override
-  String get twoFactorAuth => 'المصادقة الثنائية';
+  String get twoFactorAuth => 'Two-Factor Authentication';
 
   @override
-  String get contactSupport => 'اتصل بالدعم';
+  String get contactSupport => 'Contact Support';
 
   @override
-  String get securityPrivacy => 'الأمان والخصوصية';
+  String get securityPrivacy => 'SECURITY & PRIVACY';
 
   @override
-  String get greetingWassim => 'سلام وسيم';
+  String get greetingWassim => 'Salam Wassim';
 
   @override
-  String get browseCategories => 'تصفح الفئات';
+  String get browseCategories => 'Browse Categories';
 
   @override
-  String get topRatedNearYou => 'الأعلى تقييماً بالقرب منك';
+  String get topRatedNearYou => 'Top Rated Near You';
 
   @override
-  String get professionalAmineFaiz => 'أمين فايز';
+  String get professionalAmineFaiz => 'Amine Faiz';
 
   @override
-  String get professionMasterPlumber => 'سباك محترف';
+  String get professionMasterPlumber => 'Master Plumber';
 
   @override
-  String get professionalMariaHaniya => 'ماريا حنية';
+  String get professionalMariaHaniya => 'Maria Haniya';
 
   @override
-  String get professionExpertCarpenter => 'نجار خبير';
+  String get professionExpertCarpenter => 'Expert Carpenter';
 
   @override
-  String get professionalAliImem => 'علي إمام';
+  String get professionalAliImem => 'Ali Imem';
 
   @override
-  String get professionGardeningLandscaping => 'البستنة وتنسيق الحدائق';
+  String get professionGardeningLandscaping => 'Gardening & Landscaping';
 
   @override
-  String get profile => 'الملف الشخصي';
+  String get editProfile => 'تعديل الملف الشخصي';
 
   @override
-  String get reviews => 'تقييمات';
+  String get myProfile => 'My Profile';
 
   @override
-  String get message => 'رسالة';
+  String get settings => 'Settings';
 
   @override
-  String get call => 'اتصال';
+  String get verifiedHomeowner => 'Verified Homeowner';
 
   @override
-  String get jobsDone => 'الأعمال المنجزة';
+  String get paymentMethods => 'Payment Methods';
 
   @override
-  String get experience => 'الخبرة';
+  String get helpSupport => 'Help & Support';
 
   @override
-  String get response => 'الاستجابة';
+  String get saveChanges => 'Save Changes';
 
   @override
-  String get backgroundChecked => 'تم فحص السجل';
+  String get cancel => 'Cancel';
 
   @override
-  String get licensedInsured => 'مرخص ومؤمن';
+  String get fullName => 'Full Name';
 
   @override
-  String get services => 'الخدمات';
+  String get email => 'Email';
 
   @override
-  String get reviewsTab => 'التقييمات';
+  String get phoneNumber => 'Phone Number';
 
   @override
-  String get portfolio => 'معرض الأعمال';
+  String get homeAddress => 'Home Address';
 
   @override
-  String get reviewsSummary => 'ملخص التقييمات';
+  String get profileUpdatedSuccess => 'Profile updated successfully!';
 
   @override
-  String get basedOn => 'بناءً على';
+  String get comingSoon => 'Coming Soon';
 
   @override
-  String get portfolioDescription => 'سيتم عرض عناصر معرض الأعمال هنا.';
-
-  @override
-  String get home => 'الرئيسية';
-
-  @override
-  String get demands => 'الطلبات';
-
-  @override
-  String get requests => 'الطلبات المؤكدة';
-
-  @override
-  String get messages => 'الرسائل';
-
-  @override
-  String get plans => 'الخطط';
-
-  @override
-  String get notificationsComingSoon => 'الإشعارات - قريباً';
-
-  @override
-  String navigationTo(Object page) {
-    return 'التنقل إلى $page';
+  String navigationTo(String page) {
+    return 'Navigating to $page';
   }
 
   @override
-  String get comingSoon => 'قريباً';
+  String get language => 'Language';
 
   @override
-  String get welcomeBack => 'مرحباً بعودتك،';
+  String get english => 'English';
 
   @override
-  String get totalEarnings => 'إجمالي الأرباح';
+  String get french => 'French';
 
   @override
-  String get quickActions => 'إجراءات سريعة';
+  String get arabic => 'Arabic';
 
   @override
-  String get addService => 'إضافة خدمة';
+  String get changeLanguage => 'Change Language';
 
   @override
-  String get myServices => 'خدماتي';
+  String languageChanged(String language) {
+    return 'Language changed to $language';
+  }
 
   @override
-  String get viewAll => 'عرض الكل';
+  String get profile => 'Profile';
 
   @override
-  String get active => 'نشط';
+  String get reviews => 'Reviews';
 
   @override
-  String get inactive => 'غير نشط';
+  String get message => 'Message';
 
   @override
-  String get delete => 'حذف';
+  String get call => 'Call';
 
   @override
-  String get accountDeletion => 'حذف الحساب';
+  String get jobsDone => 'Jobs Done';
 
   @override
-  String get languageChangedTo => 'تم تغيير اللغة إلى';
+  String get experience => 'Experience';
 
   @override
-  String get bookings => 'الحجوزات';
+  String get response => 'Response';
 
   @override
-  String get availableServiceProviders => 'مقدمو الخدمات المتاحون';
+  String get backgroundChecked => 'Background Checked';
 
   @override
-  String get selectWilaya => 'اختر الولاية';
+  String get licensedInsured => 'Licensed & Insured';
 
   @override
-  String get dashboard => 'لوحة التحكم';
+  String get services => 'Services';
 
   @override
-  String get applications => 'الطلبات';
+  String get reviewsTab => 'Reviews';
 
   @override
-  String get reports => 'التقارير';
+  String get portfolio => 'Portfolio';
 
   @override
-  String get cleaning => 'التنظيف';
+  String get reviewsSummary => 'Reviews Summary';
 
   @override
-  String get plumbing => 'السباكة';
+  String get basedOn => 'Based on';
 
   @override
-  String get electrical => 'الكهرباء';
+  String get portfolioDescription => 'Portfolio items will be displayed here.';
 
   @override
-  String get gardening => 'البستنة';
+  String get home => 'Home';
 
   @override
-  String get handyman => 'الصيانة';
+  String get demands => 'Demands';
 
   @override
-  String get painting => 'الدهان';
+  String get requests => 'Requests';
 
   @override
-  String get moving => 'النقل';
+  String get messages => 'Messages';
 
   @override
-  String get more => 'المزيد';
+  String get plans => 'Plans';
 
   @override
-  String get selectDate => 'اختر تاريخاً';
+  String get notificationsComingSoon => 'Notifications - Coming Soon';
 
   @override
-  String get cantFindService => 'لا تجد الخدمة المناسبة؟';
+  String get welcomeBack => 'Welcome back,';
 
   @override
-  String get cantFindServiceDescription => 'أخبرنا بما تحتاجه، وسنجد لك\nمحترفاً مناسباً.';
+  String get totalEarnings => 'Total Earnings';
 
   @override
-  String get searchHint => 'ابحث عن خدمة أو مزود خدمة';
+  String get quickActions => 'Quick Actions';
 
   @override
-  String get tfa => 'المصادقة الثنائية';
+  String get addService => 'Add Service';
 
   @override
-  String get myaddress => 'عنواني';
+  String get myServices => 'My Services';
 
   @override
-  String get messagesTitle => 'الرسائل';
+  String get viewAll => 'View All';
 
   @override
-  String get noConversationsYet => 'لا توجد محادثات بعد';
+  String get active => 'Active';
 
   @override
-  String get startBooking => 'ابدأ بحجز خدمة لتبدأ\nالدردشة مع مزوّد الخدمة.';
+  String get inactive => 'Inactive';
 
   @override
-  String get searchInConversation => 'البحث في المحادثة...';
+  String get delete => 'Delete';
 
   @override
-  String get typeYourMessage => 'اكتب رسالتك...';
+  String get accountDeletion => 'Account Deletion';
 
   @override
-  String get reactToMessage => 'ردّ على الرسالة';
+  String get languageChangedTo => 'Language changed to';
 
   @override
-  String get letUsKnowWhatYouNeed => 'أخبرنا بما تحتاجه، وسنجد لك\nمحترفًا لمساعدتك.';
+  String get bookings => 'Bookings';
 
   @override
-  String get openJobs => 'الوظائف المفتوحة';
+  String get availableServiceProviders => 'Available Service Providers';
 
   @override
-  String get searchJobs => 'البحث عن وظائف...';
+  String get selectWilaya => 'Select Wilaya';
 
   @override
-  String get category => 'التصنيف';
+  String get dashboard => 'Dashboard';
 
   @override
-  String get wilaya => 'الولاية';
+  String get applications => 'Applications';
 
   @override
-  String get posted => 'تم النشر منذ';
+  String get reports => 'Reports';
 
   @override
-  String get sendOffer => 'إرسال عرض';
+  String get cleaning => 'Cleaning';
 
   @override
-  String get offerSent => 'تم إرسال العرض!';
+  String get plumbing => 'Plumbing';
 
   @override
-  String get myBookings => 'حجوزاتي';
+  String get electrical => 'Electrical';
 
   @override
-  String get myDemands => 'طلباتي';
+  String get gardening => 'Gardening';
 
   @override
-  String get noDemandsFound => 'لا توجد طلبات';
+  String get handyman => 'Handyman';
 
   @override
-  String get tryAdjustingSearch => 'حاول تعديل بحثك أو المرشحات';
+  String get painting => 'Painting';
 
   @override
-  String get postNewDemand => 'نشر طلب جديد';
+  String get moving => 'Moving';
 
   @override
-  String get searchByTitleOrCategory => 'البحث حسب العنوان أو التصنيف...';
+  String get more => 'More';
 
   @override
-  String get filterAndSort => 'تصفية وفرز';
+  String get selectDate => 'Select a date';
 
   @override
-  String get reset => 'إعادة تعيين';
+  String get cantFindService => 'Can\'t find the right service?';
 
   @override
-  String get sortBy => 'فرز حسب';
+  String get cantFindServiceDescription => 'Tell us what you need, and we\'ll find\nyou the right professional.';
 
   @override
-  String get date => 'التاريخ';
+  String get searchHint => 'Search for a service or provider';
 
   @override
-  String get budget => 'الميزانية';
+  String get tfa => 'Two-Factor Authentication';
 
   @override
-  String get status => 'الحالة';
+  String get myaddress => 'My Address';
 
   @override
-  String get categories => 'التصنيفات';
+  String get messagesTitle => 'Messages';
 
   @override
-  String get carpentry => 'نجارة';
+  String get noConversationsYet => 'No conversations yet';
 
   @override
-  String get budgetRange => 'نطاق الميزانية';
+  String get startBooking => 'Start by booking a service to begin\nchatting with a provider.';
 
   @override
-  String get applyFilters => 'تطبيق المرشحات';
+  String get searchInConversation => 'Search in conversation...';
 
   @override
-  String get all => 'الكل';
+  String get typeYourMessage => 'Type your message...';
 
   @override
-  String get pending => 'قيد الانتظار';
+  String get reactToMessage => 'React to message';
 
   @override
-  String get inProgress => 'قيد التنفيذ';
+  String get letUsKnowWhatYouNeed => 'Let us know what you need, and we\'ll find\na professional to help you.';
 
   @override
-  String get completed => 'مكتمل';
+  String get openJobs => 'Open Jobs';
 
   @override
-  String get cancelled => 'ملغى';
+  String get searchJobs => 'Search jobs...';
 
   @override
-  String serviceProvidersApplied(num count) {
+  String get category => 'Category';
+
+  @override
+  String get wilaya => 'Wilaya';
+
+  @override
+  String get posted => 'Posted';
+
+  @override
+  String get sendOffer => 'Send Offer';
+
+  @override
+  String get offerSent => 'Offer Sent!';
+
+  @override
+  String get myBookings => 'My Bookings';
+
+  @override
+  String get myDemands => 'My Demands';
+
+  @override
+  String get noDemandsFound => 'No demands found';
+
+  @override
+  String get tryAdjustingSearch => 'Try adjusting your search or filters';
+
+  @override
+  String get postNewDemand => 'Post New Demand';
+
+  @override
+  String get searchByTitleOrCategory => 'Search by title or category...';
+
+  @override
+  String get filterAndSort => 'Filter & Sort';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get budget => 'Budget';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get carpentry => 'Carpentry';
+
+  @override
+  String get budgetRange => 'Budget Range';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get inProgress => 'In Progress';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String serviceProvidersApplied(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count مزودي خدمة تقدموا',
-      one: 'مزود خدمة واحد تقدم',
+      other: '$count service providers applied',
+      one: '1 service provider applied',
     );
     return '$_temp0';
   }
 
   @override
-  String get viewRequests => 'عرض الطلبات';
+  String get viewRequests => 'View Requests';
 
   @override
-  String get editDemand => 'تعديل الطلب';
+  String get editDemand => 'Edit Demand';
 
   @override
-  String get cancelDemand => 'إلغاء الطلب';
+  String get cancelDemand => 'Cancel Demand';
 
   @override
-  String get providerHired => 'تم تعيين المزود';
+  String get providerHired => 'Provider Hired';
 
   @override
-  String get viewDetails => 'عرض التفاصيل';
+  String get viewDetails => 'View Details';
 
   @override
-  String get jobFinished => 'تم الانتهاء من العمل';
+  String get jobFinished => 'Job Finished';
 
   @override
-  String get viewInvoice => 'عرض الفاتورة';
+  String get viewInvoice => 'View Invoice';
 
   @override
-  String get upcoming => 'قادم';
+  String get upcoming => 'Upcoming';
 
   @override
-  String get rate => 'تقييم';
+  String get rate => 'Rate';
 
   @override
-  String get details => 'التفاصيل';
+  String get details => 'Details';
 }

@@ -653,10 +653,77 @@ class AppLocalizationsEn extends AppLocalizations {
   String get professionGardeningLandscaping => 'Gardening & Landscaping';
 
   @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get verifiedHomeowner => 'Verified Homeowner';
+
+  @override
+  String get paymentMethods => 'Payment Methods';
+
+  @override
+  String get helpSupport => 'Help & Support';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get homeAddress => 'Home Address';
+
+  @override
+  String get profileUpdatedSuccess => 'Profile updated successfully!';
+
+  @override
+  String get comingSoon => 'Coming Soon';
+
+  @override
+  String navigationTo(String page) {
+    return 'Navigating to $page';
+  }
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get french => 'French';
+
+  @override
+  String get arabic => 'Arabic';
+
+  @override
+  String get changeLanguage => 'Change Language';
+
+  @override
+  String languageChanged(String language) {
+    return 'Language changed to $language';
+  }
+
+  @override
   String get profile => 'Profile';
 
   @override
-  String get reviews => 'reviews';
+  String get reviews => 'Reviews';
 
   @override
   String get message => 'Message';
@@ -716,14 +783,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsComingSoon => 'Notifications - Coming Soon';
 
   @override
-  String navigationTo(Object page) {
-    return 'Navigation to';
-  }
-
-  @override
-  String get comingSoon => 'Coming Soon';
-
-  @override
   String get welcomeBack => 'Welcome back,';
 
   @override
@@ -751,7 +810,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get accountDeletion => 'Account deletion';
+  String get accountDeletion => 'Account Deletion';
 
   @override
   String get languageChangedTo => 'Language changed to';
@@ -802,28 +861,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectDate => 'Select a date';
 
   @override
-  String get cantFindService => 'Can\'t find a service?';
+  String get cantFindService => 'Can\'t find the right service?';
 
   @override
-  String get cantFindServiceDescription => 'Let us know what you need, and we\'ll find\na professional for you.';
+  String get cantFindServiceDescription => 'Tell us what you need, and we\'ll find\nyou the right professional.';
 
   @override
-  String get searchHint => 'Search for a service or a provider';
+  String get searchHint => 'Search for a service or provider';
 
   @override
-  String get tfa => 'Two Factor Authentication';
+  String get tfa => 'Two-Factor Authentication';
 
   @override
-  String get myaddress => 'Myaddress';
+  String get myaddress => 'My Address';
 
   @override
   String get messagesTitle => 'Messages';
 
   @override
-  String get noConversationsYet => 'No Conversations Yet';
+  String get noConversationsYet => 'No conversations yet';
 
   @override
-  String get startBooking => 'Start booking a service to begin\nchatting with a provider.';
+  String get startBooking => 'Start by booking a service to begin\nchatting with a provider.';
 
   @override
   String get searchInConversation => 'Search in conversation...';
@@ -835,7 +894,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reactToMessage => 'React to message';
 
   @override
-  String get letUsKnowWhatYouNeed => 'Let us know what you need, and we\'ll find\na professional for you.';
+  String get letUsKnowWhatYouNeed => 'Let us know what you need, and we\'ll find\na professional to help you.';
 
   @override
   String get openJobs => 'Open Jobs';
@@ -856,7 +915,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sendOffer => 'Send Offer';
 
   @override
-  String get offerSent => 'Offer sent!';
+  String get offerSent => 'Offer Sent!';
 
   @override
   String get myBookings => 'My Bookings';
@@ -922,12 +981,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelled => 'Cancelled';
 
   @override
-  String serviceProvidersApplied(num count) {
+  String serviceProvidersApplied(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count Service Providers Applied',
-      one: '1 Service Provider Applied',
+      other: '$count service providers applied',
+      one: '1 service provider applied',
     );
     return '$_temp0';
   }
@@ -942,13 +1001,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelDemand => 'Cancel Demand';
 
   @override
-  String get providerHired => 'Provider hired';
+  String get providerHired => 'Provider Hired';
 
   @override
   String get viewDetails => 'View Details';
 
   @override
-  String get jobFinished => 'Job finished';
+  String get jobFinished => 'Job Finished';
 
   @override
   String get viewInvoice => 'View Invoice';

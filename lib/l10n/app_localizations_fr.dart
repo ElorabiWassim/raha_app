@@ -512,19 +512,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get account => 'Compte';
 
   @override
-  String get updatePersonalInfo => 'Mettez à jour vos informations personnelles';
+  String get updatePersonalInfo => 'Mettre à jour vos informations personnelles';
 
   @override
-  String get changePassword => 'Changer le Mot de Passe';
+  String get changePassword => 'Changer le mot de passe';
 
   @override
-  String get updatePassword => 'Mettez à jour votre mot de passe';
+  String get updatePassword => 'Mettre à jour votre mot de passe';
 
   @override
   String get verification => 'Vérification';
 
   @override
-  String get verifyAccount => 'Vérifiez votre compte';
+  String get verifyAccount => 'Vérifier votre compte';
 
   @override
   String get verified => 'Vérifié';
@@ -533,13 +533,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifications => 'Notifications';
 
   @override
-  String get pushNotifications => 'Notifications Push';
+  String get pushNotifications => 'Notifications push';
 
   @override
   String get receivePushNotifications => 'Recevoir des notifications push';
 
   @override
-  String get emailNotifications => 'Notifications par Email';
+  String get emailNotifications => 'Notifications par e-mail';
 
   @override
   String get receiveEmailNotifications => 'Recevoir des notifications par e-mail';
@@ -548,7 +548,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get smsNotifications => 'Notifications SMS';
 
   @override
-  String get receiveSmsNotifications => 'Recevoir des notifications par SMS';
+  String get receiveSmsNotifications => 'Recevoir des notifications SMS';
 
   @override
   String get preferences => 'Préférences';
@@ -563,22 +563,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get serviceArea => 'Zone de service';
 
   @override
-  String get supportAbout => 'Support & À Propos';
+  String get supportAbout => 'Support et à propos';
 
   @override
-  String get helpCenter => 'Centre d\'Aide';
+  String get helpCenter => 'Centre d\'aide';
 
   @override
   String get getHelpSupport => 'Obtenir de l\'aide et du support';
 
   @override
-  String get privacyPolicy => 'Politique de Confidentialité';
+  String get privacyPolicy => 'Politique de confidentialité';
 
   @override
   String get readPrivacyPolicy => 'Lire notre politique de confidentialité';
 
   @override
-  String get termsOfService => 'Conditions d\'Utilisation';
+  String get termsOfService => 'Conditions d\'utilisation';
 
   @override
   String get readTermsOfService => 'Lire nos conditions d\'utilisation';
@@ -596,37 +596,37 @@ class AppLocalizationsFr extends AppLocalizations {
   String get logout => 'Déconnexion';
 
   @override
-  String get signOutAccount => 'Déconnectez-vous de votre compte';
+  String get signOutAccount => 'Se déconnecter de votre compte';
 
   @override
-  String get deleteAccount => 'Supprimer le Compte';
+  String get deleteAccount => 'Supprimer le compte';
 
   @override
   String get permanentlyDeleteAccount => 'Supprimer définitivement votre compte';
 
   @override
-  String get logoutConfirm => 'Êtes-vous sûr de vouloir vous déconnecter?';
+  String get logoutConfirm => 'Êtes-vous sûr de vouloir vous déconnecter ?';
 
   @override
   String get deleteAccountConfirm => 'Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.';
 
   @override
-  String get accountDeletionComingSoon => 'Suppression de compte - Bientôt Disponible';
+  String get accountDeletionComingSoon => 'Suppression du compte - Bientôt disponible';
 
   @override
-  String get myAddresses => 'Mes Adresses';
+  String get myAddresses => 'Mes adresses';
 
   @override
-  String get twoFactorAuth => 'Authentification à Deux Facteurs';
+  String get twoFactorAuth => 'Authentification à deux facteurs';
 
   @override
-  String get contactSupport => 'Contacter le Support';
+  String get contactSupport => 'Contacter le support';
 
   @override
-  String get securityPrivacy => 'SÉCURITÉ & CONFIDENTIALITÉ';
+  String get securityPrivacy => 'Sécurité et confidentialité';
 
   @override
-  String get greetingWassim => 'Salam Wassim';
+  String get greetingWassim => 'Bonjour Wassim';
 
   @override
   String get browseCategories => 'Parcourir les catégories';
@@ -638,13 +638,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get professionalAmineFaiz => 'Amine Faiz';
 
   @override
-  String get professionMasterPlumber => 'Maître Plombier';
+  String get professionMasterPlumber => 'Plombier expert';
 
   @override
   String get professionalMariaHaniya => 'Maria Haniya';
 
   @override
-  String get professionExpertCarpenter => 'Menuisier Expert';
+  String get professionExpertCarpenter => 'Charpentier expert';
 
   @override
   String get professionalAliImem => 'Ali Imem';
@@ -653,10 +653,77 @@ class AppLocalizationsFr extends AppLocalizations {
   String get professionGardeningLandscaping => 'Jardinage et aménagement paysager';
 
   @override
+  String get editProfile => 'Modifier le profil';
+
+  @override
+  String get myProfile => 'Mon profil';
+
+  @override
+  String get settings => 'Paramètres';
+
+  @override
+  String get verifiedHomeowner => 'Propriétaire vérifié';
+
+  @override
+  String get paymentMethods => 'Modes de paiement';
+
+  @override
+  String get helpSupport => 'Aide et support';
+
+  @override
+  String get saveChanges => 'Enregistrer les modifications';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get fullName => 'Nom complet';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get homeAddress => 'Adresse du domicile';
+
+  @override
+  String get profileUpdatedSuccess => 'Profil mis à jour avec succès !';
+
+  @override
+  String get comingSoon => 'Bientôt disponible';
+
+  @override
+  String navigationTo(String page) {
+    return 'Navigation vers $page';
+  }
+
+  @override
+  String get language => 'Langue';
+
+  @override
+  String get english => 'Anglais';
+
+  @override
+  String get french => 'Français';
+
+  @override
+  String get arabic => 'Arabe';
+
+  @override
+  String get changeLanguage => 'Changer la langue';
+
+  @override
+  String languageChanged(String language) {
+    return 'Langue changée en $language';
+  }
+
+  @override
   String get profile => 'Profil';
 
   @override
-  String get reviews => 'avis';
+  String get reviews => 'Avis';
 
   @override
   String get message => 'Message';
@@ -674,7 +741,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get response => 'Réponse';
 
   @override
-  String get backgroundChecked => 'Vérification des antécédents';
+  String get backgroundChecked => 'Antécédents vérifiés';
 
   @override
   String get licensedInsured => 'Licencié et assuré';
@@ -695,7 +762,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get basedOn => 'Basé sur';
 
   @override
-  String get portfolioDescription => 'Les éléments du portfolio seront affichés ici';
+  String get portfolioDescription => 'Les éléments du portfolio seront affichés ici.';
 
   @override
   String get home => 'Accueil';
@@ -716,15 +783,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notificationsComingSoon => 'Notifications - Bientôt disponible';
 
   @override
-  String navigationTo(Object page) {
-    return 'Navigation vers';
-  }
-
-  @override
-  String get comingSoon => 'Bientôt disponible';
-
-  @override
-  String get welcomeBack => 'Bon retour,';
+  String get welcomeBack => 'Bienvenue,';
 
   @override
   String get totalEarnings => 'Gains totaux';
@@ -769,7 +828,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dashboard => 'Tableau de bord';
 
   @override
-  String get applications => 'Candidatures';
+  String get applications => 'Applications';
 
   @override
   String get reports => 'Rapports';
@@ -802,10 +861,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectDate => 'Sélectionner une date';
 
   @override
-  String get cantFindService => 'Vous ne trouvez pas de service ?';
+  String get cantFindService => 'Vous ne trouvez pas le bon service ?';
 
   @override
-  String get cantFindServiceDescription => 'Dites-nous ce dont vous avez besoin, et nous trouverons\nun professionnel pour vous.';
+  String get cantFindServiceDescription => 'Dites-nous ce dont vous avez besoin, et nous\ntrouverons le bon professionnel pour vous.';
 
   @override
   String get searchHint => 'Rechercher un service ou un prestataire';
@@ -814,16 +873,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tfa => 'Authentification à deux facteurs';
 
   @override
-  String get myaddress => 'l\'Address';
+  String get myaddress => 'Mon adresse';
 
   @override
   String get messagesTitle => 'Messages';
 
   @override
-  String get noConversationsYet => 'Aucune conversation pour l’instant';
+  String get noConversationsYet => 'Aucune conversation pour le moment';
 
   @override
-  String get startBooking => 'Commencez à réserver un service pour\ncommuniquer avec un prestataire.';
+  String get startBooking => 'Commencez par réserver un service pour\ncommencer à discuter avec un prestataire.';
 
   @override
   String get searchInConversation => 'Rechercher dans la conversation...';
@@ -835,13 +894,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reactToMessage => 'Réagir au message';
 
   @override
-  String get letUsKnowWhatYouNeed => 'Dites-nous ce dont vous avez besoin, et nous trouverons\nun professionnel pour vous.';
+  String get letUsKnowWhatYouNeed => 'Dites-nous ce dont vous avez besoin, et nous\ntrouverons un professionnel pour vous aider.';
 
   @override
-  String get openJobs => 'Offres ouvertes';
+  String get openJobs => 'Emplois ouverts';
 
   @override
-  String get searchJobs => 'Rechercher des offres...';
+  String get searchJobs => 'Rechercher des emplois...';
 
   @override
   String get category => 'Catégorie';
@@ -850,7 +909,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get wilaya => 'Wilaya';
 
   @override
-  String get posted => 'Publié il y a';
+  String get posted => 'Publié';
 
   @override
   String get sendOffer => 'Envoyer une offre';
@@ -901,7 +960,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get carpentry => 'Menuiserie';
 
   @override
-  String get budgetRange => 'Plage de budget';
+  String get budgetRange => 'Fourchette budgétaire';
 
   @override
   String get applyFilters => 'Appliquer les filtres';
@@ -922,12 +981,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancelled => 'Annulé';
 
   @override
-  String serviceProvidersApplied(num count) {
+  String serviceProvidersApplied(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count prestataires ont postulé',
-      one: '1 prestataire a postulé',
+      other: '$count prestataires de services ont postulé',
+      one: '1 prestataire de services a postulé',
     );
     return '$_temp0';
   }
@@ -942,7 +1001,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancelDemand => 'Annuler la demande';
 
   @override
-  String get providerHired => 'Prestataire engagé';
+  String get providerHired => 'Prestataire embauché';
 
   @override
   String get viewDetails => 'Voir les détails';
@@ -957,7 +1016,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get upcoming => 'À venir';
 
   @override
-  String get rate => 'Noter';
+  String get rate => 'Évaluer';
 
   @override
   String get details => 'Détails';

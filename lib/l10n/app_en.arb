@@ -284,9 +284,6 @@
   "@signupAlreadyHaveAccount": {
     "description": "Text before login link"
   },
-
-
-
   "dashboardTitle": "Dashboard",
   "dashboardTotalUsers": "Total Users",
   "dashboardVerifiedSPs": "Verified SPs",
@@ -296,7 +293,6 @@
   "dashboardLogout": "Logout",
   "dashboardLogoutConfirm": "Are you sure you want to logout?",
   "dashboardCancel": "Cancel",
-  
   "demandsTitle": "Open Jobs",
   "demandsSearchHint": "Search jobs...",
   "demandsCategory": "Category",
@@ -308,7 +304,6 @@
   "demandsPosted": "Posted",
   "demandsSendOffer": "Send Offer",
   "demandsOfferSent": "Offer sent!",
-  
   "applicationsTitle": "Provider Applications",
   "applicationsSearchHint": "Search applications...",
   "applicationsApplied": "Applied",
@@ -331,8 +326,6 @@
       }
     }
   },
-
-  
   "plansTitle": "Plans",
   "plansRecommended": "Recommended",
   "plansUpgradeNow": "Upgrade Now",
@@ -344,14 +337,12 @@
       }
     }
   },
-  
   "plansFree": "Free",
   "plansFreePriceValue": "0 DA",
   "plansFreeFeature1": "Create an account and list up to 3 services.",
   "plansFreeFeature2": "List contact information.",
   "plansFreeFeature3": "Lower priority in the listing of services.",
   "plansFreeFeature4": "First 20 providers get Free Plan for 6 months.",
-
   "plansPro": "Pro",
   "plansProPriceValue": "700 DA/month",
   "plansProPeriodValue": "7,000 DA/year",
@@ -371,7 +362,6 @@
   "plansEliteFeature6": "Create and publish posts.",
   "plansEliteFeature7": "Promote services through advertisements in the main feed.",
   "plansEliteFeature8": "Respond to user demands.",
-  
   "verificationTitle": "Document Verification",
   "verificationSubtitle": "Upload your documents for verification",
   "verificationNationalID": "National ID / Passport",
@@ -386,7 +376,6 @@
   "verificationSuccess": "Application Submitted!",
   "verificationSuccessMessage": "We're reviewing your documents. You'll receive a notification within 2-3 business days.",
   "verificationBackToVerification": "Back to Verification",
-  
   "reportsTitle": "Manage Reports",
   "reportsSearchHint": "Search reports...",
   "reportsFilterNew": "New ({count})",
@@ -403,7 +392,6 @@
   "reportsProvider": "PROVIDER",
   "reportsDetails": "Details",
   "reportsResolve": "Resolve",
-  
   "requestsTitle": "Service Requests",
   "requestsTabRequests": "Requests",
   "requestsTabHistory": "History",
@@ -413,7 +401,6 @@
   "requestsAccept": "Accept",
   "requestsDecline": "Decline",
   "requestsViewDetails": "View Details",
-
   "account": "Account",
   "updatePersonalInfo": "Update your personal information",
   "changePassword": "Change Password",
@@ -453,7 +440,7 @@
   "twoFactorAuth": "Two-Factor Authentication",
   "contactSupport": "Contact Support",
   "securityPrivacy": "SECURITY & PRIVACY",
-   "greetingWassim": "Salam Wassim",
+  "greetingWassim": "Salam Wassim",
   "browseCategories": "Browse Categories",
   "topRatedNearYou": "Top Rated Near You",
   "professionalAmineFaiz": "Amine Faiz",
@@ -462,8 +449,44 @@
   "professionExpertCarpenter": "Expert Carpenter",
   "professionalAliImem": "Ali Imem",
   "professionGardeningLandscaping": "Gardening & Landscaping",
+  "editProfile": "Edit Profile",
+  "myProfile": "My Profile",
+  "editProfile": "Edit Profile",
+  "settings": "Settings",
+  "verifiedHomeowner": "Verified Homeowner",
+  "paymentMethods": "Payment Methods",
+  "helpSupport": "Help & Support",
+  "saveChanges": "Save Changes",
+  "cancel": "Cancel",
+  "fullName": "Full Name",
+  "email": "Email",
+  "phoneNumber": "Phone Number",
+  "homeAddress": "Home Address",
+  "profileUpdatedSuccess": "Profile updated successfully!",
+  "comingSoon": "Coming Soon",
+  "navigationTo": "Navigating to {page}",
+  "@navigationTo": {
+    "placeholders": {
+      "page": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "Language",
+  "english": "English",
+  "french": "French",
+  "arabic": "Arabic",
+  "changeLanguage": "Change Language",
+  "languageChanged": "Language changed to {language}",
+  "@languageChanged": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
   "profile": "Profile",
-  "reviews": "reviews",
+  "reviews": "Reviews",
   "message": "Message",
   "call": "Call",
   "jobsDone": "Jobs Done",
@@ -477,14 +500,12 @@
   "reviewsSummary": "Reviews Summary",
   "basedOn": "Based on",
   "portfolioDescription": "Portfolio items will be displayed here.",
-   "home": "Home",
+  "home": "Home",
   "demands": "Demands",
   "requests": "Requests",
   "messages": "Messages",
   "plans": "Plans",
   "notificationsComingSoon": "Notifications - Coming Soon",
-  "navigationTo": "Navigation to",
-  "comingSoon": "Coming Soon",
   "welcomeBack": "Welcome back,",
   "totalEarnings": "Total Earnings",
   "quickActions": "Quick Actions",
@@ -492,29 +513,9 @@
   "myServices": "My Services",
   "viewAll": "View All",
   "active": "Active",
-  "inactive": "Inactive" ,
-  "updatePersonalInfo": "Update your personal information",
-  "updatePassword": "Update your password",
-  "verification": "Verification",
-  "verifyAccount": "Verify your account",
-  "verified": "Verified",
-  "receivePushNotifications": "Receive push notifications",
-  "receiveEmailNotifications": "Receive notifications via email",
-  "receiveSmsNotifications": "Receive notifications via SMS",
-  "darkMode": "Dark Mode",
-  "enableDarkTheme": "Enable dark theme",
-  "serviceArea": "Service Area",
-  "getHelpSupport": "Get help and support",
-  "readPrivacyPolicy": "Read our privacy policy",
-  "readTermsOfService": "Read our terms of service",
-  "about": "About",
-  "version": "Version 1.0.0",
-  "dangerZone": "Danger Zone",
-  "signOutAccount": "Sign out of your account",
-  "permanentlyDeleteAccount": "Permanently delete your account",
-  "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
+  "inactive": "Inactive",
   "delete": "Delete",
-  "accountDeletion": "Account deletion",
+  "accountDeletion": "Account Deletion",
   "languageChangedTo": "Language changed to",
   "bookings": "Bookings",
   "availableServiceProviders": "Available Service Providers",
@@ -531,41 +532,27 @@
   "moving": "Moving",
   "more": "More",
   "selectDate": "Select a date",
-  "cantFindService": "Can't find a service?",
-  "cantFindServiceDescription": "Let us know what you need, and we'll find\na professional for you.",
-  "searchHint": "Search for a service or a provider",
-  "tfa":"Two Factor Authentication",
-  "myaddress":"Myaddress",
+  "cantFindService": "Can't find the right service?",
+  "cantFindServiceDescription": "Tell us what you need, and we'll find\nyou the right professional.",
+  "searchHint": "Search for a service or provider",
+  "tfa": "Two-Factor Authentication",
+  "myaddress": "My Address",
   "messagesTitle": "Messages",
-  "noConversationsYet": "No Conversations Yet",
-  "startBooking": "Start booking a service to begin\nchatting with a provider.",
-  "cleaning": "Cleaning",
-  "plumbing": "Plumbing",
-  "electrical": "Electrical",
-  "gardening": "Gardening",
-  "handyman": "Handyman",
-  "painting": "Painting",
-  "moving": "Moving",
-  "more": "More",
+  "noConversationsYet": "No conversations yet",
+  "startBooking": "Start by booking a service to begin\nchatting with a provider.",
   "searchInConversation": "Search in conversation...",
   "typeYourMessage": "Type your message...",
   "reactToMessage": "React to message",
-  "cantFindService": "Can't find a service?",
-  "letUsKnowWhatYouNeed": "Let us know what you need, and we'll find\na professional for you.",
+  "letUsKnowWhatYouNeed": "Let us know what you need, and we'll find\na professional to help you.",
   "openJobs": "Open Jobs",
   "searchJobs": "Search jobs...",
   "category": "Category",
   "wilaya": "Wilaya",
   "posted": "Posted",
   "sendOffer": "Send Offer",
-  "offerSent": "Offer sent!",
-  "plumbing": "Plumbing",
-  "electrical": "Electrical",
-  "gardening": "Gardening",
-  "cleaning": "Cleaning" ,
-   "myServices": "My Services",
+  "offerSent": "Offer Sent!",
   "myBookings": "My Bookings",
-  "myDemands": "My Demands" ,
+  "myDemands": "My Demands",
   "noDemandsFound": "No demands found",
   "tryAdjustingSearch": "Try adjusting your search or filters",
   "postNewDemand": "Post New Demand",
@@ -585,20 +572,22 @@
   "inProgress": "In Progress",
   "completed": "Completed",
   "cancelled": "Cancelled",
-  "serviceProvidersApplied": "{count, plural, =1{1 Service Provider Applied} other{{count} Service Providers Applied}}",
+  "serviceProvidersApplied": "{count, plural, =1{1 service provider applied} other{{count} service providers applied}}",
+  "@serviceProvidersApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "viewRequests": "View Requests",
   "editDemand": "Edit Demand",
   "cancelDemand": "Cancel Demand",
-  "providerHired": "Provider hired",
+  "providerHired": "Provider Hired",
   "viewDetails": "View Details",
-  "jobFinished": "Job finished",
+  "jobFinished": "Job Finished",
   "viewInvoice": "View Invoice",
   "upcoming": "Upcoming",
-  "completed": "Completed",
-  "cancelled": "Cancelled",
   "rate": "Rate",
   "details": "Details"
-  
-
 }
-
