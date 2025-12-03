@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../data/models/service_provider_model.dart';
 import 'book_service.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class Providerprofile extends StatefulWidget {
   final ServiceProvider serviceProvider;
@@ -60,6 +61,7 @@ class _ProviderprofileState extends State<Providerprofile> {
   @override
   Widget build(BuildContext context) {
     final provider = widget.serviceProvider;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -73,7 +75,7 @@ class _ProviderprofileState extends State<Providerprofile> {
         backgroundColor: Colors.white,
         elevation: 2,
         title: Text(
-          'Profile',
+          l10n.profile,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
@@ -154,7 +156,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                         ),
                         SizedBox(width: 4),
                         Text(
-                          '(${provider.reviewCount} reviews)',
+                          '(${provider.reviewCount} ${l10n.reviews})',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -173,7 +175,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                               color: Colors.grey[700],
                             ),
                             label: Text(
-                              "Message",
+                              l10n.message,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.grey[700],
@@ -195,7 +197,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                             onPressed: () {},
                             icon: Icon(Icons.call, color: Colors.white),
                             label: Text(
-                              "Call",
+                              l10n.call,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
@@ -239,7 +241,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: _buildStat(provider.jobsDone, 'Jobs Done'),
+                              child: _buildStat(provider.jobsDone, l10n.jobsDone),
                             ),
                             VerticalDivider(
                               width: 1,
@@ -249,7 +251,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                             Expanded(
                               child: _buildStat(
                                 provider.experience,
-                                'Experience',
+                                l10n.experience,
                               ),
                             ),
                             VerticalDivider(
@@ -260,7 +262,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                             Expanded(
                               child: _buildStat(
                                 provider.responseTime,
-                                'Response',
+                                l10n.response,
                               ),
                             ),
                           ],
@@ -274,12 +276,12 @@ class _ProviderprofileState extends State<Providerprofile> {
                         children: [
                           _buildBadge(
                             icon: Icons.verified_user,
-                            label: 'Background Checked',
+                            label: l10n.backgroundChecked,
                           ),
                           SizedBox(height: 8),
                           _buildBadge(
                             icon: Icons.shield,
-                            label: 'Licensed & Insured',
+                            label: l10n.licensedInsured,
                           ),
                         ],
                       ),
@@ -293,9 +295,9 @@ class _ProviderprofileState extends State<Providerprofile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildTab("Services", 'services', servicesKey),
-                    _buildTab("Reviews", 'reviews', reviewsKey),
-                    _buildTab("Portfolio", 'portfolio', portfolioKey),
+                    _buildTab(l10n.services, 'services', servicesKey),
+                    _buildTab(l10n.reviewsTab, 'reviews', reviewsKey),
+                    _buildTab(l10n.portfolio, 'portfolio', portfolioKey),
                   ],
                 ),
               ),
@@ -362,7 +364,6 @@ class _ProviderprofileState extends State<Providerprofile> {
             padding: const EdgeInsets.only(bottom: 12),
             child: GestureDetector(
               onTap: () {
-                // Navigate to the details page (replace with your actual page)
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -418,6 +419,8 @@ class _ProviderprofileState extends State<Providerprofile> {
   }
 
   Widget _buildReviewsSection(GlobalKey key, double rating, int reviewCount) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       key: key,
       padding: EdgeInsets.all(16),
@@ -438,7 +441,7 @@ class _ProviderprofileState extends State<Providerprofile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Reviews Summary',
+              l10n.reviewsSummary,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
@@ -463,7 +466,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Based on $reviewCount reviews',
+                      '${l10n.basedOn} $reviewCount ${l10n.reviews}',
                       style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
@@ -521,6 +524,8 @@ class _ProviderprofileState extends State<Providerprofile> {
   }
 
   Widget _buildPortfolioSection(GlobalKey key) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       key: key,
       padding: EdgeInsets.all(16),
@@ -541,12 +546,12 @@ class _ProviderprofileState extends State<Providerprofile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Portfolio',
+              l10n.portfolio,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 12),
             Text(
-              'Portfolio items will be displayed here.',
+              l10n.portfolioDescription,
               style: TextStyle(color: Colors.grey[600]),
             ),
           ],

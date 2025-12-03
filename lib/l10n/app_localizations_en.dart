@@ -30,22 +30,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle1 => 'Find trusted service providers near you.';
 
   @override
-  String get onboardingSubtitle1 =>
-      'Easily book verified local professionals for all your home needs.';
+  String get onboardingSubtitle1 => 'Easily book verified local professionals for all your home needs.';
 
   @override
   String get onboardingTitle2 => 'Schedule & Track your bookings';
 
   @override
-  String get onboardingSubtitle2 =>
-      'Manage your appointments and stay updated on your service.';
+  String get onboardingSubtitle2 => 'Manage your appointments and stay updated on your service.';
 
   @override
   String get onboardingTitle3 => 'Rate & Review Providers';
 
   @override
-  String get onboardingSubtitle3 =>
-      'Share your experience and help others make informed choices.';
+  String get onboardingSubtitle3 => 'Share your experience and help others make informed choices.';
 
   @override
   String get onboardingSkip => 'Skip';
@@ -87,8 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginSignUp => 'Sign Up';
 
   @override
-  String get loginInvalidUsername =>
-      'Invalid username. Please use: homeowner, serviceprovider, or admin';
+  String get loginInvalidUsername => 'Invalid username. Please use: homeowner, serviceprovider, or admin';
 
   @override
   String get roleSelectionTitle => 'Continue as';
@@ -236,4 +232,392 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signupAlreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get verifiedHomeowner => 'Verified Homeowner';
+
+  @override
+  String get paymentMethods => 'Payment Methods';
+
+  @override
+  String get helpSupport => 'Help & Support';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get homeAddress => 'Home Address';
+
+  @override
+  String get profileUpdatedSuccess => 'Profile updated successfully!';
+
+  @override
+  String get comingSoon => 'Coming Soon';
+
+  @override
+  String navigationTo(String page) {
+    return 'Navigation to';
+  }
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get french => 'French';
+
+  @override
+  String get arabic => 'Arabic';
+
+  @override
+  String get changeLanguage => 'Change Language';
+
+  @override
+  String languageChanged(String language) {
+    return 'Language changed to $language';
+  }
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get updatePersonalInfo => 'Update your personal information';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get updatePassword => 'Update your password';
+
+  @override
+  String get verification => 'Verification';
+
+  @override
+  String get verifyAccount => 'Verify your account';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get receivePushNotifications => 'Receive push notifications';
+
+  @override
+  String get emailNotifications => 'Email Notifications';
+
+  @override
+  String get receiveEmailNotifications => 'Receive notifications via email';
+
+  @override
+  String get smsNotifications => 'SMS Notifications';
+
+  @override
+  String get receiveSmsNotifications => 'Receive notifications via SMS';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get enableDarkTheme => 'Enable dark theme';
+
+  @override
+  String get serviceArea => 'Service Area';
+
+  @override
+  String get supportAbout => 'Support & About';
+
+  @override
+  String get helpCenter => 'Help Center';
+
+  @override
+  String get getHelpSupport => 'Get help and support';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get readPrivacyPolicy => 'Read our privacy policy';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get readTermsOfService => 'Read our terms of service';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get version => 'Version 1.0.0';
+
+  @override
+  String get dangerZone => 'Danger Zone';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get signOutAccount => 'Sign out of your account';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get permanentlyDeleteAccount => 'Permanently delete your account';
+
+  @override
+  String get logoutConfirm => 'Are you sure you want to logout?';
+
+  @override
+  String get deleteAccountConfirm => 'Are you sure you want to delete your account? This action cannot be undone.';
+
+  @override
+  String get accountDeletionComingSoon => 'Account deletion - Coming Soon';
+
+  @override
+  String get myAddresses => 'My Addresses';
+
+  @override
+  String get twoFactorAuth => 'Two-Factor Authentication';
+
+  @override
+  String get contactSupport => 'Contact Support';
+
+  @override
+  String get securityPrivacy => 'SECURITY & PRIVACY';
+
+  @override
+  String get greetingWassim => 'Salam Wassim';
+
+  @override
+  String get browseCategories => 'Browse Categories';
+
+  @override
+  String get topRatedNearYou => 'Top Rated Near You';
+
+  @override
+  String get professionalAmineFaiz => 'Amine Faiz';
+
+  @override
+  String get professionMasterPlumber => 'Master Plumber';
+
+  @override
+  String get professionalMariaHaniya => 'Maria Haniya';
+
+  @override
+  String get professionExpertCarpenter => 'Expert Carpenter';
+
+  @override
+  String get professionalAliImem => 'Ali Imem';
+
+  @override
+  String get professionGardeningLandscaping => 'Gardening & Landscaping';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get reviews => 'reviews';
+
+  @override
+  String get message => 'Message';
+
+  @override
+  String get call => 'Call';
+
+  @override
+  String get jobsDone => 'Jobs Done';
+
+  @override
+  String get experience => 'Experience';
+
+  @override
+  String get response => 'Response';
+
+  @override
+  String get backgroundChecked => 'Background Checked';
+
+  @override
+  String get licensedInsured => 'Licensed & Insured';
+
+  @override
+  String get services => 'Services';
+
+  @override
+  String get reviewsTab => 'Reviews';
+
+  @override
+  String get portfolio => 'Portfolio';
+
+  @override
+  String get reviewsSummary => 'Reviews Summary';
+
+  @override
+  String get basedOn => 'Based on';
+
+  @override
+  String get portfolioDescription => 'Portfolio items will be displayed here.';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get demands => 'Demands';
+
+  @override
+  String get requests => 'Requests';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get plans => 'Plans';
+
+  @override
+  String get notificationsComingSoon => 'Notifications - Coming Soon';
+
+  @override
+  String get welcomeBack => 'Welcome back,';
+
+  @override
+  String get totalEarnings => 'Total Earnings';
+
+  @override
+  String get quickActions => 'Quick Actions';
+
+  @override
+  String get addService => 'Add Service';
+
+  @override
+  String get myServices => 'My Services';
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get accountDeletion => 'Account deletion';
+
+  @override
+  String get languageChangedTo => 'Language changed to';
+
+  @override
+  String get bookings => 'Bookings';
+
+  @override
+  String get availableServiceProviders => 'Available Service Providers';
+
+  @override
+  String get selectWilaya => 'Select Wilaya';
+
+  @override
+  String get dashboard => 'Dashboard';
+
+  @override
+  String get applications => 'Applications';
+
+  @override
+  String get reports => 'Reports';
+
+  @override
+  String get cleaning => 'Cleaning';
+
+  @override
+  String get plumbing => 'Plumbing';
+
+  @override
+  String get electrical => 'Electrical';
+
+  @override
+  String get gardening => 'Gardening';
+
+  @override
+  String get handyman => 'Handyman';
+
+  @override
+  String get painting => 'Painting';
+
+  @override
+  String get moving => 'Moving';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get selectDate => 'Select a date';
+
+  @override
+  String get cantFindService => 'Can\'t find a service?';
+
+  @override
+  String get cantFindServiceDescription => 'Let us know what you need, and we\'ll find\na professional for you.';
+
+  @override
+  String get searchHint => 'Search for a service or a provider';
+
+  @override
+  String get tfa => 'Two Factor Authentication';
+
+  @override
+  String get myaddress => 'Myaddress';
+
+  @override
+  String get messagesTitle => 'Messages';
+
+  @override
+  String get noConversationsYet => 'No Conversations Yet';
+
+  @override
+  String get startBooking => 'Start booking a service to begin\nchatting with a provider.';
+
+  @override
+  String get searchInConversation => 'Search in conversation...';
+
+  @override
+  String get typeYourMessage => 'Type your message...';
+
+  @override
+  String get reactToMessage => 'React to message';
+
+  @override
+  String get letUsKnowWhatYouNeed => 'Let us know what you need, and we\'ll find\na professional for you.';
 }

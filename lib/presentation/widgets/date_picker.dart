@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class SimpleDatePicker extends StatefulWidget {
   const SimpleDatePicker({super.key});
@@ -56,6 +57,8 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SizedBox(
       width: 200,
       child: TextFormField(
@@ -63,7 +66,7 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
         readOnly: true,
         onTap: _selectDate,
         decoration: InputDecoration(
-          labelText: 'Select a date',
+          labelText: l10n.selectDate,
           labelStyle: TextStyle(color: Colors.black),
           prefixIcon: const Icon(
             Icons.calendar_today,

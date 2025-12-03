@@ -3,6 +3,7 @@ import '../widgets/search_box.dart';
 import '../widgets/category_list.dart';
 import '../widgets/Home_Demand.dart';
 import '../widgets/proffesionalCardWidget.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class HomeScreenHomeOwner extends StatefulWidget {
   const HomeScreenHomeOwner({super.key});
@@ -14,6 +15,8 @@ class HomeScreenHomeOwner extends StatefulWidget {
 class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -40,7 +43,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
                   Container(
                     margin: EdgeInsets.only(left: 10),
                     child: Text(
-                      "Salam Wassim",
+                      l10n.greetingWassim,
                       style: TextStyle(
                         color: Color(0xFF6E946D),
                         fontSize: 30,
@@ -55,7 +58,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
               Padding(
                 padding: EdgeInsets.only(left: 20, top: 20, bottom: 30),
                 child: Text(
-                  "Browse Categories",
+                  l10n.browseCategories,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
@@ -64,27 +67,27 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
               Padding(
                 padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
                 child: Text(
-                  "Top Rated Near You",
+                  l10n.topRatedNearYou,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
               ProfessionalCard(
-                name: 'Amine Faiz',
-                profession: 'Master Plumber',
+                name: l10n.professionalAmineFaiz,
+                profession: l10n.professionMasterPlumber,
                 rating: 4.9,
                 reviews: 124,
                 imagePath: 'assets/images/JohnDoe.png',
               ),
               ProfessionalCard(
-                name: 'Maria Haniya',
-                profession: 'Expert Carp',
+                name: l10n.professionalMariaHaniya,
+                profession: l10n.professionExpertCarpenter,
                 rating: 5.0,
                 reviews: 88,
                 imagePath: 'assets/images/Maria.png',
               ),
               ProfessionalCard(
-                name: 'Ali Imem',
-                profession: 'Gardening & Landscaping',
+                name: l10n.professionalAliImem,
+                profession: l10n.professionGardeningLandscaping,
                 rating: 4.8,
                 reviews: 150,
                 imagePath: 'assets/images/AliImem.png',

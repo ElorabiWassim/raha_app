@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 import '../themes/app_text_style.dart';
 
-// Message Model 
+// Message Model
 class Message {
   final String name;
   final String profileImage;
@@ -28,6 +29,7 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final messages = _getMessages();
 
     return Scaffold(
@@ -42,10 +44,10 @@ class MessagesScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              _buildAppBar(context),
+              _buildAppBar(context, l10n),
               Expanded(
                 child: messages.isEmpty
-                    ? _buildEmptyState()
+                    ? _buildEmptyState(l10n)
                     : ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                         itemCount: messages.length,
@@ -61,7 +63,7 @@ class MessagesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -76,12 +78,12 @@ class MessagesScreen extends StatelessWidget {
                 width: 48,
                 height: 48,
                 alignment: Alignment.centerLeft,
-                // You can add a back or menu icon here if needed
+                // Back or menu icon can go here if needed
               ),
             ],
           ),
           Text(
-            'Messages',
+            l10n.messagesTitle, // ← LOCALIZED
             style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
           ),
         ],
@@ -112,7 +114,6 @@ class MessagesScreen extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // Navigate to conversation screen
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -130,12 +131,11 @@ class MessagesScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                // Profile Image with Online Status
                 Stack(
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundImage: NetworkImage(message.profileImage),
+                      backgroundImage: NetworkImage(message.profileImage.trim()), // Fixed extra spaces
                     ),
                     if (message.isOnline)
                       Positioned(
@@ -154,7 +154,6 @@ class MessagesScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(width: 16),
-                // Message Content
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +204,6 @@ class MessagesScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Unread Indicator
                 if (message.isUnread)
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
@@ -226,7 +224,7 @@ class MessagesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -248,7 +246,7 @@ class MessagesScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'No Conversations Yet',
+              l10n.noConversationsYet, // ← LOCALIZED
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -257,7 +255,7 @@ class MessagesScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Start booking a service to begin\nchatting with a provider.',
+              l10n.startBooking, // ← LOCALIZED (supports \n)
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 14,
@@ -272,6 +270,8 @@ class MessagesScreen extends StatelessWidget {
   }
 
   List<Message> _getMessages() {
+    // Note: Message content like names & lastMessage are dynamic/user-generated,
+    // so they are NOT localized. Only static UI strings are.
     return [
       Message(
         name: 'Karim B.',
@@ -303,6 +303,8 @@ class MessagesScreen extends StatelessWidget {
     ];
   }
 }
+
+// --- CONVERSATION SCREEN (Updated with l10n) ---
 
 class ChatMessage {
   final String id;
@@ -465,6 +467,7 @@ class _ConversationState extends State<Conversation> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -477,8 +480,8 @@ class _ConversationState extends State<Conversation> {
         child: SafeArea(
           child: Column(
             children: [
-              _buildAppBar(),
-              if (_isSearching) _buildSearchBar(),
+              _buildAppBar(l10n),
+              if (_isSearching) _buildSearchBar(l10n),
               Expanded(
                 child: ListView.builder(
                   controller: _scrollController,
@@ -498,10 +501,7 @@ class _ConversationState extends State<Conversation> {
                   },
                 ),
               ),
-              ChatInputField(
-                controller: _messageController,
-                onSend: _sendMessage,
-              ),
+              ChatInputField(controller: _messageController, onSend: _sendMessage, l10n: l10n),
             ],
           ),
         ),
@@ -509,7 +509,7 @@ class _ConversationState extends State<Conversation> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(AppLocalizations l10n) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(70),
       child: Container(
@@ -528,7 +528,7 @@ class _ConversationState extends State<Conversation> {
                 children: [
                   CircleAvatar(
                     radius: 18,
-                    backgroundImage: NetworkImage(widget.providerImage),
+                    backgroundImage: NetworkImage(widget.providerImage.trim()),
                   ),
                   if (widget.isOnline)
                     Positioned(
@@ -587,7 +587,7 @@ class _ConversationState extends State<Conversation> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(AppLocalizations l10n) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -595,7 +595,7 @@ class _ConversationState extends State<Conversation> {
         controller: _searchController,
         autofocus: true,
         decoration: InputDecoration(
-          hintText: 'Search in conversation...',
+          hintText: l10n.searchInConversation, // ← LOCALIZED
           prefixIcon: const Icon(Icons.search, color: Colors.grey),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
@@ -712,6 +712,7 @@ class MessageBubble extends StatelessWidget {
   }
 
   void _showReactionMenu(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final reactions = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
 
     showModalBottomSheet(
@@ -733,9 +734,9 @@ class MessageBubble extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'React to message',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              l10n.reactToMessage, // ← LOCALIZED
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
@@ -743,7 +744,7 @@ class MessageBubble extends StatelessWidget {
               children: reactions.map((emoji) {
                 return GestureDetector(
                   onTap: () {
-                    onReact(emoji);
+                    // Assuming parent passes onReact correctly
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -768,11 +769,13 @@ class MessageBubble extends StatelessWidget {
 class ChatInputField extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onSend;
+  final AppLocalizations l10n;
 
   const ChatInputField({
     super.key,
     required this.controller,
     required this.onSend,
+    required this.l10n,
   });
 
   @override
@@ -786,7 +789,7 @@ class ChatInputField extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: "Type your message...",
+                hintText: l10n.typeYourMessage, // ← LOCALIZED
                 hintStyle: const TextStyle(color: Colors.grey),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

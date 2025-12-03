@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class ProfessionalCard extends StatelessWidget {
   final String name;
@@ -18,6 +19,8 @@ class ProfessionalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
@@ -35,9 +38,7 @@ class ProfessionalCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(radius: 28, backgroundImage: AssetImage(imagePath)),
-
           const SizedBox(width: 12),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +76,7 @@ class ProfessionalCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "($reviews reviews)",
+                      "($reviews ${l10n.reviews})",
                       style: TextStyle(color: Colors.grey[600], fontSize: 13),
                     ),
                   ],
@@ -83,7 +84,6 @@ class ProfessionalCard extends StatelessWidget {
               ],
             ),
           ),
-
           const Icon(Icons.chevron_right, color: Colors.grey),
         ],
       ),
