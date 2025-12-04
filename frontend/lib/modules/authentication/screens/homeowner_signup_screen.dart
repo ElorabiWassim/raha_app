@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ra7a/l10n/app_localizations.dart';
 import 'login.dart';
 import 'splash.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 const primaryColor = Color(0xFF33AD04);
 const textDark = Color(0xFF333333);
