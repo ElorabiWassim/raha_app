@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import './hosetting.dart';
+import 'hosetting.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../data/models/profile_data.dart';
 import '../../cubits/profile_cubit.dart';
 
-
 class MyProfileScreen extends StatelessWidget {
-  
-    ProfileData profileData = ProfileData(
+  ProfileData profileData = ProfileData(
     name: 'Mohamed RGB',
     email: 'Mohammedrgb89@email.com',
     phone: '0555897465',
     address: '123 Main Draria, Algiers, Algeria',
   );
-  
+
   void _navigateToPage(BuildContext context, String pageName) async {
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (pageName == 'Edit Profile') {
       final profileCubit = context.read<ProfileCubit>();
       final result = await Navigator.push(
@@ -25,7 +23,7 @@ class MyProfileScreen extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => BlocProvider.value(
             value: profileCubit,
-            child: EditProfileScreen(profileData: profileData,),
+            child: EditProfileScreen(profileData: profileData),
           ),
         ),
       );
@@ -47,7 +45,7 @@ class MyProfileScreen extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => BlocProvider.value(
             value: profileCubit,
-            child: SettingsScreen(profileData:profileData),
+            child: SettingsScreen(profileData: profileData),
           ),
         ),
       );
@@ -136,7 +134,12 @@ class MyProfileScreen extends StatelessWidget {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey[200],
-                            foregroundColor: const Color.fromARGB(255, 34, 204, 85),
+                            foregroundColor: const Color.fromARGB(
+                              255,
+                              34,
+                              204,
+                              85,
+                            ),
                             elevation: 0,
                             padding: EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
@@ -382,7 +385,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
               SizedBox(height: 40),
-              _buildInputField(label: l10n.fullName, controller: _nameController),
+              _buildInputField(
+                label: l10n.fullName,
+                controller: _nameController,
+              ),
               SizedBox(height: 24),
               _buildInputField(
                 label: l10n.email,

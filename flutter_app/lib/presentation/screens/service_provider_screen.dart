@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/proffesionalCardWidget.dart';
 import '../../data/models/service_provider_model.dart';
-import './profile.dart';
+import 'profile.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
 class ServiceProviderScreen extends StatelessWidget {

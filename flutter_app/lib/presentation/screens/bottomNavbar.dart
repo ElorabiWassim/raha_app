@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import './home_screen_home_owner.dart';
-import './profilehome.dart';
-import './my_services_screen.dart';
-import './messages_screen.dart';
+import 'home_screen_home_owner.dart';
+import 'profilehome.dart';
+import 'my_services_screen.dart';
+import 'messages_screen.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
 class HomeBottomNav extends StatefulWidget {
@@ -42,7 +42,7 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
       l10n.home,
       l10n.bookings,
       l10n.messages,
-      l10n.profile
+      l10n.profile,
     ];
 
     return Scaffold(
