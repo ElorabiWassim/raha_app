@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/Wilayas.dart';
-import './service_provider_screen.dart';
+import 'service_provider_screen.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
 class WilayaScreen extends StatelessWidget {
