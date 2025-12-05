@@ -12,11 +12,11 @@ class _DemandsPageState extends State<DemandsPage> {
   String? selectedCategory;
   String? selectedWilaya;
 
-  // Hardcoded job data (not localized – dynamic content)
   final List<Map<String, String>> jobs = [
     {
       'title': 'Leaky Kitchen Faucet Repair',
-      'description': 'The faucet has been dripping. Needs fixing or replacement.',
+      'description':
+          'The faucet has been dripping. Needs fixing or replacement.',
       'location': 'Algiers',
       'time': '2h ago',
       'category': 'Plumbing',
@@ -37,16 +37,9 @@ class _DemandsPageState extends State<DemandsPage> {
     },
   ];
 
-  // Static filter options – we’ll localize their display names
-  final List<String> categories = ['Plumbing', 'Electrical', 'Gardening', 'Cleaning'];
-  final List<String> wilayas = ['Algiers', 'Oran', 'Constantine', 'Annaba'];
-
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    // Filter jobs (optional: you can add real filtering later)
-    final filteredJobs = jobs; // TODO: apply selectedCategory & selectedWilaya
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
@@ -61,10 +54,14 @@ class _DemandsPageState extends State<DemandsPage> {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.work, color: Color(0xFF4CAF50), size: 28),
+                      const Icon(
+                        Icons.work,
+                        color: Color(0xFF4CAF50),
+                        size: 28,
+                      ),
                       const SizedBox(width: 12),
                       Text(
-                        l10n.openJobs, // ← LOCALIZED
+                        localizations.demandsTitle,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -77,7 +74,7 @@ class _DemandsPageState extends State<DemandsPage> {
                   // Search Bar
                   TextField(
                     decoration: InputDecoration(
-                      hintText: l10n.searchJobs, // ← LOCALIZED
+                      hintText: localizations.demandsSearchHint,
                       prefixIcon: const Icon(
                         Icons.search,
                         color: Color(0xFF6B7280),
@@ -110,13 +107,21 @@ class _DemandsPageState extends State<DemandsPage> {
                             value: selectedCategory,
                             isExpanded: true,
                             underline: const SizedBox(),
-                            hint: Text(l10n.category), // ← LOCALIZED
-                            items: categories.map((category) {
-                              return DropdownMenuItem(
-                                value: category,
-                                child: Text(_getLocalizedCategory(category, l10n)),
-                              );
-                            }).toList(),
+                            hint: Text(localizations.demandsCategory),
+                            items:
+                                [
+                                      localizations.demandsCategoryPlumbing,
+                                      localizations.demandsCategoryElectrical,
+                                      localizations.demandsCategoryGardening,
+                                      localizations.demandsCategoryCleaning,
+                                    ]
+                                    .map(
+                                      (category) => DropdownMenuItem(
+                                        value: category,
+                                        child: Text(category),
+                                      ),
+                                    )
+                                    .toList(),
                             onChanged: (value) {
                               setState(() {
                                 selectedCategory = value;
@@ -138,13 +143,15 @@ class _DemandsPageState extends State<DemandsPage> {
                             value: selectedWilaya,
                             isExpanded: true,
                             underline: const SizedBox(),
-                            hint: Text(l10n.wilaya), // ← LOCALIZED
-                            items: wilayas.map((wilaya) {
-                              return DropdownMenuItem(
-                                value: wilaya,
-                                child: Text(wilaya), // Wilaya names stay as-is (proper nouns)
-                              );
-                            }).toList(),
+                            hint: Text(localizations.demandsWilaya),
+                            items: ['Algiers', 'Oran', 'Constantine', 'Annaba']
+                                .map(
+                                  (wilaya) => DropdownMenuItem(
+                                    value: wilaya,
+                                    child: Text(wilaya),
+                                  ),
+                                )
+                                .toList(),
                             onChanged: (value) {
                               setState(() {
                                 selectedWilaya = value;
@@ -163,15 +170,14 @@ class _DemandsPageState extends State<DemandsPage> {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: filteredJobs.length,
+                itemCount: jobs.length,
                 itemBuilder: (context, index) {
-                  final job = filteredJobs[index];
+                  final job = jobs[index];
                   return JobCard(
                     title: job['title']!,
                     description: job['description']!,
                     location: job['location']!,
                     time: job['time']!,
-                    l10n: l10n,
                   );
                 },
               ),
@@ -181,17 +187,6 @@ class _DemandsPageState extends State<DemandsPage> {
       ),
     );
   }
-
- 
-  String _getLocalizedCategory(String category, AppLocalizations l10n) {
-    switch (category) {
-      case 'Plumbing': return l10n.plumbing;
-      case 'Electrical': return l10n.electrical;
-      case 'Gardening': return l10n.gardening;
-      case 'Cleaning': return l10n.cleaning;
-      default: return category;
-    }
-  }
 }
 
 class JobCard extends StatelessWidget {
@@ -199,7 +194,6 @@ class JobCard extends StatelessWidget {
   final String description;
   final String location;
   final String time;
-  final AppLocalizations l10n;
 
   const JobCard({
     super.key,
@@ -207,11 +201,12 @@ class JobCard extends StatelessWidget {
     required this.description,
     required this.location,
     required this.time,
-    required this.l10n,
   });
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -236,7 +231,6 @@ class JobCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Color(0xFF333333),
             ),
-            softWrap: true,
           ),
           const SizedBox(height: 8),
           Text(
@@ -262,7 +256,7 @@ class JobCard extends StatelessWidget {
               const Icon(Icons.access_time, size: 16, color: Color(0xFF6B7280)),
               const SizedBox(width: 4),
               Text(
-                '${l10n.posted} $time', // ← LOCALIZED prefix
+                '${localizations.demandsPosted} $time',
                 style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
               ),
             ],
@@ -273,7 +267,7 @@ class JobCard extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.offerSent)), // ← LOCALIZED
+                  SnackBar(content: Text(localizations.demandsOfferSent)),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -286,7 +280,7 @@ class JobCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
               child: Text(
-                l10n.sendOffer, // ← LOCALIZED
+                localizations.demandsSendOffer,
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
