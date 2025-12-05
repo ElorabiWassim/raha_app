@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
-import './onboarding.dart'; // make sure this path is correct
+import 'onboarding.dart'; // make sure this path is correct
 
 class SplashScreen extends StatefulWidget {
   final Function(Locale)? onLocaleChanged;
-  
+
   const SplashScreen({super.key, this.onLocaleChanged});
 
   @override
@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     setState(() {
       _selectedLocale = locale;
     });
-    
+
     // Change the app language
     if (widget.onLocaleChanged != null) {
       widget.onLocaleChanged!(locale);
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
   }
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             children: [
               const Spacer(flex: 2),
-              
+
               // Logo
               Hero(
                 tag: 'appLogo',
@@ -110,9 +110,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Language Selection Title
               Builder(
                 builder: (context) {
@@ -128,14 +128,13 @@ class _SplashScreenState extends State<SplashScreen> {
                           letterSpacing: 0.5,
                         ),
                       ),
-                      
                     ],
                   );
                 },
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Language Buttons
               Builder(
                 builder: (context) {
@@ -144,22 +143,25 @@ class _SplashScreenState extends State<SplashScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Column(
                       children: languages.map((language) {
-                    final isSelected = _selectedLocale?.languageCode == language['code'];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: _LanguageButton(
-                        flag: language['flag'] as String,
-                        name: language['name'] as String,
-                        isSelected: isSelected,
-                        onTap: () => _selectLanguage(Locale(language['code'] as String)),
-                      ),
-                      );
-                    }).toList(),
-                  ),
-                );
-              },
-            ),
-              
+                        final isSelected =
+                            _selectedLocale?.languageCode == language['code'];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _LanguageButton(
+                            flag: language['flag'] as String,
+                            name: language['name'] as String,
+                            isSelected: isSelected,
+                            onTap: () => _selectLanguage(
+                              Locale(language['code'] as String),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+
               const Spacer(flex: 3),
             ],
           ),
@@ -232,27 +234,26 @@ class _LanguageButton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: Text(
-                      flag,
-                      style: const TextStyle(fontSize: 28),
-                    ),
+                    child: Text(flag, style: const TextStyle(fontSize: 28)),
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // Language Name
                 Expanded(
                   child: Text(
                     name,
                     style: GoogleFonts.poppins(
                       fontSize: 18,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w500,
                       color: isSelected ? Colors.white : textDark,
                     ),
                   ),
                 ),
-                
+
                 // Selection Indicator
                 if (isSelected)
                   Container(
