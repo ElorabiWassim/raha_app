@@ -5,21 +5,35 @@ const getProfile = async (req, res) => {
     const userId = req.user.user_id;
     const role = req.user.role;
 
-    let profileData = req.user;
+    let profileData = { ...req.user };
 
-    if (role === 'service_provider') {
+    if (role === 'homeowner') {
+      const { data: homeownerData, error } = await supabase
+        .from('homeowners')
+        .select('*')
+        .eq('homeowner_id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching homeowner profile:', error);
+      }
+
+      if (homeownerData) {
+        profileData = { ...profileData, ...homeownerData };
+      }
+    } else if (role === 'service_provider') {
       const { data: spData, error } = await supabase
         .from('service_providers')
         .select('*')
         .eq('sp_id', userId)
         .single();
-      
-      if (error && error.code !== 'PGRST116') { // Ignore not found if just created
-         console.error('Error fetching SP profile:', error);
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching SP profile:', error);
       }
-      
+
       if (spData) {
-          profileData = { ...profileData, ...spData };
+        profileData = { ...profileData, ...spData };
       }
     }
 
@@ -36,43 +50,67 @@ const updateProfile = async (req, res) => {
     const role = req.user.role;
     const updates = req.body;
 
-    // Separate user table updates from SP table updates
+    // Define which fields belong to which table
+    const userFields = ['full_name', 'phone_number'];
+    const homeownerFields = ['home_address', 'date_of_birth'];
+    const spFields = [
+      'working_address',
+      'date_of_birth',
+      'service_type',
+      'experience_years',
+      'description',
+    ];
+
     const userUpdates = {};
-    const spUpdates = {};
+    const roleUpdates = {};
 
-    const userFields = ['full_name', 'phone', 'avatar_url']; // Add other user fields
-    const spFields = ['business_name', 'category', 'description', 'location', 'years_experience', 'hourly_rate']; // Add other SP fields
+    // Separate updates by table
+    Object.keys(updates).forEach((key) => {
+      if (userFields.includes(key)) {
+        userUpdates[key] = updates[key];
+      }
 
-    Object.keys(updates).forEach(key => {
-        if (userFields.includes(key)) userUpdates[key] = updates[key];
-        if (role === 'service_provider' && spFields.includes(key)) spUpdates[key] = updates[key];
+      if (role === 'homeowner' && homeownerFields.includes(key)) {
+        roleUpdates[key] = updates[key];
+      } else if (role === 'service_provider' && spFields.includes(key)) {
+        roleUpdates[key] = updates[key];
+      }
     });
 
     // Update users table
     if (Object.keys(userUpdates).length > 0) {
-        const { error } = await supabase
-            .from('users')
-            .update(userUpdates)
-            .eq('user_id', userId);
-        
-        if (error) return res.status(400).json({ error: error.message });
-    }
+      const { error } = await supabase
+        .from('users')
+        .update(userUpdates)
+        .eq('user_id', userId);
 
-    // Update service_providers table
-    if (role === 'service_provider' && Object.keys(spUpdates).length > 0) {
-        const { error } = await supabase
-            .from('service_providers')
-            .update(spUpdates)
-            .eq('sp_id', userId);
+      if (error) {
+        console.error('User update error:', error);
+        return res.status(400).json({ error: error.message });
+      }
 
-        if (error) return res.status(400).json({ error: error.message });
-    }
-
-    // Update Auth User Metadata if needed (e.g. full_name)
-    if (userUpdates.full_name) {
+      // Update Auth User Metadata if full_name changed
+      if (userUpdates.full_name) {
         await supabase.auth.updateUser({
-            data: { full_name: userUpdates.full_name }
+          data: { full_name: userUpdates.full_name },
         });
+      }
+    }
+
+    // Update role-specific table
+    if (Object.keys(roleUpdates).length > 0) {
+      const tableName = role === 'homeowner' ? 'homeowners' : 'service_providers';
+      const idField = role === 'homeowner' ? 'homeowner_id' : 'sp_id';
+
+      const { error } = await supabase
+        .from(tableName)
+        .update(roleUpdates)
+        .eq(idField, userId);
+
+      if (error) {
+        console.error(`${tableName} update error:`, error);
+        return res.status(400).json({ error: error.message });
+      }
     }
 
     res.json({ message: 'Profile updated successfully' });
@@ -88,7 +126,7 @@ const changePassword = async (req, res) => {
     if (!newPassword) return res.status(400).json({ error: 'New password required' });
 
     const { error } = await supabase.auth.updateUser({
-      password: newPassword
+      password: newPassword,
     });
 
     if (error) return res.status(400).json({ error: error.message });
@@ -104,20 +142,13 @@ const deleteAccount = async (req, res) => {
   try {
     const userId = req.user.user_id;
 
-    // Delete from DB first (cascade should handle it usually, but let's be safe or rely on Supabase Auth deletion hook if configured)
-    // Here we assume we just delete the Auth user and let Supabase cascade or handle the rest.
-    // However, the admin API is needed to delete a user by ID usually, OR the user can delete themselves.
-    // supabase.auth.admin.deleteUser requires service_role key.
-    // Standard user deletion might not be directly exposed via client lib without admin rights unless configured.
-    // BUT, we are on the backend, so we can use the service key if we initialized supabase with it?
-    // The config/supabase.js uses process.env.SUPABASE_SERVICE_KEY, so we have admin rights!
-    
+    // Delete Auth user (will cascade to other tables if foreign keys are set up properly)
     const { error } = await supabase.auth.admin.deleteUser(userId);
 
-    if (error) return res.status(400).json({ error: error.message });
-
-    // Optionally manually delete from tables if cascade not set up
-    // await supabase.from('users').delete().eq('user_id', userId);
+    if (error) {
+      console.error('Delete user error:', error);
+      return res.status(400).json({ error: error.message });
+    }
 
     res.json({ message: 'Account deleted successfully' });
   } catch (error) {
@@ -130,5 +161,5 @@ module.exports = {
   getProfile,
   updateProfile,
   changePassword,
-  deleteAccount
+  deleteAccount,
 };
