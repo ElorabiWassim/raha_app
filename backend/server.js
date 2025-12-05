@@ -5,6 +5,8 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const spRoutes = require('./routes/sp.routes');
+const loginRoutes = require('./routes/login.routes');
+const homeownerRoutes = require('./routes/homeowner.routes');
 const app = express();
 app.use(helmet());
 app.use(cors());
@@ -12,7 +14,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/sp', spRoutes);
-
+app.use('/api/auth', loginRoutes);
+app.use('/api/ho', homeownerRoutes);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
