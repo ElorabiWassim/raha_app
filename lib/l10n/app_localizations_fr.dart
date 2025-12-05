@@ -239,4 +239,118 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get signupAlreadyHaveAccount => 'Vous avez déjà un compte ? ';
+
+  @override
+  String get myServicesTitle => 'Mes Services';
+
+  @override
+  String get myBookingsTab => 'Mes Réservations';
+
+  @override
+  String get myDemandsTab => 'Mes Demandes';
+
+  @override
+  String get statusUpcoming => 'À venir';
+
+  @override
+  String get statusCompleted => 'Terminé';
+
+  @override
+  String get statusCancelled => 'Annulé';
+
+  @override
+  String get statusPending => 'En attente';
+
+  @override
+  String get statusInProgress => 'En cours';
+
+  @override
+  String get actionRate => 'Évaluer';
+
+  @override
+  String get actionDetails => 'Détails';
+
+  @override
+  String get noDemandsFound => 'Aucune demande trouvée';
+
+  @override
+  String get noDemandsSubtitle =>
+      'Essayez d\'ajuster votre recherche ou vos filtres';
+
+  @override
+  String get postNewDemand => 'Publier une demande';
+
+  @override
+  String get searchPlaceholder => 'Rechercher par titre ou catégorie...';
+
+  @override
+  String get filterAndSort => 'Filtrer et Trier';
+
+  @override
+  String get reset => 'Réinitialiser';
+
+  @override
+  String get sortBy => 'Trier par';
+
+  @override
+  String get sortDate => 'Date';
+
+  @override
+  String get sortBudget => 'Budget';
+
+  @override
+  String get sortStatus => 'Statut';
+
+  @override
+  String get categories => 'Catégories';
+
+  @override
+  String get categoryElectrical => 'Électricité';
+
+  @override
+  String get categoryPlumbing => 'Plomberie';
+
+  @override
+  String get categoryPainting => 'Peinture';
+
+  @override
+  String get categoryCarpentry => 'Menuiserie';
+
+  @override
+  String get categoryCleaning => 'Nettoyage';
+
+  @override
+  String get budgetRange => 'Fourchette de budget';
+
+  @override
+  String get applyFilters => 'Appliquer les filtres';
+
+  @override
+  String get filterAll => 'Tout';
+
+  @override
+  String providersApplied(int count) {
+    return '$count Prestataires ont postulé';
+  }
+
+  @override
+  String get viewRequests => 'Voir les demandes';
+
+  @override
+  String get editDemand => 'Modifier la demande';
+
+  @override
+  String get cancelDemand => 'Annuler la demande';
+
+  @override
+  String get providerHired => 'Prestataire engagé';
+
+  @override
+  String get viewDetails => 'Voir les détails';
+
+  @override
+  String get jobFinished => 'Travail terminé';
+
+  @override
+  String get viewInvoice => 'Voir la facture';
 }

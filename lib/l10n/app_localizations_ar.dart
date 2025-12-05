@@ -235,4 +235,117 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get signupAlreadyHaveAccount => 'لديك حساب بالفعل؟ ';
+
+  @override
+  String get myServicesTitle => 'خدماتي';
+
+  @override
+  String get myBookingsTab => 'حجوزاتي';
+
+  @override
+  String get myDemandsTab => 'طلباتي';
+
+  @override
+  String get statusUpcoming => 'قادم';
+
+  @override
+  String get statusCompleted => 'مكتمل';
+
+  @override
+  String get statusCancelled => 'ملغى';
+
+  @override
+  String get statusPending => 'قيد الانتظار';
+
+  @override
+  String get statusInProgress => 'قيد التنفيذ';
+
+  @override
+  String get actionRate => 'قيم';
+
+  @override
+  String get actionDetails => 'تفاصيل';
+
+  @override
+  String get noDemandsFound => 'لا توجد طلبات';
+
+  @override
+  String get noDemandsSubtitle => 'حاول تعديل البحث أو الفلاتر';
+
+  @override
+  String get postNewDemand => 'نشر طلب جديد';
+
+  @override
+  String get searchPlaceholder => 'البحث بالعنوان أو الفئة...';
+
+  @override
+  String get filterAndSort => 'تصفية وترتيب';
+
+  @override
+  String get reset => 'إعادة تعيين';
+
+  @override
+  String get sortBy => 'ترتيب حسب';
+
+  @override
+  String get sortDate => 'التاريخ';
+
+  @override
+  String get sortBudget => 'الميزانية';
+
+  @override
+  String get sortStatus => 'الحالة';
+
+  @override
+  String get categories => 'الفئات';
+
+  @override
+  String get categoryElectrical => 'كهرباء';
+
+  @override
+  String get categoryPlumbing => 'سباكة';
+
+  @override
+  String get categoryPainting => 'دهان';
+
+  @override
+  String get categoryCarpentry => 'نجارة';
+
+  @override
+  String get categoryCleaning => 'تنظيف';
+
+  @override
+  String get budgetRange => 'نطاق الميزانية';
+
+  @override
+  String get applyFilters => 'تطبيق الفلاتر';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String providersApplied(int count) {
+    return '$count مقدمي خدمات تقدموا';
+  }
+
+  @override
+  String get viewRequests => 'عرض الطلبات';
+
+  @override
+  String get editDemand => 'تعديل الطلب';
+
+  @override
+  String get cancelDemand => 'إلغاء الطلب';
+
+  @override
+  String get providerHired => 'تم توظيف مقدم خدمة';
+
+  @override
+  String get viewDetails => 'عرض التفاصيل';
+
+  @override
+  String get jobFinished => 'انتهت المهمة';
+
+  @override
+  String get viewInvoice => 'عرض الفاتورة';
 }

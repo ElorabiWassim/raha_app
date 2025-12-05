@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/cubits/bookings/bookings_cubit.dart';
+import '../../logic/cubits/demands/demands_cubit.dart';
+import '../../l10n/app_localizations.dart';
 import '../themes/app_text_style.dart';
 import 'my_bookings_tab.dart';
 import 'my_demands_tab.dart';
@@ -15,26 +19,32 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => BookingsCubit()..loadBookings()),
+        BlocProvider(create: (context) => DemandsCubit()..loadDemands()),
+      ],
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              _buildTabSelector(),
-              Expanded(
-                child: _selectedTabIndex == 0
-                    ? const MyBookingsTab()
-                    : const MyDemandsTab(),
-              ),
-            ],
+          child: SafeArea(
+            child: Column(
+              children: [
+                _buildAppBar(),
+                _buildTabSelector(),
+                Expanded(
+                  child: _selectedTabIndex == 0
+                      ? const MyBookingsTab()
+                      : const MyDemandsTab(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -52,7 +62,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           Container(width: 48, height: 48, alignment: Alignment.centerLeft),
           Expanded(
             child: Text(
-              'My Services',
+              AppLocalizations.of(context)!.myServicesTitle,
               textAlign: TextAlign.center,
               style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
             ),
@@ -87,14 +97,14 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           children: [
             Expanded(
               child: _buildTabButton(
-                label: 'My Bookings',
+                label: AppLocalizations.of(context)!.myBookingsTab,
                 isSelected: _selectedTabIndex == 0,
                 onTap: () => setState(() => _selectedTabIndex = 0),
               ),
             ),
             Expanded(
               child: _buildTabButton(
-                label: 'My Demands',
+                label: AppLocalizations.of(context)!.myDemandsTab,
                 isSelected: _selectedTabIndex == 1,
                 onTap: () => setState(() => _selectedTabIndex = 1),
               ),

@@ -283,5 +283,49 @@
   "signupAlreadyHaveAccount": "Already have an account? ",
   "@signupAlreadyHaveAccount": {
     "description": "Text before login link"
-  }
+  },
+  "myServicesTitle": "My Services",
+  "myBookingsTab": "My Bookings",
+  "myDemandsTab": "My Demands",
+  "statusUpcoming": "Upcoming",
+  "statusCompleted": "Completed",
+  "statusCancelled": "Cancelled",
+  "statusPending": "Pending",
+  "statusInProgress": "In Progress",
+  "actionRate": "Rate",
+  "actionDetails": "Details",
+  "noDemandsFound": "No demands found",
+  "noDemandsSubtitle": "Try adjusting your search or filters",
+  "postNewDemand": "Post New Demand",
+  "searchPlaceholder": "Search by title or category...",
+  "filterAndSort": "Filter & Sort",
+  "reset": "Reset",
+  "sortBy": "Sort By",
+  "sortDate": "Date",
+  "sortBudget": "Budget",
+  "sortStatus": "Status",
+  "categories": "Categories",
+  "categoryElectrical": "Electrical",
+  "categoryPlumbing": "Plumbing",
+  "categoryPainting": "Painting",
+  "categoryCarpentry": "Carpentry",
+  "categoryCleaning": "Cleaning",
+  "budgetRange": "Budget Range",
+  "applyFilters": "Apply Filters",
+  "filterAll": "All",
+  "providersApplied": "{count} Service Providers Applied",
+  "@providersApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewRequests": "View Requests",
+  "editDemand": "Edit Demand",
+  "cancelDemand": "Cancel Demand",
+  "providerHired": "Provider hired",
+  "viewDetails": "View Details",
+  "jobFinished": "Job finished",
+  "viewInvoice": "View Invoice"
 }

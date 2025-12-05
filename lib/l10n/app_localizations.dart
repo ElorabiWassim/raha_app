@@ -549,6 +549,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Already have an account? '**
   String get signupAlreadyHaveAccount;
+
+  /// No description provided for @myServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Services'**
+  String get myServicesTitle;
+
+  /// No description provided for @myBookingsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookings'**
+  String get myBookingsTab;
+
+  /// No description provided for @myDemandsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'My Demands'**
+  String get myDemandsTab;
+
+  /// No description provided for @statusUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get statusUpcoming;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get statusInProgress;
+
+  /// No description provided for @actionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get actionRate;
+
+  /// No description provided for @actionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get actionDetails;
+
+  /// No description provided for @noDemandsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No demands found'**
+  String get noDemandsFound;
+
+  /// No description provided for @noDemandsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search or filters'**
+  String get noDemandsSubtitle;
+
+  /// No description provided for @postNewDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'Post New Demand'**
+  String get postNewDemand;
+
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by title or category...'**
+  String get searchPlaceholder;
+
+  /// No description provided for @filterAndSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter & Sort'**
+  String get filterAndSort;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @sortDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get sortDate;
+
+  /// No description provided for @sortBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get sortBudget;
+
+  /// No description provided for @sortStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get sortStatus;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @categoryElectrical.
+  ///
+  /// In en, this message translates to:
+  /// **'Electrical'**
+  String get categoryElectrical;
+
+  /// No description provided for @categoryPlumbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Plumbing'**
+  String get categoryPlumbing;
+
+  /// No description provided for @categoryPainting.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting'**
+  String get categoryPainting;
+
+  /// No description provided for @categoryCarpentry.
+  ///
+  /// In en, this message translates to:
+  /// **'Carpentry'**
+  String get categoryCarpentry;
+
+  /// No description provided for @categoryCleaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get categoryCleaning;
+
+  /// No description provided for @budgetRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Range'**
+  String get budgetRange;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get applyFilters;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @providersApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Service Providers Applied'**
+  String providersApplied(int count);
+
+  /// No description provided for @viewRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'View Requests'**
+  String get viewRequests;
+
+  /// No description provided for @editDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Demand'**
+  String get editDemand;
+
+  /// No description provided for @cancelDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Demand'**
+  String get cancelDemand;
+
+  /// No description provided for @providerHired.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider hired'**
+  String get providerHired;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @jobFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Job finished'**
+  String get jobFinished;
+
+  /// No description provided for @viewInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'View Invoice'**
+  String get viewInvoice;
 }
 
 class _AppLocalizationsDelegate

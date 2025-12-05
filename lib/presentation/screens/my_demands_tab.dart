@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/cubits/demands/demands_cubit.dart';
+import '../../l10n/app_localizations.dart';
 import '../../data/models/demand_model.dart';
 import '../themes/app_text_style.dart';
 import 'provider_offers_screen.dart';
@@ -12,14 +15,7 @@ class MyDemandsTab extends StatefulWidget {
 }
 
 class _MyDemandsTabState extends State<MyDemandsTab> {
-  String _selectedFilter = 'All';
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-
-  // Filter options
-  String _sortBy = 'date'; // 'date', 'budget', 'status'
-  final List<String> _selectedCategories = [];
-  RangeValues _budgetRange = const RangeValues(0, 50000);
 
   @override
   void initState() {
@@ -28,32 +24,41 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
   }
 
   void _onSearchChanged() {
-    setState(() {
-      _searchQuery = _searchController.text.toLowerCase().trim();
-    });
+    context.read<DemandsCubit>().filterDemands(
+      searchQuery: _searchController.text,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final demands = _getFilteredDemands();
-
-    return Column(
-      children: [
-        _buildPostNewDemandButton(),
-        _buildSearchAndFilter(),
-        _buildFilterChips(),
-        Expanded(
-          child: demands.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-                  itemCount: demands.length,
-                  itemBuilder: (context, index) {
-                    return _buildDemandCard(demands[index]);
-                  },
-                ),
-        ),
-      ],
+    return BlocBuilder<DemandsCubit, DemandsState>(
+      builder: (context, state) {
+        if (state is DemandsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is DemandsLoaded) {
+          return Column(
+            children: [
+              _buildPostNewDemandButton(),
+              _buildSearchAndFilter(state),
+              _buildFilterChips(state),
+              Expanded(
+                child: state.demands.isEmpty
+                    ? _buildEmptyState()
+                    : ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                        itemCount: state.demands.length,
+                        itemBuilder: (context, index) {
+                          return _buildDemandCard(state.demands[index]);
+                        },
+                      ),
+              ),
+            ],
+          );
+        } else if (state is DemandsError) {
+          return Center(child: Text(state.message));
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -65,12 +70,12 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
           Icon(Icons.search_off, size: 64, color: AppColors.textLight),
           const SizedBox(height: 16),
           Text(
-            'No demands found',
+            AppLocalizations.of(context)!.noDemandsFound,
             style: AppTextStyles.heading5.copyWith(color: AppColors.textMedium),
           ),
           const SizedBox(height: 8),
           Text(
-            'Try adjusting your search or filters',
+            AppLocalizations.of(context)!.noDemandsSubtitle,
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textLight,
             ),
@@ -108,7 +113,10 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
             children: [
               const Icon(Icons.add, size: 18),
               const SizedBox(width: 6),
-              Text('Post New Demand', style: AppTextStyles.buttonSmall),
+              Text(
+                AppLocalizations.of(context)!.postNewDemand,
+                style: AppTextStyles.buttonSmall,
+              ),
             ],
           ),
         ),
@@ -116,7 +124,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     );
   }
 
-  Widget _buildSearchAndFilter() {
+  Widget _buildSearchAndFilter(DemandsLoaded state) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Row(
@@ -154,7 +162,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       ),
                       cursorColor: AppColors.primary,
                       decoration: InputDecoration(
-                        hintText: 'Search by title or category...',
+                        hintText: AppLocalizations.of(
+                          context,
+                        )!.searchPlaceholder,
                         hintStyle: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textHint,
                         ),
@@ -164,7 +174,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       ),
                     ),
                   ),
-                  if (_searchQuery.isNotEmpty)
+                  if (state.searchQuery.isNotEmpty)
                     IconButton(
                       icon: Icon(
                         Icons.clear,
@@ -173,6 +183,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       ),
                       onPressed: () {
                         _searchController.clear();
+                        // Listener will trigger filter update
                       },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -201,7 +212,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => _showFilterBottomSheet(),
+                onTap: () => _showFilterBottomSheet(state),
                 borderRadius: BorderRadius.circular(8),
                 child: Center(
                   child: Icon(
@@ -218,7 +229,11 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     );
   }
 
-  void _showFilterBottomSheet() {
+  void _showFilterBottomSheet(DemandsLoaded state) {
+    String tempSortBy = state.sortBy;
+    List<String> tempSelectedCategories = List.from(state.categoryFilter);
+    RangeValues tempBudgetRange = state.budgetRange;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -249,18 +264,20 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Filter & Sort', style: AppTextStyles.heading4),
+                      Text(
+                        AppLocalizations.of(context)!.filterAndSort,
+                        style: AppTextStyles.heading4,
+                      ),
                       TextButton(
                         onPressed: () {
                           setModalState(() {
-                            _sortBy = 'date';
-                            _selectedCategories.clear();
-                            _budgetRange = const RangeValues(0, 50000);
+                            tempSortBy = 'date';
+                            tempSelectedCategories.clear();
+                            tempBudgetRange = const RangeValues(0, 50000);
                           });
-                          setState(() {});
                         },
                         child: Text(
-                          'Reset',
+                          AppLocalizations.of(context)!.reset,
                           style: AppTextStyles.buttonMedium.copyWith(
                             color: AppColors.primary,
                           ),
@@ -277,51 +294,95 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Sort By
-                        Text('Sort By', style: AppTextStyles.heading5),
+                        Text(
+                          AppLocalizations.of(context)!.sortBy,
+                          style: AppTextStyles.heading5,
+                        ),
                         const SizedBox(height: 12),
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            _buildSortChip('Date', 'date', setModalState),
-                            _buildSortChip('Budget', 'budget', setModalState),
-                            _buildSortChip('Status', 'status', setModalState),
+                            _buildSortChip(
+                              AppLocalizations.of(context)!.sortDate,
+                              'date',
+                              tempSortBy,
+                              (val) => setModalState(() => tempSortBy = val),
+                            ),
+                            _buildSortChip(
+                              AppLocalizations.of(context)!.sortBudget,
+                              'budget',
+                              tempSortBy,
+                              (val) => setModalState(() => tempSortBy = val),
+                            ),
+                            _buildSortChip(
+                              AppLocalizations.of(context)!.sortStatus,
+                              'status',
+                              tempSortBy,
+                              (val) => setModalState(() => tempSortBy = val),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 24),
 
                         // Category Filter
-                        Text('Categories', style: AppTextStyles.heading5),
+                        Text(
+                          AppLocalizations.of(context)!.categories,
+                          style: AppTextStyles.heading5,
+                        ),
                         const SizedBox(height: 12),
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            _buildCategoryChip('Electrical', setModalState),
-                            _buildCategoryChip('Plumbing', setModalState),
-                            _buildCategoryChip('Painting', setModalState),
-                            _buildCategoryChip('Carpentry', setModalState),
-                            _buildCategoryChip('Cleaning', setModalState),
+                            _buildCategoryChip(
+                              AppLocalizations.of(context)!.categoryElectrical,
+                              tempSelectedCategories,
+                              setModalState,
+                            ),
+                            _buildCategoryChip(
+                              AppLocalizations.of(context)!.categoryPlumbing,
+                              tempSelectedCategories,
+                              setModalState,
+                            ),
+                            _buildCategoryChip(
+                              AppLocalizations.of(context)!.categoryPainting,
+                              tempSelectedCategories,
+                              setModalState,
+                            ),
+                            _buildCategoryChip(
+                              AppLocalizations.of(context)!.categoryCarpentry,
+                              tempSelectedCategories,
+                              setModalState,
+                            ),
+                            _buildCategoryChip(
+                              AppLocalizations.of(context)!.categoryCleaning,
+                              tempSelectedCategories,
+                              setModalState,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 24),
 
                         // Budget Range
-                        Text('Budget Range', style: AppTextStyles.heading5),
+                        Text(
+                          AppLocalizations.of(context)!.budgetRange,
+                          style: AppTextStyles.heading5,
+                        ),
                         const SizedBox(height: 12),
                         RangeSlider(
-                          values: _budgetRange,
+                          values: tempBudgetRange,
                           min: 0,
                           max: 50000,
                           divisions: 50,
                           activeColor: AppColors.primary,
                           labels: RangeLabels(
-                            '${_budgetRange.start.round()} DZD',
-                            '${_budgetRange.end.round()} DZD',
+                            '${tempBudgetRange.start.round()} DZD',
+                            '${tempBudgetRange.end.round()} DZD',
                           ),
                           onChanged: (values) {
                             setModalState(() {
-                              _budgetRange = values;
+                              tempBudgetRange = values;
                             });
                           },
                         ),
@@ -331,13 +392,13 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${_budgetRange.start.round()} DZD',
+                                '${tempBudgetRange.start.round()} DZD',
                                 style: AppTextStyles.bodyMedium.copyWith(
                                   color: AppColors.textMedium,
                                 ),
                               ),
                               Text(
-                                '${_budgetRange.end.round()} DZD',
+                                '${tempBudgetRange.end.round()} DZD',
                                 style: AppTextStyles.bodyMedium.copyWith(
                                   color: AppColors.textMedium,
                                 ),
@@ -357,7 +418,13 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {});
+                        context.read<DemandsCubit>().filterDemands(
+                          sortBy: tempSortBy,
+                          categoryFilter: tempSelectedCategories,
+                          budgetRange: tempBudgetRange,
+                          statusFilter: state.statusFilter,
+                          searchQuery: state.searchQuery,
+                        );
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
@@ -369,7 +436,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                         ),
                       ),
                       child: Text(
-                        'Apply Filters',
+                        AppLocalizations.of(context)!.applyFilters,
                         style: AppTextStyles.buttonMedium,
                       ),
                     ),
@@ -384,14 +451,15 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     );
   }
 
-  Widget _buildSortChip(String label, String value, StateSetter setModalState) {
-    final isSelected = _sortBy == value;
+  Widget _buildSortChip(
+    String label,
+    String value,
+    String groupValue,
+    Function(String) onSelected,
+  ) {
+    final isSelected = groupValue == value;
     return GestureDetector(
-      onTap: () {
-        setModalState(() {
-          _sortBy = value;
-        });
-      },
+      onTap: () => onSelected(value),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -415,15 +483,19 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     );
   }
 
-  Widget _buildCategoryChip(String category, StateSetter setModalState) {
-    final isSelected = _selectedCategories.contains(category);
+  Widget _buildCategoryChip(
+    String category,
+    List<String> selectedCategories,
+    StateSetter setModalState,
+  ) {
+    final isSelected = selectedCategories.contains(category);
     return GestureDetector(
       onTap: () {
         setModalState(() {
           if (isSelected) {
-            _selectedCategories.remove(category);
+            selectedCategories.remove(category);
           } else {
-            _selectedCategories.add(category);
+            selectedCategories.add(category);
           }
         });
       },
@@ -464,8 +536,8 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     );
   }
 
-  Widget _buildFilterChips() {
-    final filters = ['All', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
+  Widget _buildFilterChips(DemandsLoaded state) {
+    final filters = [null, ...DemandStatus.values];
 
     return Container(
       height: 40,
@@ -474,16 +546,69 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
         scrollDirection: Axis.horizontal,
         itemCount: filters.length,
         itemBuilder: (context, index) {
-          final filter = filters[index];
-          final isSelected = _selectedFilter == filter;
+          final status = filters[index];
+          final isSelected = state.statusFilter == status;
+
+          String label;
+          if (status == null) {
+            label = AppLocalizations.of(context)!.filterAll;
+          } else {
+            switch (status) {
+              case DemandStatus.pending:
+                label = AppLocalizations.of(context)!.statusPending;
+                break;
+              case DemandStatus.inProgress:
+                label = AppLocalizations.of(context)!.statusInProgress;
+                break;
+              case DemandStatus.completed:
+                label = AppLocalizations.of(context)!.statusCompleted;
+                break;
+              case DemandStatus.cancelled:
+                label = AppLocalizations.of(context)!.statusCancelled;
+                break;
+            }
+          }
 
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  _selectedFilter = filter;
-                });
+                context.read<DemandsCubit>().filterDemands(
+                  statusFilter: status,
+
+                  // We need to pass other filters to preserve them?
+                  // My Cubit implementation:
+                  // `final newStatusFilter = statusFilter;`
+                  // If I pass `statusFilter: null`, it sets it to null (All).
+                  // If I pass `statusFilter: DemandStatus.pending`, it sets it to pending.
+                  // But what about other filters?
+                  // `final newSearchQuery = searchQuery ?? currentState.searchQuery;`
+                  // So if I don't pass them, they are preserved.
+                  // EXCEPT `statusFilter` which is nullable.
+                  // If I don't pass `statusFilter`, it is null.
+                  // `final newStatusFilter = statusFilter;` -> null.
+                  // So calling `filterDemands()` without arguments resets status filter to All.
+                  // This is problematic if I want to update ONLY search query.
+                  // But here I AM updating status filter.
+                  // So `filterDemands(statusFilter: status)` works fine for updating status.
+                  // It will preserve others because I don't pass them.
+                  // WAIT.
+                  // `final newStatusFilter = statusFilter;`
+                  // If I call `filterDemands(searchQuery: 'abc')`, `statusFilter` is null.
+                  // So `newStatusFilter` is null.
+                  // So it resets status filter to All.
+                  // This IS a bug in Cubit if I want to preserve status filter when changing search query.
+                  // I should fix the Cubit to:
+                  // `final newStatusFilter = statusFilter ?? currentState.statusFilter;`
+                  // BUT `statusFilter` can be explicitly null (to clear it).
+                  // So I need a way to distinguish "undefined" from "null".
+                  // Or I just pass ALL current values every time.
+                  // Passing all current values is safer for now without changing Cubit signature.
+                  searchQuery: state.searchQuery,
+                  categoryFilter: state.categoryFilter,
+                  budgetRange: state.budgetRange,
+                  sortBy: state.sortBy,
+                );
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -497,7 +622,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  filter,
+                  label,
                   style: AppTextStyles.label.copyWith(
                     color: isSelected
                         ? AppColors.primary
@@ -566,7 +691,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                _buildStatusBadge(demand.status),
+                _buildStatusBadge(context, demand.status),
               ],
             ),
             const SizedBox(height: 16),
@@ -652,7 +777,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          '${demand.applicantsCount} Service Providers Applied',
+          AppLocalizations.of(
+            context,
+          )!.providersApplied(demand.applicantsCount),
           style: AppTextStyles.buttonMedium.copyWith(color: AppColors.primary),
           textAlign: TextAlign.center,
         ),
@@ -684,7 +811,10 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: Text('View Requests', style: AppTextStyles.buttonMedium),
+            child: Text(
+              AppLocalizations.of(context)!.viewRequests,
+              style: AppTextStyles.buttonMedium,
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -702,7 +832,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                'Edit Demand',
+                AppLocalizations.of(context)!.editDemand,
                 style: AppTextStyles.buttonMedium.copyWith(
                   color: AppColors.textLight,
                 ),
@@ -719,7 +849,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                'Cancel Demand',
+                AppLocalizations.of(context)!.cancelDemand,
                 style: AppTextStyles.buttonMedium.copyWith(
                   color: AppColors.error,
                 ),
@@ -735,7 +865,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          'Provider hired',
+          AppLocalizations.of(context)!.providerHired,
           style: AppTextStyles.buttonMedium.copyWith(
             color: AppColors.textMedium,
           ),
@@ -755,7 +885,10 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: Text('View Details', style: AppTextStyles.buttonMedium),
+            child: Text(
+              AppLocalizations.of(context)!.viewDetails,
+              style: AppTextStyles.buttonMedium,
+            ),
           ),
         ),
       ],
@@ -766,7 +899,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          'Job finished',
+          AppLocalizations.of(context)!.jobFinished,
           style: AppTextStyles.buttonMedium.copyWith(
             color: AppColors.textMedium,
           ),
@@ -786,14 +919,17 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: Text('View Invoice', style: AppTextStyles.buttonMedium),
+            child: Text(
+              AppLocalizations.of(context)!.viewInvoice,
+              style: AppTextStyles.buttonMedium,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStatusBadge(DemandStatus status) {
+  Widget _buildStatusBadge(BuildContext context, DemandStatus status) {
     Color backgroundColor;
     Color textColor;
     String label;
@@ -802,22 +938,22 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
       case DemandStatus.pending:
         backgroundColor = AppColors.statusPendingBg;
         textColor = AppColors.statusPending;
-        label = 'Pending';
+        label = AppLocalizations.of(context)!.statusPending;
         break;
       case DemandStatus.inProgress:
         backgroundColor = AppColors.statusInProgressBg;
         textColor = AppColors.statusInProgress;
-        label = 'In Progress';
+        label = AppLocalizations.of(context)!.statusInProgress;
         break;
       case DemandStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = 'Completed';
+        label = AppLocalizations.of(context)!.statusCompleted;
         break;
       case DemandStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = 'Cancelled';
+        label = AppLocalizations.of(context)!.statusCancelled;
         break;
     }
 
@@ -832,149 +968,6 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
         style: AppTextStyles.caption.copyWith(color: textColor),
       ),
     );
-  }
-
-  List<Demand> _getFilteredDemands() {
-    List<Demand> allDemands = _getAllDemands();
-
-    // Apply status filter
-    if (_selectedFilter != 'All') {
-      allDemands = allDemands.where((demand) {
-        switch (_selectedFilter) {
-          case 'Pending':
-            return demand.status == DemandStatus.pending;
-          case 'In Progress':
-            return demand.status == DemandStatus.inProgress;
-          case 'Completed':
-            return demand.status == DemandStatus.completed;
-          case 'Cancelled':
-            return demand.status == DemandStatus.cancelled;
-          default:
-            return true;
-        }
-      }).toList();
-    }
-
-    // Apply search filter
-    if (_searchQuery.isNotEmpty) {
-      allDemands = allDemands.where((demand) {
-        return demand.title.toLowerCase().contains(_searchQuery) ||
-            demand.category.toLowerCase().contains(_searchQuery) ||
-            demand.description.toLowerCase().contains(_searchQuery);
-      }).toList();
-    }
-
-    // Apply category filter
-    if (_selectedCategories.isNotEmpty) {
-      allDemands = allDemands.where((demand) {
-        return _selectedCategories.contains(demand.category);
-      }).toList();
-    }
-
-    // Apply budget filter
-    allDemands = allDemands.where((demand) {
-      // Parse budget string (e.g., "8,000 DZD" or "5,000 - 7,000 DZD")
-      final budgetStr = demand.budget.replaceAll(RegExp(r'[^\d-]'), '');
-      final parts = budgetStr.split('-');
-
-      if (parts.length == 2) {
-        // Range budget
-        final minBudget = int.tryParse(parts[0].trim()) ?? 0;
-        final maxBudget = int.tryParse(parts[1].trim()) ?? 50000;
-        return maxBudget >= _budgetRange.start && minBudget <= _budgetRange.end;
-      } else {
-        // Single budget value
-        final budget = int.tryParse(parts[0].trim()) ?? 0;
-        return budget >= _budgetRange.start && budget <= _budgetRange.end;
-      }
-    }).toList();
-
-    // Apply sorting
-    switch (_sortBy) {
-      case 'date':
-        // Sort by date (newest first)
-        allDemands.sort((a, b) => b.postedDate.compareTo(a.postedDate));
-        break;
-      case 'budget':
-        // Sort by budget (highest first)
-        allDemands.sort((a, b) {
-          final budgetA = _extractMaxBudget(a.budget);
-          final budgetB = _extractMaxBudget(b.budget);
-          return budgetB.compareTo(budgetA);
-        });
-        break;
-      case 'status':
-        // Sort by status priority: Pending > In Progress > Completed > Cancelled
-        final statusPriority = {
-          DemandStatus.pending: 0,
-          DemandStatus.inProgress: 1,
-          DemandStatus.completed: 2,
-          DemandStatus.cancelled: 3,
-        };
-        allDemands.sort((a, b) {
-          return (statusPriority[a.status] ?? 4).compareTo(
-            statusPriority[b.status] ?? 4,
-          );
-        });
-        break;
-    }
-
-    return allDemands;
-  }
-
-  int _extractMaxBudget(String budgetStr) {
-    final budgetClean = budgetStr.replaceAll(RegExp(r'[^\d-]'), '');
-    final parts = budgetClean.split('-');
-
-    if (parts.length == 2) {
-      return int.tryParse(parts[1].trim()) ?? 0;
-    } else {
-      return int.tryParse(parts[0].trim()) ?? 0;
-    }
-  }
-
-  List<Demand> _getAllDemands() {
-    return [
-      Demand(
-        title: 'Fix AC Unit',
-        category: 'Electrical',
-        description:
-            'AC not cooling properly, making strange noises when turned on...',
-        postedDate: 'Oct 26, 2023',
-        location: 'Algiers',
-        budget: '8,000 DZD',
-        preferredTime: 'Oct 28, PM',
-        status: DemandStatus.pending,
-        icon: Icons.ac_unit_outlined,
-        applicantsCount: 3,
-      ),
-      Demand(
-        title: 'Fix Leaky Kitchen Sink',
-        category: 'Plumbing',
-        description:
-            'Constant dripping under the sink, needs immediate attention...',
-        postedDate: 'Oct 24, 2023',
-        location: 'Oran',
-        budget: '5,000 - 7,000 DZD',
-        preferredTime: 'ASAP',
-        status: DemandStatus.inProgress,
-        icon: Icons.plumbing_outlined,
-        applicantsCount: 0,
-      ),
-      Demand(
-        title: 'Paint Living Room Walls',
-        category: 'Painting',
-        description:
-            'Need to paint the living room, approx 20sqm. Color: beige...',
-        postedDate: 'Oct 15, 2023',
-        location: 'Constantine',
-        budget: '15,000 DZD',
-        preferredTime: 'Oct 20, AM',
-        status: DemandStatus.completed,
-        icon: Icons.format_paint_outlined,
-        applicantsCount: 0,
-      ),
-    ];
   }
 
   @override

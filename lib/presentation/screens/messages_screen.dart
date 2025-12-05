@@ -1,35 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../data/models/chat_message.dart';
+import '../../data/models/message.dart';
+import '../../logic/cubits/messages/messages_cubit.dart';
+import '../../logic/cubits/messages/messages_state.dart';
 import '../themes/app_text_style.dart';
-
-// Message Model 
-class Message {
-  final String name;
-  final String profileImage;
-  final String lastMessage;
-  final String service;
-  final String time;
-  final bool isUnread;
-  final bool isOnline;
-
-  Message({
-    required this.name,
-    required this.profileImage,
-    required this.lastMessage,
-    required this.service,
-    required this.time,
-    this.isUnread = false,
-    this.isOnline = false,
-  });
-}
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final messages = _getMessages();
+    return BlocProvider(
+      create: (context) => MessagesCubit()..loadMessages(),
+      child: const _MessagesScreenContent(),
+    );
+  }
+}
 
+class _MessagesScreenContent extends StatelessWidget {
+  const _MessagesScreenContent();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -44,15 +38,30 @@ class MessagesScreen extends StatelessWidget {
             children: [
               _buildAppBar(context),
               Expanded(
-                child: messages.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
+                child: BlocBuilder<MessagesCubit, MessagesState>(
+                  builder: (context, state) {
+                    if (state is MessagesLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is MessagesLoaded) {
+                      if (state.messages.isEmpty) {
+                        return _buildEmptyState();
+                      }
+                      return ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                        itemCount: messages.length,
+                        itemCount: state.messages.length,
                         itemBuilder: (context, index) {
-                          return _buildMessageCard(context, messages[index]);
+                          return _buildMessageCard(
+                            context,
+                            state.messages[index],
+                          );
                         },
-                      ),
+                      );
+                    } else if (state is MessagesError) {
+                      return Center(child: Text(state.message));
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ],
           ),
@@ -270,54 +279,6 @@ class MessagesScreen extends StatelessWidget {
       ),
     );
   }
-
-  List<Message> _getMessages() {
-    return [
-      Message(
-        name: 'Karim B.',
-        profileImage: 'https://i.pravatar.cc/150?img=12',
-        lastMessage: 'I will be there in 15 minutes...',
-        service: 'Cleaning',
-        time: '10:45 AM',
-        isUnread: true,
-        isOnline: true,
-      ),
-      Message(
-        name: 'Amina Z.',
-        profileImage: 'https://i.pravatar.cc/150?img=47',
-        lastMessage: 'Thank you for the great work!',
-        service: 'Plumbing',
-        time: 'Yesterday',
-        isUnread: false,
-        isOnline: false,
-      ),
-      Message(
-        name: 'Yacine M.',
-        profileImage: 'https://i.pravatar.cc/150?img=33',
-        lastMessage: 'Can you come on Wednesday instead?',
-        service: 'Gardening',
-        time: 'Wed',
-        isUnread: false,
-        isOnline: false,
-      ),
-    ];
-  }
-}
-
-class ChatMessage {
-  final String id;
-  final String text;
-  final bool isMe;
-  final String time;
-  final List<String> reactions;
-
-  ChatMessage({
-    required this.id,
-    required this.text,
-    required this.isMe,
-    required this.time,
-    this.reactions = const [],
-  });
 }
 
 class Conversation extends StatefulWidget {

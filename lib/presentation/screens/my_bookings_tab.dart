@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/cubits/bookings/bookings_cubit.dart';
+import '../../l10n/app_localizations.dart';
 import '../../data/models/booking_model.dart';
 import '../themes/app_text_style.dart';
 import 'rate_report_provider_screen.dart';
@@ -8,13 +11,22 @@ class MyBookingsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bookings = _getBookings();
-
-    return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-      itemCount: bookings.length,
-      itemBuilder: (context, index) {
-        return _buildBookingCard(context, bookings[index]);
+    return BlocBuilder<BookingsCubit, BookingsState>(
+      builder: (context, state) {
+        if (state is BookingsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is BookingsLoaded) {
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+            itemCount: state.bookings.length,
+            itemBuilder: (context, index) {
+              return _buildBookingCard(context, state.bookings[index]);
+            },
+          );
+        } else if (state is BookingsError) {
+          return Center(child: Text(state.message));
+        }
+        return const SizedBox.shrink();
       },
     );
   }
@@ -68,7 +80,7 @@ class MyBookingsTab extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                _buildStatusBadge(booking.status),
+                _buildStatusBadge(context, booking.status),
               ],
             ),
             Container(
@@ -131,8 +143,8 @@ class MyBookingsTab extends StatelessWidget {
                     ),
                     child: Text(
                       booking.status == BookingStatus.completed
-                          ? 'Rate'
-                          : 'Details',
+                          ? AppLocalizations.of(context)!.actionRate
+                          : AppLocalizations.of(context)!.actionDetails,
                       style: AppTextStyles.buttonMedium,
                     ),
                   ),
@@ -145,7 +157,7 @@ class MyBookingsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(BookingStatus status) {
+  Widget _buildStatusBadge(BuildContext context, BookingStatus status) {
     Color backgroundColor;
     Color textColor;
     String label;
@@ -154,17 +166,17 @@ class MyBookingsTab extends StatelessWidget {
       case BookingStatus.upcoming:
         backgroundColor = AppColors.statusUpcomingBg;
         textColor = AppColors.statusUpcoming;
-        label = 'Upcoming';
+        label = AppLocalizations.of(context)!.statusUpcoming;
         break;
       case BookingStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = 'Completed';
+        label = AppLocalizations.of(context)!.statusCompleted;
         break;
       case BookingStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = 'Cancelled';
+        label = AppLocalizations.of(context)!.statusCancelled;
         break;
     }
 
@@ -179,34 +191,5 @@ class MyBookingsTab extends StatelessWidget {
         style: AppTextStyles.caption.copyWith(color: textColor),
       ),
     );
-  }
-
-  List<Booking> _getBookings() {
-    return [
-      Booking(
-        providerName: 'Karim Benzema',
-        providerImage: 'https://i.pravatar.cc/150?img=12',
-        serviceName: 'Plumbing Repair',
-        dateTime: '25 Oct, 10:00 AM',
-        price: '5,000 DZD',
-        status: BookingStatus.upcoming,
-      ),
-      Booking(
-        providerName: 'Nadia Belkacem',
-        providerImage: 'https://i.pravatar.cc/150?img=47',
-        serviceName: 'House Cleaning',
-        dateTime: '22 Oct, 02:00 PM',
-        price: '3,500 DZD',
-        status: BookingStatus.completed,
-      ),
-      Booking(
-        providerName: 'Ahmed Djebbour',
-        providerImage: 'https://i.pravatar.cc/150?img=33',
-        serviceName: 'AC Maintenance',
-        dateTime: '15 Oct, 09:30 AM',
-        price: '6,000 DZD',
-        status: BookingStatus.cancelled,
-      ),
-    ];
   }
 }

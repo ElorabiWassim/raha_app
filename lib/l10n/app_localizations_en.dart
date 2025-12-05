@@ -236,4 +236,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signupAlreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get myServicesTitle => 'My Services';
+
+  @override
+  String get myBookingsTab => 'My Bookings';
+
+  @override
+  String get myDemandsTab => 'My Demands';
+
+  @override
+  String get statusUpcoming => 'Upcoming';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get actionRate => 'Rate';
+
+  @override
+  String get actionDetails => 'Details';
+
+  @override
+  String get noDemandsFound => 'No demands found';
+
+  @override
+  String get noDemandsSubtitle => 'Try adjusting your search or filters';
+
+  @override
+  String get postNewDemand => 'Post New Demand';
+
+  @override
+  String get searchPlaceholder => 'Search by title or category...';
+
+  @override
+  String get filterAndSort => 'Filter & Sort';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get sortDate => 'Date';
+
+  @override
+  String get sortBudget => 'Budget';
+
+  @override
+  String get sortStatus => 'Status';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get categoryElectrical => 'Electrical';
+
+  @override
+  String get categoryPlumbing => 'Plumbing';
+
+  @override
+  String get categoryPainting => 'Painting';
+
+  @override
+  String get categoryCarpentry => 'Carpentry';
+
+  @override
+  String get categoryCleaning => 'Cleaning';
+
+  @override
+  String get budgetRange => 'Budget Range';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String providersApplied(int count) {
+    return '$count Service Providers Applied';
+  }
+
+  @override
+  String get viewRequests => 'View Requests';
+
+  @override
+  String get editDemand => 'Edit Demand';
+
+  @override
+  String get cancelDemand => 'Cancel Demand';
+
+  @override
+  String get providerHired => 'Provider hired';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get jobFinished => 'Job finished';
+
+  @override
+  String get viewInvoice => 'View Invoice';
 }

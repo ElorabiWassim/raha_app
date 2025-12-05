@@ -1,56 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import 'package:ra7a/modules/authentication/screens/splash.dart';
+import 'logic/cubits/auth/auth_cubit.dart';
+import 'logic/cubits/localization/localization_cubit.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LocalizationCubit()),
+        BlocProvider(create: (context) => AuthCubit()),
+      ],
+      child: const AppView(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  Locale? _locale;
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
-  void _setLocale(Locale? locale) {
-    setState(() {
-      _locale = locale;
-    });
-  }
+class AppView extends StatelessWidget {
+  const AppView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: _navigatorKey,
-      debugShowCheckedModeBanner: false,
-      locale: _locale,
-      supportedLocales: const [Locale('en'), Locale('fr'), Locale('ar')],
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      localeResolutionCallback: (deviceLocale, supportedLocales) {
-        if (_locale != null) return _locale;
-        for (final locale in supportedLocales) {
-          if (locale.languageCode == deviceLocale?.languageCode) {
-            return locale;
-          }
-        }
-        return const Locale('en');
+    return BlocBuilder<LocalizationCubit, LocalizationState>(
+      builder: (context, state) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          locale: state.locale,
+          supportedLocales: const [Locale('en'), Locale('fr'), Locale('ar')],
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          localeResolutionCallback: (deviceLocale, supportedLocales) {
+            if (state is! LocalizationInitial) return state.locale;
+            for (final locale in supportedLocales) {
+              if (locale.languageCode == deviceLocale?.languageCode) {
+                return locale;
+              }
+            }
+            return const Locale('en');
+          },
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          home: SplashScreen(
+            key: ValueKey('splash_${state.locale.languageCode}'),
+            onLocaleChanged: (locale) {
+              context.read<LocalizationCubit>().changeLanguage(
+                locale.languageCode,
+              );
+            },
+          ),
+        );
       },
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      home: SplashScreen(
-        key: ValueKey('splash_${_locale?.languageCode ?? 'system'}'),
-        onLocaleChanged: _setLocale,
-      ),
     );
   }
 }
