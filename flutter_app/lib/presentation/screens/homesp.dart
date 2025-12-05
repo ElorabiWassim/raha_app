@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/serviceprovider_data.dart';
+import '../themes/app_text_style.dart';
 import './addservicescreen.dart';
 import './setting.dart';
 import './demands.dart';
@@ -110,7 +111,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           },
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
-          selectedItemColor: Color(0xFF68E36C),
+          selectedItemColor: AppColors.primary,
           unselectedItemColor: Colors.grey[600],
           selectedFontSize: 12,
           unselectedFontSize: 12,
@@ -197,12 +198,12 @@ class ServiceProviderHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF68E36C), Color(0xFF5CD660)],
+              colors: [AppColors.primary, AppColors.primaryLight],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -264,18 +265,23 @@ class ServiceProviderHome extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProfileCard(context),
-            _buildStatsRow(),
-            SizedBox(height: 24),
-            _buildQuickActions(context),
-            SizedBox(height: 24),
-            _buildServicesSection(context),
-            SizedBox(height: 32),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.mainBackgroundGradient,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProfileCard(context),
+              _buildStatsRow(),
+              SizedBox(height: 24),
+              _buildQuickActions(context),
+              SizedBox(height: 24),
+              _buildServicesSection(context),
+              SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
@@ -286,11 +292,11 @@ class ServiceProviderHome extends StatelessWidget {
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Color(0xFF68E36C),
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF68E36C).withValues(alpha: 0.3),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 10,
             spreadRadius: 0,
           ),
@@ -301,7 +307,7 @@ class ServiceProviderHome extends StatelessWidget {
           CircleAvatar(
             radius: 35,
             backgroundColor: Colors.white,
-            child: Icon(Icons.person, size: 40, color: Color(0xFF68E36C)),
+            child: Icon(Icons.person, size: 40, color: AppColors.primary),
           ),
           SizedBox(width: 16),
           Expanded(
@@ -448,7 +454,7 @@ class ServiceProviderHome extends StatelessWidget {
                 child: _buildActionButton(
                   icon: Icons.add_circle_outline,
                   label: 'Add Service',
-                  color: Color(0xFF68E36C),
+                  color: AppColors.primary,
                   onTap: () => _navigateToPage(context, 'Add Service'),
                 ),
               ),
@@ -537,7 +543,7 @@ class ServiceProviderHome extends StatelessWidget {
                 child: Text(
                   'View All',
                   style: TextStyle(
-                    color: Color(0xFF68E36C),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -597,7 +603,7 @@ class ServiceProviderHome extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: service.isActive
-                      ? Color(0xFF68E36C).withValues(alpha: 0.1)
+                      ? AppColors.primary.withValues(alpha: 0.1)
                       : Colors.grey[200],
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -607,7 +613,7 @@ class ServiceProviderHome extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: service.isActive
-                        ? Color(0xFF68E36C)
+                        ? AppColors.primary
                         : Colors.grey[600],
                   ),
                 ),
@@ -615,7 +621,7 @@ class ServiceProviderHome extends StatelessWidget {
             ],
           ),
         ),
-        trailing: Icon(Icons.edit_outlined, color: Color(0xFF68E36C), size: 20),
+        trailing: Icon(Icons.edit_outlined, color: AppColors.primary, size: 20),
         onTap: () => _navigateToPage(context, 'Edit Service: ${service.title}'),
       ),
     );

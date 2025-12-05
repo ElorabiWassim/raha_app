@@ -88,9 +88,15 @@ class AppTextStyles {
 
 // App Colors - for consistency
 class AppColors {
-  static const Color primary = Color(0xFF35AE04);
+  static const Color primary = Color(0xFF33AD04);
   static const Color primaryLight = Color(0xFF33AD04);
   static const Color primaryDark = Color(0xFF1D6302);
+
+  static const LinearGradient mainBackgroundGradient = LinearGradient(
+    colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 
   static const Color textDark = Color(0xFF333333);
   static const Color textMedium = Color(0xFF52525B);

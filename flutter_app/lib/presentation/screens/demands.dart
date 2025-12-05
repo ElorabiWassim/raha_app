@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_text_style.dart';
 
 class DemandsPage extends StatefulWidget {
   const DemandsPage({super.key});
@@ -39,10 +40,14 @@ class _DemandsPageState extends State<DemandsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F8F8),
-      body: SafeArea(
-        child: Column(
-          children: [
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.mainBackgroundGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
             // Header
             Container(
               padding: const EdgeInsets.all(16),
@@ -51,14 +56,14 @@ class _DemandsPageState extends State<DemandsPage> {
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.work, color: Color(0xFF4CAF50), size: 28),
+                      Icon(Icons.work, color: AppColors.primary, size: 28),
                       SizedBox(width: 12),
                       Text(
                         'Open Jobs',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF388E3C),
+                          color: AppColors.primaryDark,
                         ),
                       ),
                     ],
@@ -178,6 +183,7 @@ class _DemandsPageState extends State<DemandsPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }
@@ -262,7 +268,7 @@ class JobCard extends StatelessWidget {
                 ).showSnackBar(const SnackBar(content: Text('Offer sent!')));
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(

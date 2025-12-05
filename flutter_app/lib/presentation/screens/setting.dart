@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_text_style.dart';
 import '../../data/models/serviceprovider_data.dart';
 import '../../modules/authentication/screens/login.dart';
 
@@ -70,11 +71,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Color(0xFF68E36C),
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF68E36C).withValues(alpha: 0.3),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 10,
             spreadRadius: 0,
           ),
@@ -85,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           CircleAvatar(
             radius: 35,
             backgroundColor: Colors.white,
-            child: Icon(Icons.person, size: 40, color: Color(0xFF68E36C)),
+            child: Icon(Icons.person, size: 40, color: AppColors.primary),
           ),
           SizedBox(width: 16),
           Expanded(
@@ -150,7 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           trailing: Container(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: Color(0xFF68E36C).withValues(alpha: 0.05),
+              color: AppColors.primary.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -158,7 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF68E36C),
+                color: AppColors.primary,
               ),
             ),
           ),
@@ -357,12 +358,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: (textColor ?? Color(0xFF68E36C)).withValues(alpha: 0.1),
+                color: (textColor ?? AppColors.primary).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 icon,
-                color: textColor ?? Color(0xFF68E36C),
+                color: textColor ?? AppColors.primary,
                 size: 22,
               ),
             ),
@@ -408,10 +409,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Color(0xFF68E36C).withValues(alpha: 0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: Color(0xFF68E36C), size: 22),
+            child: Icon(icon, color: AppColors.primary, size: 22),
           ),
           SizedBox(width: 16),
           Expanded(
@@ -437,7 +438,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeThumbColor: Color(0xFF68E36C),
+            activeThumbColor: AppColors.primary,
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_text_style.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../data/models/service_provider_model.dart';
 import 'book_service.dart';
@@ -40,7 +41,7 @@ class _ProviderprofileState extends State<Providerprofile> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isActive ? const Color(0xFF68E36C) : Colors.transparent,
+              color: isActive ? AppColors.primary : Colors.transparent,
               width: 3,
             ),
           ),
@@ -48,7 +49,7 @@ class _ProviderprofileState extends State<Providerprofile> {
         child: Text(
           label,
           style: TextStyle(
-            color: isActive ? const Color(0xFF68E36C) : Colors.grey,
+            color: isActive ? AppColors.primary : Colors.grey,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
             fontSize: 16,
           ),
@@ -91,11 +92,7 @@ class _ProviderprofileState extends State<Providerprofile> {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppColors.mainBackgroundGradient,
         ),
         child: SingleChildScrollView(
           controller: _scrollController,
@@ -203,7 +200,7 @@ class _ProviderprofileState extends State<Providerprofile> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF68E36C),
+                              backgroundColor: AppColors.primary,
                               padding: EdgeInsets.symmetric(vertical: 14),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -331,18 +328,18 @@ class _ProviderprofileState extends State<Providerprofile> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFF68E36C).withOpacity(0.1),
+        color: AppColors.primary.withValues(alpha: .1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Color(0xFF68E36C), size: 18),
+          Icon(icon, color: AppColors.primary, size: 18),
           SizedBox(width: 8),
           Text(
             label,
             style: TextStyle(
-              color: Color(0xFF68E36C),
+              color: AppColors.primary,
               fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
@@ -502,7 +499,7 @@ class _ProviderprofileState extends State<Providerprofile> {
             child: LinearProgressIndicator(
               value: percentage,
               backgroundColor: Colors.grey[200],
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF68E36C)),
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
               minHeight: 6,
             ),
           ),

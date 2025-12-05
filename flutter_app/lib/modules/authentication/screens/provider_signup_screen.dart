@@ -8,6 +8,7 @@ import '../../../../logic/cubits/signup/signup_state.dart';
 import 'login.dart';
 import 'verification.dart';
 import 'splash.dart';
+import '../../../presentation/screens/homesp.dart';
 
 const primaryColor = Color(0xFF33AD04);
 const textDark = Color(0xFF333333);
@@ -146,10 +147,12 @@ class _ProviderSignUpScreenContentState
       child: BlocListener<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state is SignupSuccess) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const VerificationPage()),
-            );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MainNavigationScreen(),
+                ),
+              );
           } else if (state is SignupFailure) {
             ScaffoldMessenger.of(
               context,

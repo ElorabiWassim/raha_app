@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_text_style.dart';
 import '../widgets/search_box.dart';
 import '../widgets/category_list.dart';
 import '../widgets/Home_Demand.dart';
@@ -17,11 +18,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppColors.mainBackgroundGradient,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -42,7 +39,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
                     child: Text(
                       "Salam Wassim",
                       style: TextStyle(
-                        color: Color(0xFF6E946D),
+                        color: AppColors.primary,
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0,

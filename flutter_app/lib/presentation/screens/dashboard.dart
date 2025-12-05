@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_text_style.dart';
 import '../widgets/bottom_nav_admin.dart';
 import '../../modules/authentication/screens/login.dart';
 
@@ -65,12 +66,12 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           title: const Row(
             children: [
-              Icon(Icons.logout, color: Color(0xFF4CAF50)),
+              Icon(Icons.logout, color: AppColors.primary),
               SizedBox(width: 8),
               Text(
                 'Logout',
                 style: TextStyle(
-                  color: Color(0xFF388E3C),
+                  color: AppColors.primaryDark,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -96,7 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -115,13 +116,17 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F8F8),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.mainBackgroundGradient,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               // Header
               Container(
                 padding: const EdgeInsets.all(16),
@@ -133,7 +138,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     const Icon(
                       Icons.space_dashboard,
-                      color: Color(0xFF4CAF50),
+                      color: AppColors.primary,
                       size: 28,
                     ),
                     const SizedBox(width: 12),
@@ -143,7 +148,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF388E3C),
+                          color: AppColors.primaryDark,
                         ),
                       ),
                     ),
@@ -154,14 +159,14 @@ class _DashboardPageState extends State<DashboardPage> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Color(0xFF4CAF50),
+                                color: AppColors.primary,
                               ),
                             )
-                          : const Icon(Icons.refresh, color: Color(0xFF4CAF50)),
+                          : const Icon(Icons.refresh, color: AppColors.primary),
                       onPressed: isLoading ? null : _refreshData,
                     ),
                     IconButton(
-                      icon: const Icon(Icons.logout, color: Color(0xFF4CAF50)),
+                      icon: const Icon(Icons.logout, color: AppColors.primary),
                       onPressed: _handleLogout,
                       tooltip: 'Logout',
                     ),
@@ -241,7 +246,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50),
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -284,6 +289,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ],
           ),
         ),
+        ),
       ),
       bottomNavigationBar: const Ra7aBottomNav(currentIndex: 0),
     );
@@ -302,7 +308,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             child: const Icon(
               Icons.notifications,
-              color: Color(0xFF4CAF50),
+              color: AppColors.primary,
               size: 20,
             ),
           ),
@@ -383,10 +389,10 @@ class StatCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF388E3C),
+                    color: AppColors.primaryDark,
                   ),
                 ),
-                Icon(icon, color: const Color(0xFF4CAF50), size: 20),
+                Icon(icon, color: AppColors.primary, size: 20),
               ],
             ),
             const SizedBox(height: 8),
@@ -404,7 +410,7 @@ class StatCard extends StatelessWidget {
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: isPositive
-                    ? const Color(0xFF4CAF50)
+                    ? AppColors.primary
                     : const Color(0xFFF44336),
               ),
             ),

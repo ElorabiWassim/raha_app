@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_text_style.dart';
 
 class RequestsPage extends StatefulWidget {
   const RequestsPage({super.key});
@@ -40,34 +41,38 @@ class _RequestsPageState extends State<RequestsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F8F8),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
-              child: const Row(
-                children: [
-                  Icon(Icons.description, color: Color(0xFF4CAF50), size: 28),
-                  SizedBox(width: 12),
-                  Text(
-                    'Service Requests',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF388E3C),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.mainBackgroundGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
+                child: const Row(
+                  children: [
+                    Icon(Icons.description, color: AppColors.primary, size: 28),
+                    SizedBox(width: 12),
+                    Text(
+                      'Service Requests',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryDark,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            // Tab Bar
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: Row(
+              // Tab Bar
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Row(
                 children: [
                   _buildTab('Requests', 0),
                   const SizedBox(width: 8),
@@ -98,6 +103,7 @@ class _RequestsPageState extends State<RequestsPage> {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -117,7 +123,7 @@ class _RequestsPageState extends State<RequestsPage> {
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: isSelected
-                  ? const Color(0xFF4CAF50)
+                  ? AppColors.primary
                   : const Color(0xFFE5E7EB),
               width: isSelected ? 2 : 1,
             ),
@@ -129,7 +135,7 @@ class _RequestsPageState extends State<RequestsPage> {
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               color: isSelected
-                  ? const Color(0xFF4CAF50)
+                  ? AppColors.primary
                   : const Color(0xFF6B7280),
             ),
           ),
@@ -168,7 +174,7 @@ class RequestCard extends StatelessWidget {
       case 'Completed':
         return const Color(0xFF9E9E9E);
       default:
-        return const Color(0xFF4CAF50);
+        return AppColors.primary;
     }
   }
 
@@ -200,7 +206,7 @@ class RequestCard extends StatelessWidget {
                   color: const Color(0xFFE8F5E9),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: const Color(0xFF4CAF50), size: 24),
+                child: Icon(icon, color: AppColors.primary, size: 24),
               ),
               const SizedBox(width: 12),
 
@@ -217,7 +223,7 @@ class RequestCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF4CAF50),
+                            color: AppColors.primary,
                           ),
                         ),
                         Container(
@@ -323,7 +329,7 @@ class RequestCard extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4CAF50),
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -348,7 +354,7 @@ class RequestCard extends StatelessWidget {
             child: const Text(
               'View Details',
               style: TextStyle(
-                color: Color(0xFF4CAF50),
+                color: AppColors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
