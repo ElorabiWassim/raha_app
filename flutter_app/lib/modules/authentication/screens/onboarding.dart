@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import 'package:ra7a/data/local/preferences_service.dart';
 import '../../../../logic/cubits/onboarding/onboarding_cubit.dart';
 import '../../../../logic/cubits/onboarding/onboarding_state.dart';
 import 'login.dart';
@@ -13,7 +14,8 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OnboardingCubit(),
+      create: (context) =>
+          OnboardingCubit(preferences: context.read<PreferencesService>()),
       child: const _OnboardingScreenContent(),
     );
   }

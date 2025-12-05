@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ra7a/data/local/local_cache_repository.dart';
+import 'package:ra7a/data/local/preferences_service.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import 'package:ra7a/modules/authentication/screens/login.dart';
+import 'package:ra7a/presentation/screens/bottomNavbar.dart';
+import 'package:ra7a/presentation/screens/dashboard.dart';
+import 'package:ra7a/presentation/screens/homesp.dart';
 import '../../../../logic/cubits/splash/splash_cubit.dart';
 import '../../../../logic/cubits/splash/splash_state.dart';
 import './onboarding.dart';
@@ -14,7 +20,10 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SplashCubit(),
+      create: (context) => SplashCubit(
+        cacheRepository: context.read<LocalCacheRepository>(),
+        preferences: context.read<PreferencesService>(),
+      )..initialize(),
       child: _SplashScreenContent(onLocaleChanged: onLocaleChanged),
     );
   }
@@ -43,6 +52,18 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
         });
       }
     });
+  }
+
+  Widget _destinationForRole(String role) {
+    switch (role) {
+      case 'serviceprovider':
+        return const MainNavigationScreen();
+      case 'admin':
+        return const DashboardPage();
+      case 'homeowner':
+      default:
+        return const HomeBottomNav();
+    }
   }
 
   @override
@@ -78,13 +99,9 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
       widget.onLocaleChanged!(locale);
     }
 
-    // Use Cubit to handle navigation state
-    // We add a small delay to let the UI update the selection before navigating
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (context.mounted) {
-        context.read<SplashCubit>().completeSplash();
-      }
-    });
+    if (context.mounted) {
+      context.read<SplashCubit>().continueToOnboarding();
+    }
   }
 
   @override
@@ -98,6 +115,25 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+          );
+        } else if (state is SplashNavigateToLogin) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          );
+        } else if (state is SplashNavigateToHome) {
+          final destination = _destinationForRole(state.role);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => destination),
+          );
+        } else if (state is SplashError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
           );
         }
       },

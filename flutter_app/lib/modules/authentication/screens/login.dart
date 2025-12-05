@@ -48,8 +48,18 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            // Update AuthCubit
-            context.read<AuthCubit>().authenticate(state.username, state.role);
+            final timestamp = DateTime.now().millisecondsSinceEpoch;
+            final accessToken = 'demo_access_${state.username}_$timestamp';
+            final refreshToken = 'demo_refresh_${state.username}_$timestamp';
+
+            // Update AuthCubit and persist the session locally
+            context.read<AuthCubit>().authenticate(
+              username: state.username,
+              role: state.role,
+              userId: state.username,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+            );
 
             Widget destinationPage;
             if (state.role == 'homeowner') {

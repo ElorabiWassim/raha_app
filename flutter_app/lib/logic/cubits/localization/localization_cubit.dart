@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:ra7a/data/local/preferences_service.dart';
+
 // State
 abstract class LocalizationState extends Equatable {
   final Locale locale;
@@ -21,9 +23,14 @@ class LocalizationChanged extends LocalizationState {
 
 // Cubit
 class LocalizationCubit extends Cubit<LocalizationState> {
-  LocalizationCubit() : super(const LocalizationInitial(Locale('en')));
+  LocalizationCubit({required PreferencesService preferences})
+    : _preferences = preferences,
+      super(LocalizationInitial(Locale(preferences.languageCode ?? 'en')));
 
-  void changeLanguage(String languageCode) {
+  final PreferencesService _preferences;
+
+  Future<void> changeLanguage(String languageCode) async {
+    await _preferences.setLanguageCode(languageCode);
     emit(LocalizationChanged(Locale(languageCode)));
   }
 }
