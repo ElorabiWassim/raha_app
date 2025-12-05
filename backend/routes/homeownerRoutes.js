@@ -24,6 +24,10 @@ const {
 getAllServiceCategories
 } = require("../controllers/categories")
 
+const {
+addDemand , editDemand , cancelDemand , getUserDemands , getDemandOffers , acceptDemand
+} = require("../controllers/demands");
+
 
 
 
@@ -34,6 +38,13 @@ router.post("/updateprofilephoto" ,upload.single('file'), uploadProfilePicture )
 router.get("/getServiceProviderProfile" , getServiceProviderProfile ); 
 router.get("/getServices" , getServices );     
 router.get("/categories" , getAllServiceCategories );
+router.post("/addDemand" , addDemand);
+router.post("/editDemand" , editDemand);
+router.post("/cancelDemand" , cancelDemand);
+router.get("/getUserDemands" , getUserDemands);
+router.get("/getDemandOffers" , getDemandOffers);
+router.post("/acceptDemand" , acceptDemand);
+
 
 
  
