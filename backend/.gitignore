@@ -1,2 +1,21 @@
-.env
-/node_modules
+# Backend-specific ignores (not covered by root .gitignore)
+uploads/
+temp/
+logs/
+*.pem
+*.key
+*.crt
+config/*.local.js
+config/local.*
+
+# Database files (if any)
+*.db
+*.sqlite
+*.sqlite3
+
+# Session files
+sessions/
+
+# Already covered by root .gitignore (kept for reference):
+# .env
+# node_modules/

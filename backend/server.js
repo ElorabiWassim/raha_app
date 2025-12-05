@@ -5,6 +5,8 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const spRoutes = require('./routes/sp.routes');
+const adminRoutes = require('./routes/admin.routes');
+
 const app = express();
 app.use(helmet());
 app.use(cors());
@@ -12,6 +14,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/sp', spRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
