@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../data/models/serviceprovider_data.dart';
-import './addservicescreen.dart';
-import './setting.dart';
-import './demands.dart';
-import './requests.dart';
+import 'addservicescreen.dart';
+import 'setting.dart';
+import 'demands.dart';
+import 'requests.dart';
 import '../../modules/upgrades/screens/plans.dart';
-import './messages_screen.dart';
+import 'messages_screen.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
 void main() {
@@ -91,7 +91,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       body: _getPages()[_currentIndex],
       bottomNavigationBar: Container(
@@ -188,7 +188,9 @@ class ServiceProviderHome extends StatelessWidget {
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l10n.navigationTo} $pageName - ${l10n.comingSoon}'),
+            content: Text(
+              '${l10n.navigationTo} $pageName - ${l10n.comingSoon}',
+            ),
             duration: Duration(seconds: 1),
           ),
         );
@@ -201,7 +203,7 @@ class ServiceProviderHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -289,7 +291,7 @@ class ServiceProviderHome extends StatelessWidget {
 
   Widget _buildProfileCard(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(20),
@@ -361,7 +363,7 @@ class ServiceProviderHome extends StatelessWidget {
 
   Widget _buildStatsRow(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -436,7 +438,7 @@ class ServiceProviderHome extends StatelessWidget {
 
   Widget _buildQuickActions(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -529,7 +531,7 @@ class ServiceProviderHome extends StatelessWidget {
 
   Widget _buildServicesSection(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -577,7 +579,7 @@ class ServiceProviderHome extends StatelessWidget {
 
   Widget _buildServiceCard(BuildContext context, Service service) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

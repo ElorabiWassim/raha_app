@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './category_widget.dart';
+import 'category_widget.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../screens/wilaya_screen.dart';
 
@@ -44,7 +44,7 @@ class CategoryList extends StatelessWidget {
           children: [
             CircleButton(
               icon: 'assets/icons/handyman.png',
-               label: l10n.handyman,
+              label: l10n.handyman,
               destination: WilayaScreen(category: "Handyman"),
             ),
             CircleButton(
