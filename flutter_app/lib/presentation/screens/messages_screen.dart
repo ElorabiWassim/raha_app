@@ -1,60 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ra7a/l10n/app_localizations.dart';
+import '../../data/models/chat_message.dart';
+import '../../data/models/message.dart';
+import '../../logic/cubits/messages/messages_cubit.dart';
+import '../../logic/cubits/messages/messages_state.dart';
 import '../themes/app_text_style.dart';
-
-// Message Model
-class Message {
-  final String name;
-  final String profileImage;
-  final String lastMessage;
-  final String service;
-  final String time;
-  final bool isUnread;
-  final bool isOnline;
-
-  Message({
-    required this.name,
-    required this.profileImage,
-    required this.lastMessage,
-    required this.service,
-    required this.time,
-    this.isUnread = false,
-    this.isOnline = false,
-  });
-}
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final messages = _getMessages();
+    return BlocProvider(
+      create: (context) => MessagesCubit()..loadMessages(),
+      child: const _MessagesScreenContent(),
+    );
+  }
+}
 
+class _MessagesScreenContent extends StatelessWidget {
+  const _MessagesScreenContent();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppColors.mainBackgroundGradient,
         ),
         child: SafeArea(
           child: Column(
             children: [
-              _buildAppBar(context, l10n),
+              _buildAppBar(context),
               Expanded(
-                child: messages.isEmpty
-                    ? _buildEmptyState(l10n)
-                    : ListView.builder(
+                child: BlocBuilder<MessagesCubit, MessagesState>(
+                  builder: (context, state) {
+                    if (state is MessagesLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is MessagesLoaded) {
+                      if (state.messages.isEmpty) {
+                        return _buildEmptyState();
+                      }
+                      return ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                        itemCount: messages.length,
+                        itemCount: state.messages.length,
                         itemBuilder: (context, index) {
-                          return _buildMessageCard(context, messages[index]);
+                          return _buildMessageCard(
+                            context,
+                            state.messages[index],
+                          );
                         },
-                      ),
+                      );
+                    } else if (state is MessagesError) {
+                      return Center(child: Text(state.message));
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ],
           ),
@@ -63,7 +66,7 @@ class MessagesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context, AppLocalizations l10n) {
+  Widget _buildAppBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -78,12 +81,12 @@ class MessagesScreen extends StatelessWidget {
                 width: 48,
                 height: 48,
                 alignment: Alignment.centerLeft,
-                // Back or menu icon can go here if needed
+                // You can add a back or menu icon here if needed
               ),
             ],
           ),
           Text(
-            l10n.messagesTitle, // ← LOCALIZED
+            'Messages',
             style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
           ),
         ],
@@ -114,6 +117,7 @@ class MessagesScreen extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
+            // Navigate to conversation screen
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -131,11 +135,12 @@ class MessagesScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
+                // Profile Image with Online Status
                 Stack(
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundImage: NetworkImage(message.profileImage.trim()), // Fixed extra spaces
+                      backgroundImage: NetworkImage(message.profileImage),
                     ),
                     if (message.isOnline)
                       Positioned(
@@ -154,6 +159,7 @@ class MessagesScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(width: 16),
+                // Message Content
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,6 +210,7 @@ class MessagesScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                // Unread Indicator
                 if (message.isUnread)
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
@@ -224,7 +231,7 @@ class MessagesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(AppLocalizations l10n) {
+  Widget _buildEmptyState() {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -246,7 +253,7 @@ class MessagesScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              l10n.noConversationsYet, // ← LOCALIZED
+              'No Conversations Yet',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -255,7 +262,7 @@ class MessagesScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              l10n.startBooking, // ← LOCALIZED (supports \n)
+              'Start booking a service to begin\nchatting with a provider.',
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 14,
@@ -268,58 +275,6 @@ class MessagesScreen extends StatelessWidget {
       ),
     );
   }
-
-  List<Message> _getMessages() {
-    // Note: Message content like names & lastMessage are dynamic/user-generated,
-    // so they are NOT localized. Only static UI strings are.
-    return [
-      Message(
-        name: 'Karim B.',
-        profileImage: 'https://i.pravatar.cc/150?img=12',
-        lastMessage: 'I will be there in 15 minutes...',
-        service: 'Cleaning',
-        time: '10:45 AM',
-        isUnread: true,
-        isOnline: true,
-      ),
-      Message(
-        name: 'Amina Z.',
-        profileImage: 'https://i.pravatar.cc/150?img=47',
-        lastMessage: 'Thank you for the great work!',
-        service: 'Plumbing',
-        time: 'Yesterday',
-        isUnread: false,
-        isOnline: false,
-      ),
-      Message(
-        name: 'Yacine M.',
-        profileImage: 'https://i.pravatar.cc/150?img=33',
-        lastMessage: 'Can you come on Wednesday instead?',
-        service: 'Gardening',
-        time: 'Wed',
-        isUnread: false,
-        isOnline: false,
-      ),
-    ];
-  }
-}
-
-// --- CONVERSATION SCREEN (Updated with l10n) ---
-
-class ChatMessage {
-  final String id;
-  final String text;
-  final bool isMe;
-  final String time;
-  final List<String> reactions;
-
-  ChatMessage({
-    required this.id,
-    required this.text,
-    required this.isMe,
-    required this.time,
-    this.reactions = const [],
-  });
 }
 
 class Conversation extends StatefulWidget {
@@ -467,21 +422,16 @@ class _ConversationState extends State<Conversation> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppColors.mainBackgroundGradient,
         ),
         child: SafeArea(
           child: Column(
             children: [
-              _buildAppBar(l10n),
-              if (_isSearching) _buildSearchBar(l10n),
+              _buildAppBar(),
+              if (_isSearching) _buildSearchBar(),
               Expanded(
                 child: ListView.builder(
                   controller: _scrollController,
@@ -501,7 +451,10 @@ class _ConversationState extends State<Conversation> {
                   },
                 ),
               ),
-              ChatInputField(controller: _messageController, onSend: _sendMessage, l10n: l10n),
+              ChatInputField(
+                controller: _messageController,
+                onSend: _sendMessage,
+              ),
             ],
           ),
         ),
@@ -509,7 +462,7 @@ class _ConversationState extends State<Conversation> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(AppLocalizations l10n) {
+  PreferredSizeWidget _buildAppBar() {
     return PreferredSize(
       preferredSize: const Size.fromHeight(70),
       child: Container(
@@ -528,7 +481,7 @@ class _ConversationState extends State<Conversation> {
                 children: [
                   CircleAvatar(
                     radius: 18,
-                    backgroundImage: NetworkImage(widget.providerImage.trim()),
+                    backgroundImage: NetworkImage(widget.providerImage),
                   ),
                   if (widget.isOnline)
                     Positioned(
@@ -587,7 +540,7 @@ class _ConversationState extends State<Conversation> {
     );
   }
 
-  Widget _buildSearchBar(AppLocalizations l10n) {
+  Widget _buildSearchBar() {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -595,7 +548,7 @@ class _ConversationState extends State<Conversation> {
         controller: _searchController,
         autofocus: true,
         decoration: InputDecoration(
-          hintText: l10n.searchInConversation, // ← LOCALIZED
+          hintText: 'Search in conversation...',
           prefixIcon: const Icon(Icons.search, color: Colors.grey),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
@@ -712,7 +665,6 @@ class MessageBubble extends StatelessWidget {
   }
 
   void _showReactionMenu(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final reactions = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
 
     showModalBottomSheet(
@@ -734,9 +686,9 @@ class MessageBubble extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              l10n.reactToMessage, // ← LOCALIZED
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            const Text(
+              'React to message',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
@@ -744,7 +696,7 @@ class MessageBubble extends StatelessWidget {
               children: reactions.map((emoji) {
                 return GestureDetector(
                   onTap: () {
-                    // Assuming parent passes onReact correctly
+                    onReact(emoji);
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -769,13 +721,11 @@ class MessageBubble extends StatelessWidget {
 class ChatInputField extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onSend;
-  final AppLocalizations l10n;
 
   const ChatInputField({
     super.key,
     required this.controller,
     required this.onSend,
-    required this.l10n,
   });
 
   @override
@@ -789,7 +739,7 @@ class ChatInputField extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: l10n.typeYourMessage, // ← LOCALIZED
+                hintText: "Type your message...",
                 hintStyle: const TextStyle(color: Colors.grey),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

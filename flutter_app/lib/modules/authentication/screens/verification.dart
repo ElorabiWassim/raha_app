@@ -1,163 +1,199 @@
 import 'package:flutter/material.dart';
-import 'package:ra7a/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ra7a/logic/cubits/verification/verification_cubit.dart';
+import 'package:ra7a/logic/cubits/verification/verification_state.dart';
 
-class VerificationPage extends StatefulWidget {
+class VerificationPage extends StatelessWidget {
   const VerificationPage({super.key});
 
   @override
-  State<VerificationPage> createState() => _VerificationPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => VerificationCubit(),
+      child: const _VerificationPageContent(),
+    );
+  }
 }
 
-class _VerificationPageState extends State<VerificationPage> {
-  bool idUploaded = false;
-  bool certUploaded = false;
-  bool photoUploaded = false;
-  bool showSuccess = false;
-
-  bool get canSubmit => idUploaded && certUploaded && photoUploaded;
+class _VerificationPageContent extends StatelessWidget {
+  const _VerificationPageContent();
 
   @override
   Widget build(BuildContext context) {
-    if (showSuccess) {
-      return _buildSuccessScreen();
-    }
+    return BlocConsumer<VerificationCubit, VerificationState>(
+      listener: (context, state) {
+        if (state is VerificationFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        if (state is VerificationSuccess) {
+          return _buildSuccessScreen(context);
+        }
 
-    final localizations = AppLocalizations.of(context)!;
+        bool idUploaded = false;
+        bool certUploaded = false;
+        bool photoUploaded = false;
+        bool isSubmitting = false;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F8F8),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
-              child: Column(
-                children: [
-                  Row(
+        if (state is VerificationInitial) {
+          idUploaded = state.idUploaded;
+          certUploaded = state.certUploaded;
+          photoUploaded = state.photoUploaded;
+        } else if (state is VerificationSubmitting) {
+          isSubmitting = true;
+          // Assuming we keep the previous state visually or just show loading
+          // Ideally state should carry the data even when submitting
+        }
+
+        // If submitting, we might want to show the form but disabled, or a loading overlay.
+        // For simplicity, let's assume VerificationInitial is the main state for the form.
+        // If we are submitting, we can't easily get the boolean flags unless we store them in Submitting state too.
+        // Let's modify the Cubit/State to handle this better or just assume true for now if we are submitting (since we can only submit if all are true).
+
+        if (state is VerificationSubmitting) {
+          idUploaded = true;
+          certUploaded = true;
+          photoUploaded = true;
+        }
+
+        bool canSubmit =
+            idUploaded && certUploaded && photoUploaded && !isSubmitting;
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F8F8),
+          body: SafeArea(
+            child: Column(
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
+                  child: Column(
                     children: [
-                      const Icon(
-                        Icons.verified,
-                        color: Color(0xFF4CAF50),
-                        size: 28,
+                      const Row(
+                        children: [
+                          Icon(
+                            Icons.verified,
+                            color: Color(0xFF4CAF50),
+                            size: 28,
+                          ),
+                          SizedBox(width: 12),
+                          Text(
+                            'Document Verification',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF388E3C),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(height: 8),
                       Text(
-                        localizations.verificationTitle,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF388E3C),
-                        ),
+                        'Upload your documents for verification',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    localizations.verificationSubtitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // Documents List
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  DocumentUploadCard(
-                    icon: Icons.badge,
-                    title: localizations.verificationNationalID,
-                    subtitle: localizations.verificationRequired,
-                    isUploaded: idUploaded,
-                    onTap: () {
-                      setState(() {
-                        idUploaded = !idUploaded;
-                      });
-                    },
+                // Documents List
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      DocumentUploadCard(
+                        icon: Icons.badge,
+                        title: 'National ID / Passport',
+                        subtitle: 'Required',
+                        isUploaded: idUploaded,
+                        onTap: () =>
+                            context.read<VerificationCubit>().uploadId(),
+                      ),
+                      const SizedBox(height: 16),
+                      DocumentUploadCard(
+                        icon: Icons.school,
+                        title: 'Professional Certificate',
+                        subtitle: 'Required',
+                        isUploaded: certUploaded,
+                        onTap: () =>
+                            context.read<VerificationCubit>().uploadCert(),
+                      ),
+                      const SizedBox(height: 16),
+                      DocumentUploadCard(
+                        icon: Icons.account_circle,
+                        title: 'Profile Picture',
+                        subtitle: 'Clear headshot required',
+                        isUploaded: photoUploaded,
+                        onTap: () =>
+                            context.read<VerificationCubit>().uploadPhoto(),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  DocumentUploadCard(
-                    icon: Icons.school,
-                    title: localizations.verificationCertificate,
-                    subtitle: localizations.verificationRequired,
-                    isUploaded: certUploaded,
-                    onTap: () {
-                      setState(() {
-                        certUploaded = !certUploaded;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  DocumentUploadCard(
-                    icon: Icons.account_circle,
-                    title: localizations.verificationProfilePicture,
-                    subtitle: localizations.verificationClearHeadshot,
-                    isUploaded: photoUploaded,
-                    onTap: () {
-                      setState(() {
-                        photoUploaded = !photoUploaded;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // Submit Button
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: .05),
-                    blurRadius: 4,
-                    offset: const Offset(0, -2),
+                // Submit Button
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: .05),
+                        blurRadius: 4,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: canSubmit
-                      ? () {
-                          setState(() {
-                            showSuccess = true;
-                          });
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4CAF50),
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: Colors.grey[300],
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    localizations.verificationSubmit,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: canSubmit
+                          ? () {
+                              context.read<VerificationCubit>().submit();
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4CAF50),
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: Colors.grey[300],
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: isSubmitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Submit for Review',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSuccessScreen() {
-    final localizations = AppLocalizations.of(context)!;
-
+  Widget _buildSuccessScreen(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
@@ -181,9 +217,9 @@ class _VerificationPageState extends State<VerificationPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Text(
-                  localizations.verificationSuccess,
-                  style: const TextStyle(
+                const Text(
+                  'Application Submitted!',
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF333333),
@@ -191,7 +227,7 @@ class _VerificationPageState extends State<VerificationPage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  localizations.verificationSuccessMessage,
+                  "We're reviewing your documents. You'll receive a notification within 2-3 business days.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -204,12 +240,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        showSuccess = false;
-                        idUploaded = false;
-                        certUploaded = false;
-                        photoUploaded = false;
-                      });
+                      context.read<VerificationCubit>().reset();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4CAF50),
@@ -219,9 +250,9 @@ class _VerificationPageState extends State<VerificationPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(
-                      localizations.verificationBackToVerification,
-                      style: const TextStyle(
+                    child: const Text(
+                      'Back to Verification',
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -255,8 +286,6 @@ class DocumentUploadCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -321,7 +350,7 @@ class DocumentUploadCard extends StatelessWidget {
                 border: Border.all(
                   color: isUploaded
                       ? const Color(0xFF4CAF50)
-                      : const Color(0xFFE5E7EB),
+                      : const Color(0xFFE8F5E9), // Fixed color
                   width: 2,
                   style: isUploaded ? BorderStyle.solid : BorderStyle.none,
                 ),
@@ -338,9 +367,7 @@ class DocumentUploadCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    isUploaded
-                        ? localizations.verificationDocumentUploaded
-                        : localizations.verificationTapToUpload,
+                    isUploaded ? 'Document Uploaded' : 'Tap to Upload',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -355,7 +382,7 @@ class DocumentUploadCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            localizations.verificationAcceptedFormats,
+            'Accepted: JPG, PNG, PDF. Max size: 5MB',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
