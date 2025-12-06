@@ -4,6 +4,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../cubits/ServiceProviderFetchProfileCubit.dart';
 import 'book_service.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Providerprofile extends StatelessWidget {
   final String spId;
@@ -37,6 +39,26 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchServices(String spId) async {
+    final url = Uri.parse(
+      'http://10.28.22.27:5000/homeowner/getServices?sp_id=$spId',
+    );
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((s) {
+        return {
+          'title': s['name'] ?? '',
+          'price': '${s['price_amount'] ?? ''} ${s['price_type'] ?? ''}',
+          'description': s['description'] ?? '',
+        };
+      }).toList();
+    } else {
+      throw Exception('Failed to load services');
+    }
   }
 
   Widget _buildTab(String label, String value, GlobalKey key) {
@@ -317,7 +339,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
                     ),
 
                     // SECTIONS
-                    _buildServicesSection(servicesKey, services),
+                    _buildServicesSection(servicesKey, p['sp_id']),
                     _buildReviewsSection(
                       reviewsKey,
                       (p['average_review'] ?? 0).toDouble(),
@@ -375,32 +397,55 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
     );
   }
 
-  Widget _buildServicesSection(GlobalKey key, List<dynamic> services) {
-    return Container(
-      key: key,
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: services.map((service) {
+  Widget _buildServicesSection(GlobalKey key, String spId) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _fetchServices(spId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        BookService(service_name: service['title']),
-                  ),
-                );
-              },
-              child: _buildServiceCard(
-                service['title'],
-                '${service['pricingModel']} ${service['price']}',
+            padding: const EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Text(
+                'Error loading services',
+                style: TextStyle(color: Colors.red),
               ),
             ),
           );
-        }).toList(),
-      ),
+        }
+
+        final services = snapshot.data ?? [];
+
+        return Container(
+          key: key,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: services.map((service) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BookService(service_name: service['title']),
+                      ),
+                    );
+                  },
+                  child: _buildServiceCard(service['title'], service['price']),
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
     );
   }
 
