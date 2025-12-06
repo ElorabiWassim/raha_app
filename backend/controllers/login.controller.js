@@ -2,19 +2,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const supabase = require('../config/supabase');
-
 const register = async (req, res) => {
   try {
     const { full_name, email, phone_number, password, role, home_address } = req.body;
     
-    // Validate role
     if (role !== 'service_provider' && role !== 'homeowner') {
       return res.status(400).json({ 
         error: 'Invalid role. Only "service_provider" or "homeowner" are allowed.' 
       });
     }
 
-    // Check if email already exists
     const { data: existingUser, error: emailError } = await supabase
       .from('users')
       .select('email')
@@ -29,10 +26,7 @@ const register = async (req, res) => {
       return res.status(400).json({ error: 'Email already in use' });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Insert new user
     const { data: newUser, error: insertError } = await supabase
       .from('users')
       .insert({
@@ -52,19 +46,17 @@ const register = async (req, res) => {
       throw insertError;
     }
 
-    // Create role-specific profile
     if (role === 'service_provider') {
       const { error: spError } = await supabase
         .from('service_providers')
         .insert({
           sp_id: newUser.user_id,
           created_at: new Date().toISOString(),
-          
         });
 
       if (spError) {
         console.error('Service provider profile creation error:', spError);
-        // Rollback: delete the user if service provider profile creation fails
+       
         await supabase.from('users').delete().eq('user_id', newUser.user_id);
         return res.status(500).json({ error: 'Failed to create service provider profile' });
       }
@@ -86,11 +78,11 @@ const register = async (req, res) => {
       }
     }
 
-    // Generate JWT token
+   
     const token = jwt.sign(
       { user_id: newUser.user_id, role: newUser.role },
       process.env.JWT_SECRET,
-      { expiresIn: '24h' } // Increased to 24 hours
+      { expiresIn: '24h' }
     );
 
     res.status(201).json({
@@ -143,7 +135,7 @@ const login = async (req, res) => {
       const { data: spProfile, error: spError } = await supabase
         .from('service_providers')
         .select('sp_id')
-        .eq('user_id', user.user_id)
+        .eq('sp_id', user.user_id)
         .single();
 
       // If profile doesn't exist, create it

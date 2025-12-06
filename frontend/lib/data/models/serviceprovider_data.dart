@@ -36,6 +36,8 @@ class Service {
   String category;
   String description;
   String pricingModel;
+  final List<String> images;
+
 
   Service({
     required this.title,
@@ -44,5 +46,6 @@ class Service {
     this.category = 'Plumbing',
     this.description = '',
     this.pricingModel = 'Fixed Price',
+    this.images = const [],
   });
 }

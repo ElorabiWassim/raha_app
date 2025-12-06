@@ -1020,4 +1020,154 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get details => 'التفاصيل';
+
+  @override
+  String get profileInformation => 'معلومات الملف الشخصي';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get profession => 'المهنة';
+
+  @override
+  String get location => 'الموقع';
+
+  @override
+  String get statsInformation => 'معلومات الإحصائيات';
+
+  @override
+  String get rating => 'التقييم';
+
+  @override
+  String get responseTime => 'سرعة الاستجابة';
+
+  @override
+  String get editService => 'تعديل الخدمة';
+
+  @override
+  String get deleteServiceTitle => 'حذف الخدمة';
+
+  @override
+  String get deleteServiceMessage => 'هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get serviceDetails => 'تفاصيل الخدمة';
+
+  @override
+  String get serviceTitle => 'عنوان الخدمة';
+
+  @override
+  String get enterServiceTitle => 'يرجى إدخال عنوان الخدمة';
+
+  @override
+  String get price => 'السعر';
+
+  @override
+  String get enterServicePrice => 'يرجى إدخال سعر الخدمة';
+
+  @override
+  String get priceExample => 'مثال: \"تبدأ من 1500 دج\" أو \"2500 دج للساعة\"';
+
+  @override
+  String get serviceStatus => 'حالة الخدمة';
+
+  @override
+  String get visibleToCustomers => 'الخدمة ظاهرة للزبائن';
+
+  @override
+  String get hiddenFromCustomers => 'الخدمة مخفية عن الزبائن';
+
+  @override
+  String get pricingTips => 'نصائح التسعير';
+
+  @override
+  String get tip1 => 'استخدم صيغ أسعار واضحة مثل \"1500 دج\" أو \"للساعة\"';
+
+  @override
+  String get tip2 => 'فكّر في وضع سعر ابتدائي للمهام المعقدة';
+
+  @override
+  String get tip3 => 'كن شفافًا بخصوص الرسوم الإضافية';
+
+  @override
+  String get tip4 => 'راجع أسعار المنافسين في منطقتك';
+
+  @override
+  String get deleteService => 'حذف الخدمة';
+
+  @override
+  String get confirmDeleteService => 'هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get serviceVisible => 'الخدمة مرئية للعملاء';
+
+  @override
+  String get serviceHidden => 'الخدمة مخفية عن العملاء';
+
+  @override
+  String get tipClearPricing => 'استخدم تنسيقات تسعير واضحة مثل \"1500 دج\" أو \"للساعة\"';
+
+  @override
+  String get tipStartingPrices => 'فكر في عرض أسعار بداية للخدمات المعقدة';
+
+  @override
+  String get tipTransparency => 'كن شفافًا بشأن الرسوم الإضافية';
+
+  @override
+  String get tipCompetitorPricing => 'راجع أسعار المنافسين في منطقتك';
+
+  @override
+  String get serviceImages => 'صور الخدمة';
+
+  @override
+  String get addPhotosToAttractCustomers => 'أضف صورًا لأعمالك لجذب المزيد من العملاء.';
+
+  @override
+  String get uploadImages => 'رفع الصور';
+
+  @override
+  String get tapToSelectFromGallery => 'اضغط هنا لاختيار صور من معرضك';
+
+  @override
+  String get imageUploadComingSoon => 'رفع الصور – قادم قريبًا';
+
+  @override
+  String get serviceName => 'اسم الخدمة';
+
+  @override
+  String get enterServiceName => 'أدخل اسم الخدمة';
+
+  @override
+  String get description => 'الوصف';
+
+  @override
+  String get describeYourService => 'صف خدمتك بالتفصيل';
+
+  @override
+  String get pricing => 'التسعير';
+
+  @override
+  String get pricingModel => 'نموذج التسعير';
+
+  @override
+  String get hourlyRate => 'سعر الساعة';
+
+  @override
+  String get fixedPrice => 'سعر ثابت';
+
+  @override
+  String get enterPrice => '٠٫٠٠';
+
+  @override
+  String get pleaseEnterServiceName => 'الرجاء إدخال اسم الخدمة';
+
+  @override
+  String get pleaseEnterDescription => 'الرجاء إدخال وصف';
+
+  @override
+  String get pleaseEnterPrice => 'الرجاء إدخال سعر';
+
+  @override
+  String get serviceAddedSuccessfully => 'تمت إضافة الخدمة بنجاح!';
 }

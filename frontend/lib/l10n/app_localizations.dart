@@ -2082,6 +2082,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Details'**
   String get details;
+
+  /// No description provided for @profileInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Information'**
+  String get profileInformation;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @profession.
+  ///
+  /// In en, this message translates to:
+  /// **'Profession'**
+  String get profession;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @statsInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics Information'**
+  String get statsInformation;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// No description provided for @responseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Response Time'**
+  String get responseTime;
+
+  /// No description provided for @editService.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Service'**
+  String get editService;
+
+  /// No description provided for @deleteServiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Service'**
+  String get deleteServiceTitle;
+
+  /// No description provided for @deleteServiceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this service? This action cannot be undone.'**
+  String get deleteServiceMessage;
+
+  /// No description provided for @serviceDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Details'**
+  String get serviceDetails;
+
+  /// No description provided for @serviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Title'**
+  String get serviceTitle;
+
+  /// No description provided for @enterServiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter service title'**
+  String get enterServiceTitle;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @enterServicePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter service price'**
+  String get enterServicePrice;
+
+  /// No description provided for @priceExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., \"Starts at 1500 DA\" or \"2500 DA per hour\"'**
+  String get priceExample;
+
+  /// No description provided for @serviceStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Status'**
+  String get serviceStatus;
+
+  /// No description provided for @visibleToCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Service is visible to customers'**
+  String get visibleToCustomers;
+
+  /// No description provided for @hiddenFromCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Service is hidden from customers'**
+  String get hiddenFromCustomers;
+
+  /// No description provided for @pricingTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing Tips'**
+  String get pricingTips;
+
+  /// No description provided for @tip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Use clear pricing formats like \"1500 DA\" or \"per hour\"'**
+  String get tip1;
+
+  /// No description provided for @tip2.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider offering starting prices for complex jobs'**
+  String get tip2;
+
+  /// No description provided for @tip3.
+  ///
+  /// In en, this message translates to:
+  /// **'Be transparent about additional charges'**
+  String get tip3;
+
+  /// No description provided for @tip4.
+  ///
+  /// In en, this message translates to:
+  /// **'Review competitor pricing in your area'**
+  String get tip4;
+
+  /// No description provided for @deleteService.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Service'**
+  String get deleteService;
+
+  /// No description provided for @confirmDeleteService.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this service? This action cannot be undone.'**
+  String get confirmDeleteService;
+
+  /// No description provided for @serviceVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Service is visible to customers'**
+  String get serviceVisible;
+
+  /// No description provided for @serviceHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Service is hidden from customers'**
+  String get serviceHidden;
+
+  /// No description provided for @tipClearPricing.
+  ///
+  /// In en, this message translates to:
+  /// **'Use clear pricing formats like \"1500 DA\" or \"per hour\"'**
+  String get tipClearPricing;
+
+  /// No description provided for @tipStartingPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider offering starting prices for complex jobs'**
+  String get tipStartingPrices;
+
+  /// No description provided for @tipTransparency.
+  ///
+  /// In en, this message translates to:
+  /// **'Be transparent about additional charges'**
+  String get tipTransparency;
+
+  /// No description provided for @tipCompetitorPricing.
+  ///
+  /// In en, this message translates to:
+  /// **'Review competitor pricing in your area'**
+  String get tipCompetitorPricing;
+
+  /// No description provided for @serviceImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Images'**
+  String get serviceImages;
+
+  /// No description provided for @addPhotosToAttractCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photos of your work to attract more customers.'**
+  String get addPhotosToAttractCustomers;
+
+  /// No description provided for @uploadImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Images'**
+  String get uploadImages;
+
+  /// No description provided for @tapToSelectFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to select photos from your gallery'**
+  String get tapToSelectFromGallery;
+
+  /// No description provided for @imageUploadComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Image upload - Coming Soon'**
+  String get imageUploadComingSoon;
+
+  /// No description provided for @serviceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Name'**
+  String get serviceName;
+
+  /// No description provided for @enterServiceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter service name'**
+  String get enterServiceName;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @describeYourService.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe your service in detail'**
+  String get describeYourService;
+
+  /// No description provided for @pricing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing'**
+  String get pricing;
+
+  /// No description provided for @pricingModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing Model'**
+  String get pricingModel;
+
+  /// No description provided for @hourlyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly Rate'**
+  String get hourlyRate;
+
+  /// No description provided for @fixedPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed Price'**
+  String get fixedPrice;
+
+  /// No description provided for @enterPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'0.00'**
+  String get enterPrice;
+
+  /// No description provided for @pleaseEnterServiceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a service name'**
+  String get pleaseEnterServiceName;
+
+  /// No description provided for @pleaseEnterDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a description'**
+  String get pleaseEnterDescription;
+
+  /// No description provided for @pleaseEnterPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a price'**
+  String get pleaseEnterPrice;
+
+  /// No description provided for @serviceAddedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Service added successfully!'**
+  String get serviceAddedSuccessfully;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -145,8 +145,8 @@ const getMyServices = async (req, res) => {
 };
 const getServiceById = async (req, res) => {
   try {
-    const { serviceId } = req.params; // Extract service ID from URL params
-    const sp_id = req.serviceProvider.sp_id; // From authenticated SP
+    const { serviceId } = req.params;
+    const sp_id = req.serviceProvider.sp_id; 
 
     const { data: service, error } = await supabase
       .from('services')
@@ -159,12 +159,12 @@ const getServiceById = async (req, res) => {
         )
       `)
       .eq('service_id', serviceId)
-      .eq('sp_id', sp_id) // Ensure the service belongs to this SP
+      .eq('sp_id', sp_id) 
       .single();
 
     if (error) {
       if (error.code === 'PGRST116') {
-        // No rows returned (not found or not owned by this SP)
+        
         return res.status(404).json({ error: 'Service not found or access denied' });
       }
       throw error;
@@ -426,8 +426,6 @@ const createCategory = async (req, res) => {
     if (!name) {
       return res.status(400).json({ error: 'Category name is required' });
     }
-
-    // Check if category already exists
     const { data: existing, error: checkError } = await supabase
       .from('service_categories')
       .select('category_id')
@@ -506,7 +504,6 @@ const sendOffer = async (req, res) => {
     const { demand_id, message, proposed_price, proposed_date } = req.body;
     const sp_id = req.serviceProvider.sp_id;
 
-    // Verify demand exists and is open
     const { data: demand, error: demandError } = await supabase
       .from('demands')
       .select('status')
@@ -521,7 +518,6 @@ const sendOffer = async (req, res) => {
       return res.status(400).json({ error: 'Demand is not open for offers' });
     }
 
-    // Check if SP already sent an offer
     const { data: existingOffer } = await supabase
       .from('demand_offers')
       .select('offer_id')
@@ -647,53 +643,61 @@ const getOfferDetails = async (req, res) => {
   }
 };
 
-// Bookings
 const getMyBookings = async (req, res) => {
   try {
     const sp_id = req.serviceProvider.sp_id;
-    const { status, page = 1, limit = 20 } = req.query;
-    const offset = (page - 1) * limit;
 
-    let query = supabase
+    
+    const { data: bookings, error } = await supabase
       .from('bookings')
       .select(`
         *,
-        homeowners (
-          homeowner_id,
-          home_address
-        ),
-        services (
-          service_id,
+        service_id,
+        homeowner_id,
+        service (
           name,
-          description
+          service_categories (name)
+        ),
+        homeowner (
+          full_name,
+          phone_number
+        ),
+        booking_images (
+          booking_image_id,
+          image_url
         )
-      `, { count: 'exact' })
+      `)
       .eq('sp_id', sp_id)
-      .in('status', ['pending', 'confirmed', 'in_progress'])
-      .order('date', { ascending: true })
-      .range(offset, offset + limit - 1);
-
-    if (status) {
-      query = query.eq('status', status);
-    }
-
-    const { data: bookings, error, count } = await query;
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw error;
     }
 
-    res.json({
-      bookings,
-      pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        total: count,
-        totalPages: Math.ceil(count / limit)
-      }
-    });
+    // Generate signed URLs for images
+    const bookingsWithSignedImages = await Promise.all(
+      bookings.map(async (booking) => {
+        const signedImages = await Promise.all(
+          booking.booking_images.map(async (img) => {
+            const { data: signedUrlData } = await supabase.storage
+              .from('service-images') // ← Your bucket name
+              .createSignedUrl(img.image_url, 60 * 5); // 5 minutes
+            return {
+              ...img,
+              image_url: signedUrlData.signedUrl
+            };
+          })
+        );
+        return {
+          ...booking,
+          booking_images: signedImages
+        };
+      })
+    );
+
+    res.json({ bookings: bookingsWithSignedImages });
   } catch (error) {
-    console.error('Get bookings error:', error);
+    console.error('Get my bookings error:', error);
     res.status(500).json({ error: 'Failed to fetch bookings' });
   }
 };
@@ -704,8 +708,11 @@ const getBookingHistory = async (req, res) => {
     const { page = 1, limit = 20 } = req.query;
     const offset = (page - 1) * limit;
 
+    const tenDaysAgo = new Date();
+    tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+
     const { data: bookings, error, count } = await supabase
-      .from('bookings')
+      .from("bookings")
       .select(`
         *,
         homeowners (
@@ -721,15 +728,14 @@ const getBookingHistory = async (req, res) => {
           rating,
           review_text
         )
-      `, { count: 'exact' })
-      .eq('sp_id', sp_id)
-      .in('status', ['completed', 'cancelled'])
-      .order('updated_at', { ascending: false })
+      `, { count: "exact" })
+      .eq("sp_id", sp_id)
+      .in("status", ["completed", "cancelled", "rejected", "accepted","pending"])
+      .gte("updated_at", tenDaysAgo.toISOString())
+      .order("updated_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     res.json({
       bookings,
@@ -741,10 +747,11 @@ const getBookingHistory = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get booking history error:', error);
-    res.status(500).json({ error: 'Failed to fetch booking history' });
+    console.error("Get booking history error:", error);
+    res.status(500).json({ error: "Failed to fetch booking history" });
   }
 };
+
 
 const acceptBooking = async (req, res) => {
   try {
@@ -769,7 +776,7 @@ const acceptBooking = async (req, res) => {
     const { data: updatedBooking, error } = await supabase
       .from('bookings')
       .update({
-        status: 'confirmed',
+        status: 'accepted',
         updated_at: new Date().toISOString()
       })
       .eq('booking_id', bookingId)
@@ -813,7 +820,7 @@ const declineBooking = async (req, res) => {
     const { data: updatedBooking, error } = await supabase
       .from('bookings')
       .update({
-        status: 'cancelled',
+        status: 'rejected',
         updated_at: new Date().toISOString()
       })
       .eq('booking_id', bookingId)
@@ -834,6 +841,7 @@ const declineBooking = async (req, res) => {
   }
 };
 
+
 const completeBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
@@ -850,7 +858,7 @@ const completeBooking = async (req, res) => {
       return res.status(404).json({ error: 'Booking not found' });
     }
 
-    if (!['confirmed', 'in_progress'].includes(booking.status)) {
+    if (!['accepted'].includes(booking.status)) {
       return res.status(400).json({ error: 'Cannot complete this booking' });
     }
 
@@ -878,7 +886,7 @@ const completeBooking = async (req, res) => {
   }
 };
 
-// Subscription
+
 const getCurrentSubscription = async (req, res) => {
   try {
     const sp_id = req.serviceProvider.sp_id;
@@ -890,7 +898,7 @@ const getCurrentSubscription = async (req, res) => {
       .eq('status', 'active')
       .single();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+    if (error && error.code !== 'PGRST116') { 
       throw error;
     }
 
@@ -908,16 +916,15 @@ const upgradeSubscription = async (req, res) => {
 
     // Define subscription pricing
     const pricing = {
-      basic: 9.99,
-      premium: 29.99,
-      enterprise: 99.99
+      free: 0.00,
+      pro: 2999,
+      elite: 9999
     };
 
     if (!pricing[tier]) {
       return res.status(400).json({ error: 'Invalid subscription tier' });
     }
 
-    // Cancel existing active subscription
     await supabase
       .from('subscriptions')
       .update({ 
@@ -927,7 +934,6 @@ const upgradeSubscription = async (req, res) => {
       .eq('sp_id', sp_id)
       .eq('status', 'active');
 
-    // Create new subscription
     const startDate = new Date();
     const endDate = new Date();
     endDate.setMonth(endDate.getMonth() + 1);
@@ -961,7 +967,6 @@ const upgradeSubscription = async (req, res) => {
   }
 };
 
-// Profile
 const getProfile = async (req, res) => {
   try {
     const sp_id = req.serviceProvider.sp_id;
@@ -994,7 +999,7 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const sp_id = req.serviceProvider.sp_id;
-    const { working_address, service_type, experience_years, job_done, description } = req.body;
+    const { working_address, service_type, experience_years, job_done, description,verificationstatus } = req.body;
 
     const updates = {};
     if (working_address) updates.working_address = working_address;
@@ -1002,6 +1007,7 @@ const updateProfile = async (req, res) => {
     if (experience_years !== undefined) updates.experience_years = experience_years;
     if (job_done !== undefined) updates.jobs_done = job_done;
     if (description) updates.description = description;
+    if (verificationstatus) updates.verification_status = verificationstatus;
 
     const { data: profile, error } = await supabase
       .from('service_providers')
@@ -1021,6 +1027,318 @@ const updateProfile = async (req, res) => {
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({ error: 'Failed to update profile' });
+  }
+};
+
+const uploadServiceImages = async (req, res) => {
+  try {
+    const { service_id } = req.params;
+    const sp_id = req.serviceProvider.sp_id;
+
+    // Validate service ownership
+    const { data: service, error: serviceError } = await supabase
+      .from('services')
+      .select('service_id, sp_id')
+      .eq('service_id', service_id)
+      .eq('sp_id', sp_id)
+      .single();
+
+    if (serviceError || !service) {
+      return res.status(404).json({ error: 'Service not found or unauthorized' });
+    }
+
+    const images = req.files || [];
+    const savedImagePaths = []; // ← Store paths, not URLs
+
+    for (const image of images) {
+      const timestamp = Date.now();
+      const filename = `${service_id}_${timestamp}_${image.originalname}`;
+      const filePath = `service-images/${sp_id}/${filename}`; // 👈 This is what we save
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('service-images')
+        .upload(filePath, image.buffer, {
+          contentType: image.mimetype,
+          upsert: false
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        continue;
+      }
+
+      // ✅ SAVE ONLY THE FILE PATH (NOT URL!)
+      const { data: imageRecord, error: dbError } = await supabase
+        .from('service_images')
+        .insert({
+          service_id,
+          image_url: filePath // 👈 Critical: store path, not publicUrl
+        })
+        .select()
+        .single();
+
+      if (!dbError) {
+        savedImagePaths.push(imageRecord);
+      }
+    }
+
+    res.status(201).json({
+      message: 'Images uploaded successfully',
+      images: savedImagePaths
+    });
+
+  } catch (error) {
+    console.error('Upload service images error:', error);
+    res.status(500).json({ error: 'Failed to upload images' });
+  }
+};
+
+
+// GET /services/:service_id/images
+const getServiceImages = async (req, res) => {
+  try {
+    const { service_id } = req.params;
+
+    const { data: images, error } = await supabase
+      .from('service_images')
+      .select('image_id, image_url') // image_url = filename/path
+      .eq('service_id', service_id);
+     
+    if (error) throw error;
+
+    // Generate fresh signed URLs for each image
+    const signedImages = await Promise.all(
+      images.map(async (img) => {
+        const fileName = img.image_url; // ← This is just the filename/path
+
+        const { data: signedUrlData } = await supabase.storage
+          .from('service-images')
+          .createSignedUrl(fileName, 60 * 5); // 5 minutes
+
+        return {
+          ...img,
+          image_url: signedUrlData.signedUrl // 👈 Return signed URL to client
+        };
+      })
+    );
+
+    res.status(200).json({
+      service_id,
+      images: signedImages
+    });
+
+  } catch (error) {
+    console.error('Get service images error:', error);
+    res.status(500).json({ error: 'Failed to fetch images' });
+  }
+};
+
+const deleteServiceImage = async (req, res) => {
+  try {
+    const { image_id } = req.params;
+    const sp_id = req.serviceProvider.sp_id;
+    const { data: image, error: imageError } = await supabase
+      .from('service_images')
+      .select(`
+        *,
+        services!inner(sp_id)
+      `)
+      .eq('image_id', image_id)
+      .single();
+
+    if (imageError || !image) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+
+    if (image.services.sp_id !== sp_id) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    // Extract file path from URL
+    const url = new URL(image.image_url);
+    const filePath = url.pathname.split('/storage/v1/object/public/service-images/')[1];
+
+    const { error: storageError } = await supabase.storage
+      .from('service-images')
+      .remove([filePath]);
+
+    if (storageError) {
+      console.error('Storage delete error:', storageError);
+    }
+
+    
+    const { error: dbError } = await supabase
+      .from('service_images')
+      .delete()
+      .eq('image_id', image_id);
+
+    if (dbError) {
+      throw dbError;
+    }
+
+    res.status(200).json({
+      message: 'Image deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete service image error:', error);
+    res.status(500).json({ error: 'Failed to delete image' });
+  }
+};
+const updateServiceImage = async (req, res) => {
+  try {
+    const { image_id } = req.params;
+    const sp_id = req.serviceProvider.sp_id;
+    const newImage = req.file; 
+
+    if (!newImage) {
+      return res.status(400).json({ error: 'No image provided' });
+    }
+
+    const { data: existingImage, error: imageError } = await supabase
+      .from('service_images')
+      .select(`
+        *,
+        services!inner(sp_id, service_id)
+      `)
+      .eq('image_id', image_id)
+      .single();
+
+    if (imageError || !existingImage) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+
+    if (existingImage.services.sp_id !== sp_id) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    const oldUrl = new URL(existingImage.image_url);
+    const oldFilePath = oldUrl.pathname.split('/storage/v1/object/public/service-images/')[1];
+    
+    await supabase.storage
+      .from('service-images')
+      .remove([oldFilePath]);
+
+  
+    const timestamp = Date.now();
+    const filename = `${existingImage.services.service_id}_${timestamp}_${newImage.originalname}`;
+    const newFilePath = `service-images/${sp_id}/${filename}`;
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('service-images')
+      .upload(newFilePath, newImage.buffer, {
+        contentType: newImage.mimetype,
+        upsert: false
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    
+    const { data: urlData } = supabase.storage
+      .from('service-images')
+      .getPublicUrl(newFilePath);
+
+    
+    const { data: updatedImage, error: updateError } = await supabase
+      .from('service_images')
+      .update({
+        image_url: urlData.publicUrl,
+        updated_at: new Date().toISOString()
+      })
+      .eq('image_id', image_id)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    res.status(200).json({
+      message: 'Image updated successfully',
+      image: updatedImage
+    });
+  } catch (error) {
+    console.error('Update service image error:', error);
+    res.status(500).json({ error: 'Failed to update image' });
+  }
+};
+
+const updateProfilePicture = async (req, res) => {
+  try {
+    const sp_id = req.serviceProvider.sp_id;
+    const image = req.file;
+
+    if (!image) {
+      return res.status(400).json({ error: 'No image provided' });
+    }
+
+    const { data: currentProfile, error: profileError } = await supabase
+      .from('service_providers')
+      .select('profile_picture_url')
+      .eq('sp_id', sp_id)
+      .single();
+
+    if (profileError) {
+      throw profileError;
+    }
+    if (currentProfile.profile_picture_url) {
+      try {
+        const oldUrl = new URL(currentProfile.profile_picture_url);
+        const oldFilePath = oldUrl.pathname.split('/storage/v1/object/public/service-providers-profile-photos/')[1];
+        
+        if (oldFilePath) {
+          await supabase.storage
+            .from('service-providers-profile-photos')
+            .remove([oldFilePath]);
+        }
+      } catch (deleteError) {
+        console.error('Error deleting old profile picture:', deleteError);
+        
+      }
+    }
+
+    const timestamp = Date.now();
+    const fileExtension = image.originalname.split('.').pop();
+    const filename = `${sp_id}_${timestamp}.${fileExtension}`;
+    const filePath = `${sp_id}/${filename}`;
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('service-providers-profile-photos')
+      .upload(filePath, image.buffer, {
+        contentType: image.mimetype,
+        upsert: false
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('service-providers-profile-photos')
+      .getPublicUrl(filePath);
+
+    const { data: updatedProfile, error: updateError } = await supabase
+      .from('service_providers')
+      .update({
+        profile_picture_url: urlData.publicUrl
+      })
+      .eq('sp_id', sp_id)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    res.json({
+      message: 'Profile picture updated successfully',
+      profile_picture_url: urlData.publicUrl,
+      profile: updatedProfile
+    });
+  } catch (error) {
+    console.error('Update profile picture error:', error);
+    res.status(500).json({ error: 'Failed to update profile picture' });
   }
 };
 
@@ -1046,5 +1364,10 @@ module.exports = {
  getDemandsByWilaya,
   getDemandsByCategory,
   searchDemandsByTitle,
-  createCategory,getServiceById
+  createCategory,getServiceById,
+  getServiceImages,
+  uploadServiceImages,
+  deleteServiceImage,
+  updateServiceImage,
+  updateProfilePicture
   };

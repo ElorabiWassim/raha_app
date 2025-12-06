@@ -545,6 +545,79 @@
   "viewInvoice": "عرض الفاتورة",
   "upcoming": "قادم",
   "rate": "تقييم",
-  "details": "التفاصيل"
+  "details": "التفاصيل",
+  
+  "editService": "تعديل الخدمة",
+  
+
+  "deleteServiceTitle": "حذف الخدمة",
+  "deleteServiceMessage": "هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.",
+  
+
+  "serviceDetails": "تفاصيل الخدمة",
+  "serviceTitle": "عنوان الخدمة",
+  "enterServiceTitle": "يرجى إدخال عنوان الخدمة",
+
+  "price": "السعر",
+  "enterServicePrice": "يرجى إدخال سعر الخدمة",
+  "priceExample": "مثال: \"تبدأ من 1500 دج\" أو \"2500 دج للساعة\"",
+
+  "serviceStatus": "حالة الخدمة",
+  "visibleToCustomers": "الخدمة ظاهرة للزبائن",
+  "hiddenFromCustomers": "الخدمة مخفية عن الزبائن",
+
+  "pricingTips": "نصائح التسعير",
+  "tip1": "استخدم صيغ أسعار واضحة مثل \"1500 دج\" أو \"للساعة\"",
+  "tip2": "فكّر في وضع سعر ابتدائي للمهام المعقدة",
+  "tip3": "كن شفافًا بخصوص الرسوم الإضافية",
+  "tip4": "راجع أسعار المنافسين في منطقتك",
+  "deleteService": "حذف الخدمة",
+  "confirmDeleteService": "هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.",
+  
+  "serviceVisible": "الخدمة مرئية للعملاء",
+  "serviceHidden": "الخدمة مخفية عن العملاء",
+
+  "tipClearPricing": "استخدم تنسيقات تسعير واضحة مثل \"1500 دج\" أو \"للساعة\"",
+  "tipStartingPrices": "فكر في عرض أسعار بداية للخدمات المعقدة",
+  "tipTransparency": "كن شفافًا بشأن الرسوم الإضافية",
+  "tipCompetitorPricing": "راجع أسعار المنافسين في منطقتك",
+  "serviceImages": "صور الخدمة",
+  "addPhotosToAttractCustomers": "أضف صورًا لأعمالك لجذب المزيد من العملاء.",
+  "uploadImages": "رفع الصور",
+  "tapToSelectFromGallery": "اضغط هنا لاختيار صور من معرضك",
+  "imageUploadComingSoon": "رفع الصور – قادم قريبًا",
+  "serviceName": "اسم الخدمة",
+  "enterServiceName": "أدخل اسم الخدمة",
+  "description": "الوصف",
+  "describeYourService": "صف خدمتك بالتفصيل",
+  "pricing": "التسعير",
+  "pricingModel": "نموذج التسعير",
+  "hourlyRate": "سعر الساعة",
+  "fixedPrice": "سعر ثابت",
+  "enterPrice": "٠٫٠٠",
+  "pleaseEnterServiceName": "الرجاء إدخال اسم الخدمة",
+  "pleaseEnterDescription": "الرجاء إدخال وصف",
+  "pleaseEnterPrice": "الرجاء إدخال سعر",
+  "serviceAddedSuccessfully": "تمت إضافة الخدمة بنجاح!",
+  
+  "profileInformation": "معلومات الملف الشخصي",
+  "statsInformation": "معلومات الإحصائيات",
+
+  "name": "الاسم",
+  "profession": "المهنة",
+  "location": "الموقع",
+ 
+
+  "rating": "التقييم",
+  
+  "responseTime": "سرعة الاستجابة",
+
+  "pleaseEnterName": "الرجاء إدخال الاسم",
+  "pleaseEnterProfession": "الرجاء إدخال المهنة",
+  "pleaseEnterLocation": "الرجاء إدخال الموقع",
+  "pleaseEnterExperience": "الرجاء إدخال الخبرة"
+  
+
+  
 
 }

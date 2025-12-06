@@ -26,7 +26,6 @@ const demandQueryValidator = [
 
 const sendOfferValidator = [
   body('demand_id').isUUID().withMessage('Valid demand ID is required'),
-  body('sp_id').isUUID().withMessage('Valid service provider ID is required'),
   body('message').trim().notEmpty().withMessage('Message is required'),
   body('proposed_price').isFloat({ min: 0 }).withMessage('Proposed price must be positive'),
   body('proposed_date').isISO8601().withMessage('Valid date is required'),

@@ -67,16 +67,15 @@ class MyProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
-        shadowColor: Colors.black,
+        backgroundColor: Color(0xFFE8F5E9),
+        elevation: 0,
         surfaceTintColor: Colors.transparent,
         title: Text(
           l10n.myProfile,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black87,
           ),
         ),
         actions: [
@@ -85,7 +84,7 @@ class MyProfileScreen extends StatelessWidget {
               _navigateToPage(context, 'Settings');
             },
             icon: Icon(Icons.settings_outlined),
-            color: Colors.black,
+            color: Colors.black87,
           ),
         ],
         centerTitle: true,
@@ -97,37 +96,38 @@ class MyProfileScreen extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(height: 12),
                 Container(
                   color: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+                  padding: EdgeInsets.symmetric(vertical: 32, horizontal: 20),
                   child: Column(
                     children: [
                       CircleAvatar(
-                        radius: 55,
+                        radius: 60,
                         backgroundColor: Colors.grey[300],
                         backgroundImage: AssetImage(
                           'assets/images/MohammedPicture.png',
                         ),
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 20),
                       Text(
                         profileData.name,
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 26,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                       ),
-                      SizedBox(height: 6),
+                      SizedBox(height: 8),
                       Text(
                         l10n.verifiedHomeowner,
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 16,
                           color: Color(0xFF68E36C),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 24),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -135,19 +135,19 @@ class MyProfileScreen extends StatelessWidget {
                             _navigateToPage(context, 'Edit Profile');
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[200],
-                            foregroundColor: const Color.fromARGB(255, 34, 204, 85),
+                            backgroundColor: Color(0xFFE8F5E9),
+                            foregroundColor: Color(0xFF68E36C),
                             elevation: 0,
-                            padding: EdgeInsets.symmetric(vertical: 14),
+                            padding: EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                           child: Text(
                             l10n.editProfile,
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -330,22 +330,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Color(0xFFE8F5E9),
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFE8F5E9),
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
         title: Text(
           l10n.editProfile,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black87,
           ),
         ),
         centerTitle: true,

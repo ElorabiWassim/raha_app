@@ -57,24 +57,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Color(0xFFE8F5E9),
       appBar: AppBar(
-        elevation: 2,
-        shadowColor: Colors.black,
+        elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () {
             Navigator.pop(context, currentProfileData);
           },
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFE8F5E9),
         title: Text(
           l10n.settings,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black87,
           ),
         ),
         centerTitle: true,
@@ -351,7 +350,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: ElevatedButton(
                   onPressed: _showLogoutDialog,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFF9800),
+                    backgroundColor: Colors.red,
                     padding: EdgeInsets.symmetric(vertical: 16),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -677,7 +676,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 (route) => false,
               );
             },
-            child: Text(l10n.logout, style: TextStyle(color: Colors.orange)),
+            child: Text(l10n.logout, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

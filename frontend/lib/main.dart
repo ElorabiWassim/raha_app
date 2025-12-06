@@ -5,6 +5,7 @@ import 'package:ra7a/l10n/app_localizations.dart';
 import 'package:ra7a/modules/authentication/screens/splash.dart';
 import 'package:ra7a/cubits/language_cubit.dart';
 import 'package:ra7a/cubits/profile_cubit.dart';
+import 'package:ra7a/cubits/serviceprovider_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => LanguageCubit()),
         BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(create: (context) => ServiceProviderCubit()),
       ],
       child: const MyAppView(),
     );
@@ -43,7 +45,7 @@ class _MyAppViewState extends State<MyAppView> {
           navigatorKey: _navigatorKey,
           debugShowCheckedModeBanner: false,
           
-          // Use Cubit locale
+         
           locale: languageState.locale,
           
           supportedLocales: const [
