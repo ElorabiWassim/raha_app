@@ -1,0 +1,623 @@
+{
+  "appTitle": "راحة",
+  "splashWelcome": "مرحبًا",
+  "languageEnglish": "الإنجليزية",
+  "languageFrench": "الفرنسية",
+  "languageArabic": "العربية",
+  "chooseLanguage": "اختر لغتك",
+  "@chooseLanguage": {
+    "description": "Title for language selection screen"
+  },
+  "onboardingTitle1": "ابحث عن مقدمي خدمات موثوقين بالقرب منك.",
+  "@onboardingTitle1": {
+    "description": "First onboarding screen title"
+  },
+  "onboardingSubtitle1": "احجز بسهولة محترفين محليين معتمدين لجميع احتياجات منزلك.",
+  "@onboardingSubtitle1": {
+    "description": "First onboarding screen subtitle"
+  },
+  "onboardingTitle2": "جدولة وتتبع حجوزاتك",
+  "@onboardingTitle2": {
+    "description": "Second onboarding screen title"
+  },
+  "onboardingSubtitle2": "إدارة مواعيدك والبقاء على اطلاع بخدمتك.",
+  "@onboardingSubtitle2": {
+    "description": "Second onboarding screen subtitle"
+  },
+  "onboardingTitle3": "تقييم ومراجعة مقدمي الخدمات",
+  "@onboardingTitle3": {
+    "description": "Third onboarding screen title"
+  },
+  "onboardingSubtitle3": "شارك تجربتك وساعد الآخرين على اتخاذ خيارات مدروسة.",
+  "@onboardingSubtitle3": {
+    "description": "Third onboarding screen subtitle"
+  },
+  "onboardingSkip": "تخطي",
+  "@onboardingSkip": {
+    "description": "Skip button text on onboarding"
+  },
+  "onboardingNext": "التالي",
+  "@onboardingNext": {
+    "description": "Next button text on onboarding"
+  },
+  "loginWelcomeBack": "مرحبًا بعودتك",
+  "@loginWelcomeBack": {
+    "description": "Welcome message on login screen"
+  },
+  "loginUsername": "اسم المستخدم",
+  "@loginUsername": {
+    "description": "Username field label"
+  },
+  "loginUsernameHint": "أدخل اسم المستخدم",
+  "@loginUsernameHint": {
+    "description": "Username field hint text"
+  },
+  "loginPassword": "كلمة المرور",
+  "@loginPassword": {
+    "description": "Password field label"
+  },
+  "loginPasswordHint": "أدخل كلمة المرور",
+  "@loginPasswordHint": {
+    "description": "Password field hint text"
+  },
+  "loginForgotPassword": "نسيت كلمة المرور؟",
+  "@loginForgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "loginButton": "تسجيل الدخول",
+  "@loginButton": {
+    "description": "Login button text"
+  },
+  "loginOr": "أو",
+  "@loginOr": {
+    "description": "Divider text between login options"
+  },
+  "loginContinueWithGoogle": "المتابعة مع Google",
+  "@loginContinueWithGoogle": {
+    "description": "Google login button text"
+  },
+  "loginNoAccount": "ليس لديك حساب؟ ",
+  "@loginNoAccount": {
+    "description": "Text before sign up link"
+  },
+  "loginSignUp": "إنشاء حساب",
+  "@loginSignUp": {
+    "description": "Sign up link text"
+  },
+  "loginInvalidUsername": "اسم المستخدم غير صحيح. يرجى استخدام: homeowner أو serviceprovider أو admin",
+  "@loginInvalidUsername": {
+    "description": "Error message for invalid username"
+  },
+  "roleSelectionTitle": "اختر نوع حسابك",
+  "@roleSelectionTitle": {
+    "description": "Title on role selection screen"
+  },
+  "roleSelectionSubtitle": "اختر دورك لبدء استخدام راحة",
+  "@roleSelectionSubtitle": {
+    "description": "Subtitle on role selection screen"
+  },
+  "roleHomeowner": "صاحب منزل",
+  "@roleHomeowner": {
+    "description": "Homeowner role button text"
+  },
+  "roleHomeownerDescription": "أبحث عن مساعدة",
+  "@roleHomeownerDescription": {
+    "description": "Homeowner role description"
+  },
+  "roleServiceProvider": "مقدم خدمة",
+  "@roleServiceProvider": {
+    "description": "Service provider role button text"
+  },
+  "roleServiceProviderDescription": "أقدم مهاراتي",
+  "@roleServiceProviderDescription": {
+    "description": "Service provider role description"
+  },
+  "roleSelectionBackToLogin": "العودة لتسجيل الدخول",
+  "@roleSelectionBackToLogin": {
+    "description": "Back to login button text"
+  },
+  "signupCreateAccount": "إنشاء حسابك",
+  "@signupCreateAccount": {
+    "description": "Title for homeowner signup screen"
+  },
+  "signupCreateProviderAccount": "إنشاء حساب مقدم الخدمة",
+  "@signupCreateProviderAccount": {
+    "description": "Title for provider signup screen"
+  },
+  "signupFullName": "الاسم الكامل",
+  "@signupFullName": {
+    "description": "Full name field label"
+  },
+  "signupFullNameHint": "أدخل اسمك الكامل",
+  "@signupFullNameHint": {
+    "description": "Full name field hint"
+  },
+  "signupEmail": "البريد الإلكتروني",
+  "@signupEmail": {
+    "description": "Email field label"
+  },
+  "signupEmailHint": "أدخل بريدك الإلكتروني",
+  "@signupEmailHint": {
+    "description": "Email field hint"
+  },
+  "signupDateOfBirth": "تاريخ الميلاد",
+  "@signupDateOfBirth": {
+    "description": "Date of birth label"
+  },
+  "signupDateHint": "يوم/شهر/سنة",
+  "@signupDateHint": {
+    "description": "Date picker hint"
+  },
+  "signupPhoneNumber": "رقم الهاتف",
+  "@signupPhoneNumber": {
+    "description": "Phone number field label"
+  },
+  "signupPhoneNumberHint": "أدخل رقم هاتفك",
+  "@signupPhoneNumberHint": {
+    "description": "Phone number field hint"
+  },
+  "signupCity": "المدينة",
+  "@signupCity": {
+    "description": "City field label"
+  },
+  "signupCityHint": "مثال: الجزائر",
+  "@signupCityHint": {
+    "description": "City field hint"
+  },
+  "signupNeighborhood": "الحي / الشارع",
+  "@signupNeighborhood": {
+    "description": "Neighborhood field label"
+  },
+  "signupNeighborhoodHint": "مثال: 123 شارع رئيسي",
+  "@signupNeighborhoodHint": {
+    "description": "Neighborhood field hint"
+  },
+  "signupUseCurrentLocation": "استخدام موقعي الحالي",
+  "@signupUseCurrentLocation": {
+    "description": "Use current location button"
+  },
+  "signupPropertyType": "نوع العقار (اختياري)",
+  "@signupPropertyType": {
+    "description": "Property type label"
+  },
+  "signupSelectPropertyType": "اختر نوع العقار",
+  "@signupSelectPropertyType": {
+    "description": "Property type dropdown hint"
+  },
+  "signupPropertyTypeApartment": "شقة",
+  "@signupPropertyTypeApartment": {
+    "description": "Apartment property type"
+  },
+  "signupPropertyTypeVilla": "فيلا",
+  "@signupPropertyTypeVilla": {
+    "description": "Villa property type"
+  },
+  "signupPropertyTypeStudio": "استوديو",
+  "@signupPropertyTypeStudio": {
+    "description": "Studio property type"
+  },
+  "signupServiceType": "نوع الخدمة",
+  "@signupServiceType": {
+    "description": "Service type label"
+  },
+  "signupSelectServiceType": "اختر نوع خدمتك",
+  "@signupSelectServiceType": {
+    "description": "Service type dropdown hint"
+  },
+  "signupSelectServiceTypeError": "يرجى اختيار نوع الخدمة",
+  "@signupSelectServiceTypeError": {
+    "description": "Service type validation error"
+  },
+  "signupServiceTypePlumbing": "السباكة",
+  "@signupServiceTypePlumbing": {
+    "description": "Plumbing service type"
+  },
+  "signupServiceTypeElectrical": "الكهرباء",
+  "@signupServiceTypeElectrical": {
+    "description": "Electrical service type"
+  },
+  "signupServiceTypeCleaning": "التنظيف",
+  "@signupServiceTypeCleaning": {
+    "description": "Cleaning service type"
+  },
+  "signupServiceTypePainting": "الدهان",
+  "@signupServiceTypePainting": {
+    "description": "Painting service type"
+  },
+  "signupServiceTypeCarpentry": "النجارة",
+  "@signupServiceTypeCarpentry": {
+    "description": "Carpentry service type"
+  },
+  "signupServiceTypeHVAC": "التكييف والتهوية",
+  "@signupServiceTypeHVAC": {
+    "description": "HVAC service type"
+  },
+  "signupServiceTypeGardening": "البستنة",
+  "@signupServiceTypeGardening": {
+    "description": "Gardening service type"
+  },
+  "signupServiceTypeOther": "أخرى",
+  "@signupServiceTypeOther": {
+    "description": "Other service type"
+  },
+  "signupPassword": "كلمة المرور",
+  "@signupPassword": {
+    "description": "Password field label"
+  },
+  "signupPasswordHint": "أدخل كلمة المرور",
+  "@signupPasswordHint": {
+    "description": "Password field hint"
+  },
+  "signupConfirmPassword": "تأكيد كلمة المرور",
+  "@signupConfirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "signupConfirmPasswordHint": "أكد كلمة المرور",
+  "@signupConfirmPasswordHint": {
+    "description": "Confirm password field hint"
+  },
+  "signupAcceptTerms": "أوافق على ",
+  "@signupAcceptTerms": {
+    "description": "Terms acceptance text prefix"
+  },
+  "signupTermsAndConditions": "الشروط والأحكام",
+  "@signupTermsAndConditions": {
+    "description": "Terms and conditions link text"
+  },
+  "signupButton": "إنشاء حساب",
+  "@signupButton": {
+    "description": "Sign up button text"
+  },
+  "signupVerifyAccount": "التحقق من حسابك",
+  "@signupVerifyAccount": {
+    "description": "Verify account button text for provider"
+  },
+  "signupOr": "أو",
+  "@signupOr": {
+    "description": "Divider text"
+  },
+  "signupWithGoogle": "التسجيل مع Google",
+  "@signupWithGoogle": {
+    "description": "Google sign up button text"
+  },
+  "signupAlreadyHaveAccount": "لديك حساب بالفعل؟ ",
+  "@signupAlreadyHaveAccount": {
+    "description": "Text before login link"
+  },
+  "dashboardTitle": "لوحة التحكم",
+  "dashboardTotalUsers": "إجمالي المستخدمين",
+  "dashboardVerifiedSPs": "مقدمو الخدمة المعتمدون",
+  "dashboardActiveBookings": "الحجوزات النشطة",
+  "dashboardRevenue": "الإيرادات",
+  "dashboardRecentActivity": "النشاط الأخير",
+  "dashboardLogout": "تسجيل الخروج",
+  "dashboardLogoutConfirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "dashboardCancel": "إلغاء",
+  
+  "demandsTitle": "الوظائف المفتوحة",
+  "demandsSearchHint": "ابحث عن الوظائف...",
+  "demandsCategory": "الفئة",
+  "demandsWilaya": "الولاية",
+  "demandsCategoryPlumbing": "السباكة",
+  "demandsCategoryElectrical": "الكهرباء",
+  "demandsCategoryGardening": "البستنة",
+  "demandsCategoryCleaning": "التنظيف",
+  "demandsPosted": "تم النشر",
+  "demandsSendOffer": "إرسال عرض",
+  "demandsOfferSent": "تم إرسال العرض!",
+  
+  "applicationsTitle": "طلبات مقدمي الخدمة",
+  "applicationsSearchHint": "ابحث في الطلبات...",
+  "applicationsApplied": "تم التقديم",
+  "applicationsServicesOffered": "الخدمات المقدمة:",
+  "applicationsAccept": "قبول",
+  "applicationsDecline": "رفض",
+  "applicationsAccepted": "تم قبول {name}",
+  "applicationsDeclined": "تم رفض {name}",
+  
+  "plansTitle": "الخطط",
+  "plansRecommended": "موصى به",
+  "plansUpgradeNow": "الترقية الآن",
+  "plansSelectedPlan": "الخطة المحددة: {plan}",
+  
+  "plansFree": "مجاني",
+  "plansFreePriceValue": "0 دج",
+  "plansFreeFeature1": "إنشاء حساب وإدراج ما يصل إلى 3 خدمات.",
+  "plansFreeFeature2": "إدراج معلومات الاتصال.",
+  "plansFreeFeature3": "أولوية أقل في قائمة الخدمات.",
+  "plansFreeFeature4": "أول 20 مزود يحصلون على الخطة المجانية لمدة 6 أشهر.",
+  
+  "plansPro": "محترف",
+  "plansProPriceValue": "700 دج/شهر",
+  "plansProPeriodValue": "7,000 دج/سنة",
+  "plansProFeature1": "إدراج ما يصل إلى 10 خدمات.",
+  "plansProFeature2": "استقبال الحجوزات والطلبات ورسائل العملاء.",
+  "plansProFeature3": "إنشاء ونشر المنشورات.",
+  "plansProFeature4": "الرد على طلبات المستخدمين.",
+  "plansProFeature5": "أولوية متوسطة في نتائج البحث.",
+
+  "plansElite": "نخبة",
+  "plansElitePriceValue": "1,500 دج/شهر",
+  "plansElitePeriodValue": "15,000 دج/سنة",
+  "plansEliteFeature1": "إدراج ما يصل إلى 20 خدمة.",
+  "plansEliteFeature2": "عرض رؤى تفصيلية للملف الشخصي (عدد مشاهدات الملف الشخصي).",
+  "plansEliteFeature3": "أعلى أولوية في عرض نتائج البحث.",
+  "plansEliteFeature4": "الحصول على شارة التحقق لزيادة الثقة.",
+  "plansEliteFeature5": "استقبال الحجوزات والطلبات والرسائل.",
+  "plansEliteFeature6": "إنشاء ونشر المنشورات.",
+  "plansEliteFeature7": "الترويج للخدمات من خلال الإعلانات في الخلاصة الرئيسية.",
+  "plansEliteFeature8": "الرد على طلبات المستخدمين.",
+  "verificationTitle": "التحقق من المستندات",
+  "verificationSubtitle": "قم بتحميل مستنداتك للتحقق",
+  "verificationNationalID": "بطاقة الهوية الوطنية / جواز السفر",
+  "verificationCertificate": "الشهادة المهنية",
+  "verificationProfilePicture": "صورة الملف الشخصي",
+  "verificationRequired": "مطلوب",
+  "verificationClearHeadshot": "مطلوب صورة واضحة للرأس",
+  "verificationTapToUpload": "اضغط للتحميل",
+  "verificationDocumentUploaded": "تم تحميل المستند",
+  "verificationAcceptedFormats": "المقبول: JPG، PNG، PDF. الحد الأقصى: 5 ميجابايت",
+  "verificationSubmit": "إرسال للمراجعة",
+  "verificationSuccess": "تم إرسال الطلب!",
+  "verificationSuccessMessage": "نحن نراجع مستنداتك. ستتلقى إشعارًا خلال 2-3 أيام عمل.",
+  "verificationBackToVerification": "العودة إلى التحقق",
+  "reportsTitle": "إدارة التقارير",
+  "reportsSearchHint": "ابحث في التقارير...",
+  "reportsFilterNew": "جديد ({count})",
+  "reportsFilterInProgress": "قيد المعالجة",
+  "reportsFilterResolved": "تم الحل",
+  "reportsHomeowner": "صاحب المنزل",
+  "reportsProvider": "مقدم الخدمة",
+  "reportsDetails": "التفاصيل",
+  "reportsResolve": "حل",
+  "requestsTitle": "طلبات الخدمة",
+  "requestsTabRequests": "الطلبات",
+  "requestsTabHistory": "السجل",
+  "requestsStatusPending": "قيد الانتظار",
+  "requestsStatusConfirmed": "مؤكد",
+  "requestsStatusCompleted": "مكتمل",
+  "requestsAccept": "قبول",
+  "requestsDecline": "رفض",
+  "requestsViewDetails": "عرض التفاصيل",
+  "editProfile": "تعديل الملف الشخصي",
+  "myProfile": "ملفي الشخصي",
+  "settings": "الإعدادات",
+  "verifiedHomeowner": "مالك منزل موثق",
+  "paymentMethods": "طرق الدفع",
+  "helpSupport": "المساعدة والدعم",
+  "saveChanges": "حفظ التغييرات",
+  "cancel": "إلغاء",
+  "fullName": "الاسم الكامل",
+  "email": "البريد الإلكتروني",
+  "phoneNumber": "رقم الهاتف",
+  "homeAddress": "عنوان المنزل",
+  "profileUpdatedSuccess": "تم تحديث الملف الشخصي بنجاح!",
+  "comingSoon": "قريباً",
+  "navigationTo": "التنقل إلى {page}",
+  "language": "اللغة",
+  "english": "الإنجليزية",
+  "french": "الفرنسية",
+  "arabic": "العربية",
+  "changeLanguage": "تغيير اللغة",
+  "languageChanged": "تم تغيير اللغة إلى {language}",
+  "account": "الحساب",
+  "updatePersonalInfo": "تحديث معلوماتك الشخصية",
+  "changePassword": "تغيير كلمة المرور",
+  "updatePassword": "تحديث كلمة المرور الخاصة بك",
+  "verification": "التحقق",
+  "verifyAccount": "تحقق من حسابك",
+  "verified": "موثق",
+  "notifications": "الإشعارات",
+  "pushNotifications": "الإشعارات الفورية",
+  "receivePushNotifications": "تلقي الإشعارات الفورية",
+  "emailNotifications": "إشعارات البريد الإلكتروني",
+  "receiveEmailNotifications": "تلقي الإشعارات عبر البريد الإلكتروني",
+  "smsNotifications": "إشعارات الرسائل النصية",
+  "receiveSmsNotifications": "تلقي الإشعارات عبر الرسائل النصية",
+  "preferences": "التفضيلات",
+  "darkMode": "الوضع الداكن",
+  "enableDarkTheme": "تفعيل السمة الداكنة",
+  "serviceArea": "منطقة الخدمة",
+  "supportAbout": "الدعم والمعلومات",
+  "helpCenter": "مركز المساعدة",
+  "getHelpSupport": "الحصول على المساعدة والدعم",
+  "privacyPolicy": "سياسة الخصوصية",
+  "readPrivacyPolicy": "اقرأ سياسة الخصوصية الخاصة بنا",
+  "termsOfService": "شروط الخدمة",
+  "readTermsOfService": "اقرأ شروط الخدمة الخاصة بنا",
+  "about": "حول",
+  "version": "الإصدار 1.0.0",
+  "dangerZone": "منطقة الخطر",
+  "logout": "تسجيل الخروج",
+  "signOutAccount": "الخروج من حسابك",
+  "deleteAccount": "حذف الحساب",
+  "permanentlyDeleteAccount": "حذف حسابك نهائياً",
+  "logoutConfirm": "هل أنت متأكد من أنك تريد تسجيل الخروج؟",
+  "deleteAccountConfirm": "هل أنت متأكد من أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.",
+  "accountDeletionComingSoon": "حذف الحساب - قريباً",
+  "myAddresses": "عناويني",
+  "twoFactorAuth": "المصادقة الثنائية",
+  "contactSupport": "اتصل بالدعم",
+  "securityPrivacy": "الأمان والخصوصية",
+  "greetingWassim": "سلام وسيم",
+  "browseCategories": "تصفح الفئات",
+  "topRatedNearYou": "الأعلى تقييماً بالقرب منك",
+  "professionalAmineFaiz": "أمين فايز",
+  "professionMasterPlumber": "سباك محترف",
+  "professionalMariaHaniya": "ماريا حنية",
+  "professionExpertCarpenter": "نجار خبير",
+  "professionalAliImem": "علي إمام",
+  "professionGardeningLandscaping": "البستنة وتنسيق الحدائق",
+  "profile": "الملف الشخصي",
+  "reviews": "تقييمات",
+  "message": "رسالة",
+  "call": "اتصال",
+  "jobsDone": "الأعمال المنجزة",
+  "experience": "الخبرة",
+  "response": "الاستجابة",
+  "backgroundChecked": "تم فحص السجل",
+  "licensedInsured": "مرخص ومؤمن",
+  "services": "الخدمات",
+  "reviewsTab": "التقييمات",
+  "portfolio": "معرض الأعمال",
+  "reviewsSummary": "ملخص التقييمات",
+  "basedOn": "بناءً على",
+  "portfolioDescription": "سيتم عرض عناصر معرض الأعمال هنا.",
+  "home": "الرئيسية",
+  "demands": "الطلبات",
+  "requests": "الطلبات المؤكدة",
+  "messages": "الرسائل",
+  "plans": "الخطط",
+  "notificationsComingSoon": "الإشعارات - قريباً",
+  "welcomeBack": "مرحباً بعودتك،",
+  "totalEarnings": "إجمالي الأرباح",
+  "quickActions": "إجراءات سريعة",
+  "addService": "إضافة خدمة",
+  "myServices": "خدماتي",
+  "viewAll": "عرض الكل",
+  "active": "نشط",
+  "inactive": "غير نشط",
+  "delete": "حذف",
+  "accountDeletion": "حذف الحساب",
+  "languageChangedTo": "تم تغيير اللغة إلى",
+  "bookings": "الحجوزات",
+  "availableServiceProviders": "مقدمو الخدمات المتاحون",
+  "selectWilaya": "اختر الولاية",
+  "dashboard": "لوحة التحكم",
+  "applications": "الطلبات",
+  "reports": "التقارير",
+  "cleaning": "التنظيف",
+  "plumbing": "السباكة",
+  "electrical": "الكهرباء",
+  "gardening": "البستنة",
+  "handyman": "الصيانة",
+  "painting": "الدهان",
+  "moving": "النقل",
+  "more": "المزيد",
+  "selectDate": "اختر تاريخاً",
+  "cantFindService": "لا تجد الخدمة المناسبة؟",
+  "cantFindServiceDescription": "أخبرنا بما تحتاجه، وسنجد لك\nمحترفاً مناسباً.",
+  "searchHint": "ابحث عن خدمة أو مزود خدمة",
+  "tfa": "المصادقة الثنائية",
+  "myaddress": "عنواني",
+  "messagesTitle": "الرسائل",
+  "noConversationsYet": "لا توجد محادثات بعد",
+  "startBooking": "ابدأ بحجز خدمة لتبدأ\nالدردشة مع مزوّد الخدمة.",
+  "searchInConversation": "البحث في المحادثة...",
+  "typeYourMessage": "اكتب رسالتك...",
+  "reactToMessage": "ردّ على الرسالة",
+  "letUsKnowWhatYouNeed": "أخبرنا بما تحتاجه، وسنجد لك\nمحترفًا لمساعدتك.",
+  "openJobs": "الوظائف المفتوحة",
+  "searchJobs": "البحث عن وظائف...",
+  "category": "التصنيف",
+  "wilaya": "الولاية",
+  "posted": "تم النشر منذ",
+  "sendOffer": "إرسال عرض",
+  "offerSent": "تم إرسال العرض!",
+  "myBookings": "حجوزاتي",
+  "myDemands": "طلباتي",
+  "noDemandsFound": "لا توجد طلبات",
+  "tryAdjustingSearch": "حاول تعديل بحثك أو المرشحات",
+  "postNewDemand": "نشر طلب جديد",
+  "searchByTitleOrCategory": "البحث حسب العنوان أو التصنيف...",
+  "filterAndSort": "تصفية وفرز",
+  "reset": "إعادة تعيين",
+  "sortBy": "فرز حسب",
+  "date": "التاريخ",
+  "budget": "الميزانية",
+  "status": "الحالة",
+  "categories": "التصنيفات",
+  "carpentry": "نجارة",
+  "budgetRange": "نطاق الميزانية",
+  "applyFilters": "تطبيق المرشحات",
+  "all": "الكل",
+  "pending": "قيد الانتظار",
+  "inProgress": "قيد التنفيذ",
+  "completed": "مكتمل",
+  "cancelled": "ملغى",
+  "serviceProvidersApplied": "{count, plural, =1{مزود خدمة واحد تقدم} other{{count} مزودي خدمة تقدموا}}",
+  "viewRequests": "عرض الطلبات",
+  "editDemand": "تعديل الطلب",
+  "cancelDemand": "إلغاء الطلب",
+  "providerHired": "تم تعيين المزود",
+  "viewDetails": "عرض التفاصيل",
+  "jobFinished": "تم الانتهاء من العمل",
+  "viewInvoice": "عرض الفاتورة",
+  "upcoming": "قادم",
+  "rate": "تقييم",
+  "details": "التفاصيل",
+  
+  "editService": "تعديل الخدمة",
+  
+
+  "deleteServiceTitle": "حذف الخدمة",
+  "deleteServiceMessage": "هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.",
+  
+
+  "serviceDetails": "تفاصيل الخدمة",
+  "serviceTitle": "عنوان الخدمة",
+  "enterServiceTitle": "يرجى إدخال عنوان الخدمة",
+
+  "price": "السعر",
+  "enterServicePrice": "يرجى إدخال سعر الخدمة",
+  "priceExample": "مثال: \"تبدأ من 1500 دج\" أو \"2500 دج للساعة\"",
+
+  "serviceStatus": "حالة الخدمة",
+  "visibleToCustomers": "الخدمة ظاهرة للزبائن",
+  "hiddenFromCustomers": "الخدمة مخفية عن الزبائن",
+
+  "pricingTips": "نصائح التسعير",
+  "tip1": "استخدم صيغ أسعار واضحة مثل \"1500 دج\" أو \"للساعة\"",
+  "tip2": "فكّر في وضع سعر ابتدائي للمهام المعقدة",
+  "tip3": "كن شفافًا بخصوص الرسوم الإضافية",
+  "tip4": "راجع أسعار المنافسين في منطقتك",
+  "deleteService": "حذف الخدمة",
+  "confirmDeleteService": "هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.",
+  
+  "serviceVisible": "الخدمة مرئية للعملاء",
+  "serviceHidden": "الخدمة مخفية عن العملاء",
+
+  "tipClearPricing": "استخدم تنسيقات تسعير واضحة مثل \"1500 دج\" أو \"للساعة\"",
+  "tipStartingPrices": "فكر في عرض أسعار بداية للخدمات المعقدة",
+  "tipTransparency": "كن شفافًا بشأن الرسوم الإضافية",
+  "tipCompetitorPricing": "راجع أسعار المنافسين في منطقتك",
+  "serviceImages": "صور الخدمة",
+  "addPhotosToAttractCustomers": "أضف صورًا لأعمالك لجذب المزيد من العملاء.",
+  "uploadImages": "رفع الصور",
+  "tapToSelectFromGallery": "اضغط هنا لاختيار صور من معرضك",
+  "imageUploadComingSoon": "رفع الصور – قادم قريبًا",
+  "serviceName": "اسم الخدمة",
+  "enterServiceName": "أدخل اسم الخدمة",
+  "description": "الوصف",
+  "describeYourService": "صف خدمتك بالتفصيل",
+  "pricing": "التسعير",
+  "pricingModel": "نموذج التسعير",
+  "hourlyRate": "سعر الساعة",
+  "fixedPrice": "سعر ثابت",
+  "enterPrice": "٠٫٠٠",
+  "pleaseEnterServiceName": "الرجاء إدخال اسم الخدمة",
+  "pleaseEnterDescription": "الرجاء إدخال وصف",
+  "pleaseEnterPrice": "الرجاء إدخال سعر",
+  "serviceAddedSuccessfully": "تمت إضافة الخدمة بنجاح!",
+  
+  "profileInformation": "معلومات الملف الشخصي",
+  "statsInformation": "معلومات الإحصائيات",
+
+  "name": "الاسم",
+  "profession": "المهنة",
+  "location": "الموقع",
+ 
+
+  "rating": "التقييم",
+  
+  "responseTime": "سرعة الاستجابة",
+
+  "pleaseEnterName": "الرجاء إدخال الاسم",
+  "pleaseEnterProfession": "الرجاء إدخال المهنة",
+  "pleaseEnterLocation": "الرجاء إدخال الموقع",
+  "pleaseEnterExperience": "الرجاء إدخال الخبرة"
+  
+
+  
+
+}

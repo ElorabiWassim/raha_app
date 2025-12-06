@@ -1,0 +1,602 @@
+{
+  "appTitle": "Ra7a",
+  "splashWelcome": "Bienvenue",
+  "languageEnglish": "Anglais",
+  "languageFrench": "Français",
+  "languageArabic": "Arabe",
+  "chooseLanguage": "Choisissez votre langue",
+  "@chooseLanguage": {
+    "description": "Title for language selection screen"
+  },
+  "onboardingTitle1": "Trouvez des prestataires de services de confiance près de chez vous.",
+  "@onboardingTitle1": {
+    "description": "First onboarding screen title"
+  },
+  "onboardingSubtitle1": "Réservez facilement des professionnels locaux vérifiés pour tous vos besoins domestiques.",
+  "@onboardingSubtitle1": {
+    "description": "First onboarding screen subtitle"
+  },
+  "onboardingTitle2": "Planifiez et suivez vos réservations",
+  "@onboardingTitle2": {
+    "description": "Second onboarding screen title"
+  },
+  "onboardingSubtitle2": "Gérez vos rendez-vous et restez informé de votre service.",
+  "@onboardingSubtitle2": {
+    "description": "Second onboarding screen subtitle"
+  },
+  "onboardingTitle3": "Évaluez et commentez les prestataires",
+  "@onboardingTitle3": {
+    "description": "Third onboarding screen title"
+  },
+  "onboardingSubtitle3": "Partagez votre expérience et aidez les autres à faire des choix éclairés.",
+  "@onboardingSubtitle3": {
+    "description": "Third onboarding screen subtitle"
+  },
+  "onboardingSkip": "Passer",
+  "@onboardingSkip": {
+    "description": "Skip button text on onboarding"
+  },
+  "onboardingNext": "Suivant",
+  "@onboardingNext": {
+    "description": "Next button text on onboarding"
+  },
+  "loginWelcomeBack": "Bon retour",
+  "@loginWelcomeBack": {
+    "description": "Welcome message on login screen"
+  },
+  "loginUsername": "Nom d'utilisateur",
+  "@loginUsername": {
+    "description": "Username field label"
+  },
+  "loginUsernameHint": "Entrez votre nom d'utilisateur",
+  "@loginUsernameHint": {
+    "description": "Username field hint text"
+  },
+  "loginPassword": "Mot de passe",
+  "@loginPassword": {
+    "description": "Password field label"
+  },
+  "loginPasswordHint": "Entrez votre mot de passe",
+  "@loginPasswordHint": {
+    "description": "Password field hint text"
+  },
+  "loginForgotPassword": "Mot de passe oublié ?",
+  "@loginForgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "loginButton": "Connexion",
+  "@loginButton": {
+    "description": "Login button text"
+  },
+  "loginOr": "ou",
+  "@loginOr": {
+    "description": "Divider text between login options"
+  },
+  "loginContinueWithGoogle": "Continuer avec Google",
+  "@loginContinueWithGoogle": {
+    "description": "Google login button text"
+  },
+  "loginNoAccount": "Vous n'avez pas de compte ? ",
+  "@loginNoAccount": {
+    "description": "Text before sign up link"
+  },
+  "loginSignUp": "S'inscrire",
+  "@loginSignUp": {
+    "description": "Sign up link text"
+  },
+  "loginInvalidUsername": "Nom d'utilisateur invalide. Veuillez utiliser : homeowner, serviceprovider ou admin",
+  "@loginInvalidUsername": {
+    "description": "Error message for invalid username"
+  },
+  "roleSelectionTitle": "Continuer en tant que",
+  "@roleSelectionTitle": {
+    "description": "Title on role selection screen"
+  },
+  "roleSelectionSubtitle": "Choisissez votre rôle pour commencer à utiliser Raha",
+  "@roleSelectionSubtitle": {
+    "description": "Subtitle on role selection screen"
+  },
+  "roleHomeowner": "Propriétaire",
+  "@roleHomeowner": {
+    "description": "Homeowner role button text"
+  },
+  "roleHomeownerDescription": "À la recherche d'aide",
+  "@roleHomeownerDescription": {
+    "description": "Homeowner role description"
+  },
+  "roleServiceProvider": "Prestataire de services",
+  "@roleServiceProvider": {
+    "description": "Service provider role button text"
+  },
+  "roleServiceProviderDescription": "Offrir mes compétences",
+  "@roleServiceProviderDescription": {
+    "description": "Service provider role description"
+  },
+  "roleSelectionBackToLogin": "Retour à la connexion",
+  "@roleSelectionBackToLogin": {
+    "description": "Back to login button text"
+  },
+  "signupCreateAccount": "Créer votre compte",
+  "@signupCreateAccount": {
+    "description": "Title for homeowner signup screen"
+  },
+  "signupCreateProviderAccount": "Créer un compte prestataire",
+  "@signupCreateProviderAccount": {
+    "description": "Title for provider signup screen"
+  },
+  "signupFullName": "Nom complet",
+  "@signupFullName": {
+    "description": "Full name field label"
+  },
+  "signupFullNameHint": "Entrez votre nom complet",
+  "@signupFullNameHint": {
+    "description": "Full name field hint"
+  },
+  "signupEmail": "E-mail",
+  "@signupEmail": {
+    "description": "Email field label"
+  },
+  "signupEmailHint": "Entrez votre e-mail",
+  "@signupEmailHint": {
+    "description": "Email field hint"
+  },
+  "signupDateOfBirth": "Date de naissance",
+  "@signupDateOfBirth": {
+    "description": "Date of birth label"
+  },
+  "signupDateHint": "jj/mm/aaaa",
+  "@signupDateHint": {
+    "description": "Date picker hint"
+  },
+  "signupPhoneNumber": "Numéro de téléphone",
+  "@signupPhoneNumber": {
+    "description": "Phone number field label"
+  },
+  "signupPhoneNumberHint": "Entrez votre numéro de téléphone",
+  "@signupPhoneNumberHint": {
+    "description": "Phone number field hint"
+  },
+  "signupCity": "Ville",
+  "@signupCity": {
+    "description": "City field label"
+  },
+  "signupCityHint": "ex. Alger",
+  "@signupCityHint": {
+    "description": "City field hint"
+  },
+  "signupNeighborhood": "Quartier / Rue",
+  "@signupNeighborhood": {
+    "description": "Neighborhood field label"
+  },
+  "signupNeighborhoodHint": "ex. 123 Rue principale",
+  "@signupNeighborhoodHint": {
+    "description": "Neighborhood field hint"
+  },
+  "signupUseCurrentLocation": "Utiliser ma position actuelle",
+  "@signupUseCurrentLocation": {
+    "description": "Use current location button"
+  },
+  "signupPropertyType": "Type de propriété (Optionnel)",
+  "@signupPropertyType": {
+    "description": "Property type label"
+  },
+  "signupSelectPropertyType": "Sélectionner le type de propriété",
+  "@signupSelectPropertyType": {
+    "description": "Property type dropdown hint"
+  },
+  "signupPropertyTypeApartment": "Appartement",
+  "@signupPropertyTypeApartment": {
+    "description": "Apartment property type"
+  },
+  "signupPropertyTypeVilla": "Villa",
+  "@signupPropertyTypeVilla": {
+    "description": "Villa property type"
+  },
+  "signupPropertyTypeStudio": "Studio",
+  "@signupPropertyTypeStudio": {
+    "description": "Studio property type"
+  },
+  "signupServiceType": "Type de service",
+  "@signupServiceType": {
+    "description": "Service type label"
+  },
+  "signupSelectServiceType": "Sélectionnez votre type de service",
+  "@signupSelectServiceType": {
+    "description": "Service type dropdown hint"
+  },
+  "signupSelectServiceTypeError": "Veuillez sélectionner un type de service",
+  "@signupSelectServiceTypeError": {
+    "description": "Service type validation error"
+  },
+  "signupServiceTypePlumbing": "Plomberie",
+  "@signupServiceTypePlumbing": {
+    "description": "Plumbing service type"
+  },
+  "signupServiceTypeElectrical": "Électricité",
+  "@signupServiceTypeElectrical": {
+    "description": "Electrical service type"
+  },
+  "signupServiceTypeCleaning": "Nettoyage",
+  "@signupServiceTypeCleaning": {
+    "description": "Cleaning service type"
+  },
+  "signupServiceTypePainting": "Peinture",
+  "@signupServiceTypePainting": {
+    "description": "Painting service type"
+  },
+  "signupServiceTypeCarpentry": "Menuiserie",
+  "@signupServiceTypeCarpentry": {
+    "description": "Carpentry service type"
+  },
+  "signupServiceTypeHVAC": "Climatisation",
+  "@signupServiceTypeHVAC": {
+    "description": "HVAC service type"
+  },
+  "signupServiceTypeGardening": "Jardinage",
+  "@signupServiceTypeGardening": {
+    "description": "Gardening service type"
+  },
+  "signupServiceTypeOther": "Autre",
+  "@signupServiceTypeOther": {
+    "description": "Other service type"
+  },
+  "signupPassword": "Mot de passe",
+  "@signupPassword": {
+    "description": "Password field label"
+  },
+  "signupPasswordHint": "Entrez votre mot de passe",
+  "@signupPasswordHint": {
+    "description": "Password field hint"
+  },
+  "signupConfirmPassword": "Confirmer le mot de passe",
+  "@signupConfirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "signupConfirmPasswordHint": "Confirmez votre mot de passe",
+  "@signupConfirmPasswordHint": {
+    "description": "Confirm password field hint"
+  },
+  "signupAcceptTerms": "J'accepte les ",
+  "@signupAcceptTerms": {
+    "description": "Terms acceptance text prefix"
+  },
+  "signupTermsAndConditions": "Conditions générales",
+  "@signupTermsAndConditions": {
+    "description": "Terms and conditions link text"
+  },
+  "signupButton": "S'inscrire",
+  "@signupButton": {
+    "description": "Sign up button text"
+  },
+  "signupVerifyAccount": "Vérifier votre compte",
+  "@signupVerifyAccount": {
+    "description": "Verify account button text for provider"
+  },
+  "signupOr": "OU",
+  "@signupOr": {
+    "description": "Divider text"
+  },
+  "signupWithGoogle": "S'inscrire avec Google",
+  "@signupWithGoogle": {
+    "description": "Google sign up button text"
+  },
+  "signupAlreadyHaveAccount": "Vous avez déjà un compte ? ",
+  "@signupAlreadyHaveAccount": {
+    "description": "Text before login link"
+  },
+  "dashboardTitle": "Tableau de bord",
+  "dashboardTotalUsers": "Total utilisateurs",
+  "dashboardVerifiedSPs": "Prestataires vérifiés",
+  "dashboardActiveBookings": "Réservations actives",
+  "dashboardRevenue": "Revenus",
+  "dashboardRecentActivity": "Activité récente",
+  "dashboardLogout": "Déconnexion",
+  "dashboardLogoutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "dashboardCancel": "Annuler",
+  "demandsTitle": "Emplois ouverts",
+  "demandsSearchHint": "Rechercher des emplois...",
+  "demandsCategory": "Catégorie",
+  "demandsWilaya": "Wilaya",
+  "demandsCategoryPlumbing": "Plomberie",
+  "demandsCategoryElectrical": "Électricité",
+  "demandsCategoryGardening": "Jardinage",
+  "demandsCategoryCleaning": "Nettoyage",
+  "demandsPosted": "Publié",
+  "demandsSendOffer": "Envoyer une offre",
+  "demandsOfferSent": "Offre envoyée !",
+  "applicationsTitle": "Candidatures de prestataires",
+  "applicationsSearchHint": "Rechercher des candidatures...",
+  "applicationsApplied": "Candidature",
+  "applicationsServicesOffered": "Services offerts :",
+  "applicationsAccept": "Accepter",
+  "applicationsDecline": "Refuser",
+  "applicationsAccepted": "{name} accepté",
+  "applicationsDeclined": "{name} refusé",
+  "plansTitle": "Plans",
+  "plansRecommended": "Recommandé",
+  "plansUpgradeNow": "Mettre à niveau",
+  "plansSelectedPlan": "Plan sélectionné : {plan}",
+  "verificationTitle": "Vérification des documents",
+  "verificationSubtitle": "Téléchargez vos documents pour vérification",
+  "verificationNationalID": "Carte d'identité / Passeport",
+  "verificationCertificate": "Certificat professionnel",
+  "verificationProfilePicture": "Photo de profil",
+  "verificationRequired": "Obligatoire",
+  "verificationClearHeadshot": "Photo de face claire requise",
+  "verificationTapToUpload": "Appuyez pour télécharger",
+  "verificationDocumentUploaded": "Document téléchargé",
+  "verificationAcceptedFormats": "Accepté : JPG, PNG, PDF. Taille max : 5 Mo",
+  "verificationSubmit": "Soumettre pour examen",
+  "verificationSuccess": "Candidature soumise !",
+  "verificationSuccessMessage": "Nous examinons vos documents. Vous recevrez une notification dans 2-3 jours ouvrables.",
+  "verificationBackToVerification": "Retour à la vérification",
+  "reportsTitle": "Gérer les signalements",
+  "reportsSearchHint": "Rechercher des signalements...",
+  "reportsFilterNew": "Nouveau ({count})",
+  "reportsFilterInProgress": "En cours",
+  "reportsFilterResolved": "Résolu",
+  "reportsHomeowner": "PROPRIÉTAIRE",
+  "reportsProvider": "PRESTATAIRE",
+  "reportsDetails": "Détails",
+  "reportsResolve": "Résoudre",
+  "requestsTitle": "Demandes de service",
+  "requestsTabRequests": "Demandes",
+  "requestsTabHistory": "Historique",
+  "requestsStatusPending": "En attente",
+  "requestsStatusConfirmed": "Confirmé",
+  "requestsStatusCompleted": "Terminé",
+  "requestsAccept": "Accepter",
+  "requestsDecline": "Refuser",
+  "requestsViewDetails": "Voir les détails",
+  "plansFree": "Gratuit",
+  "plansFreePriceValue": "0 DA",
+  "plansFreeFeature1": "Créer un compte et répertorier jusqu'à 3 services.",
+  "plansFreeFeature2": "Répertorier les informations de contact.",
+  "plansFreeFeature3": "Priorité inférieure dans la liste des services.",
+  "plansFreeFeature4": "Les 20 premiers prestataires obtiennent le plan gratuit pendant 6 mois.",
+  "plansPro": "Pro",
+  "plansProPriceValue": "700 DA/mois",
+  "plansProPeriodValue": "7 000 DA/an",
+  "plansProFeature1": "Répertorier jusqu'à 10 services.",
+  "plansProFeature2": "Recevoir des réservations, des demandes et des messages clients.",
+  "plansProFeature3": "Créer et publier des publications.",
+  "plansProFeature4": "Répondre aux demandes des utilisateurs.",
+  "plansProFeature5": "Priorité moyenne dans les résultats de recherche.",
+  "plansElite": "Élite",
+  "plansElitePriceValue": "1 500 DA/mois",
+  "plansElitePeriodValue": "15 000 DA/an",
+  "plansEliteFeature1": "Répertorier jusqu'à 20 services.",
+  "plansEliteFeature2": "Afficher des informations détaillées sur le profil (nombre de vues du profil).",
+  "plansEliteFeature3": "Priorité la plus élevée dans l'affichage des résultats de recherche.",
+  "plansEliteFeature4": "Obtenir un badge vérifié pour une confiance accrue.",
+  "plansEliteFeature5": "Recevoir des réservations, des demandes et des messages.",
+  "plansEliteFeature6": "Créer et publier des publications.",
+  "plansEliteFeature7": "Promouvoir les services par le biais de publicités dans le fil principal.",
+  "plansEliteFeature8": "Répondre aux demandes des utilisateurs.",
+  "editProfile": "Modifier le profil",
+  "myProfile": "Mon profil",
+  "editProfile": "Modifier le profil",
+  "settings": "Paramètres",
+  "verifiedHomeowner": "Propriétaire vérifié",
+  "paymentMethods": "Modes de paiement",
+  "helpSupport": "Aide et support",
+  "saveChanges": "Enregistrer les modifications",
+  "cancel": "Annuler",
+  "fullName": "Nom complet",
+  "email": "E-mail",
+  "phoneNumber": "Numéro de téléphone",
+  "homeAddress": "Adresse du domicile",
+  "profileUpdatedSuccess": "Profil mis à jour avec succès !",
+  "comingSoon": "Bientôt disponible",
+  "navigationTo": "Navigation vers {page}",
+  "language": "Langue",
+  "english": "Anglais",
+  "french": "Français",
+  "arabic": "Arabe",
+  "changeLanguage": "Changer la langue",
+  "languageChanged": "Langue changée en {language}",
+  "account": "Compte",
+  "updatePersonalInfo": "Mettre à jour vos informations personnelles",
+  "changePassword": "Changer le mot de passe",
+  "updatePassword": "Mettre à jour votre mot de passe",
+  "verification": "Vérification",
+  "verifyAccount": "Vérifier votre compte",
+  "verified": "Vérifié",
+  "notifications": "Notifications",
+  "pushNotifications": "Notifications push",
+  "receivePushNotifications": "Recevoir des notifications push",
+  "emailNotifications": "Notifications par e-mail",
+  "receiveEmailNotifications": "Recevoir des notifications par e-mail",
+  "smsNotifications": "Notifications SMS",
+  "receiveSmsNotifications": "Recevoir des notifications SMS",
+  "preferences": "Préférences",
+  "darkMode": "Mode sombre",
+  "enableDarkTheme": "Activer le thème sombre",
+  "serviceArea": "Zone de service",
+  "supportAbout": "Support et à propos",
+  "helpCenter": "Centre d'aide",
+  "getHelpSupport": "Obtenir de l'aide et du support",
+  "privacyPolicy": "Politique de confidentialité",
+  "readPrivacyPolicy": "Lire notre politique de confidentialité",
+  "termsOfService": "Conditions d'utilisation",
+  "readTermsOfService": "Lire nos conditions d'utilisation",
+  "about": "À propos",
+  "version": "Version 1.0.0",
+  "dangerZone": "Zone dangereuse",
+  "logout": "Déconnexion",
+  "signOutAccount": "Se déconnecter de votre compte",
+  "deleteAccount": "Supprimer le compte",
+  "permanentlyDeleteAccount": "Supprimer définitivement votre compte",
+  "logoutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "deleteAccountConfirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+  "accountDeletionComingSoon": "Suppression du compte - Bientôt disponible",
+  "myAddresses": "Mes adresses",
+  "twoFactorAuth": "Authentification à deux facteurs",
+  "contactSupport": "Contacter le support",
+  "securityPrivacy": "Sécurité et confidentialité",
+  "greetingWassim": "Bonjour Wassim",
+  "browseCategories": "Parcourir les catégories",
+  "topRatedNearYou": "Les mieux notés près de chez vous",
+  "professionalAmineFaiz": "Amine Faiz",
+  "professionMasterPlumber": "Plombier expert",
+  "professionalMariaHaniya": "Maria Haniya",
+  "professionExpertCarpenter": "Charpentier expert",
+  "professionalAliImem": "Ali Imem",
+  "professionGardeningLandscaping": "Jardinage et aménagement paysager",
+  "profile": "Profil",
+  "reviews": "Avis",
+  "message": "Message",
+  "call": "Appeler",
+  "jobsDone": "Travaux effectués",
+  "experience": "Expérience",
+  "response": "Réponse",
+  "backgroundChecked": "Antécédents vérifiés",
+  "licensedInsured": "Licencié et assuré",
+  "services": "Services",
+  "reviewsTab": "Avis",
+  "portfolio": "Portfolio",
+  "reviewsSummary": "Résumé des avis",
+  "basedOn": "Basé sur",
+  "portfolioDescription": "Les éléments du portfolio seront affichés ici.",
+  "home": "Accueil",
+  "demands": "Demandes",
+  "requests": "Requêtes",
+  "messages": "Messages",
+  "plans": "Plans",
+  "notificationsComingSoon": "Notifications - Bientôt disponible",
+  "welcomeBack": "Bienvenue,",
+  "totalEarnings": "Gains totaux",
+  "quickActions": "Actions rapides",
+  "addService": "Ajouter un service",
+  "myServices": "Mes services",
+  "viewAll": "Voir tout",
+  "active": "Actif",
+  "inactive": "Inactif",
+  "delete": "Supprimer",
+  "accountDeletion": "Suppression du compte",
+  "languageChangedTo": "Langue changée en",
+  "bookings": "Réservations",
+  "availableServiceProviders": "Prestataires de services disponibles",
+  "selectWilaya": "Sélectionner une wilaya",
+  "dashboard": "Tableau de bord",
+  "applications": "Applications",
+  "reports": "Rapports",
+  "cleaning": "Nettoyage",
+  "plumbing": "Plomberie",
+  "electrical": "Électricité",
+  "gardening": "Jardinage",
+  "handyman": "Bricolage",
+  "painting": "Peinture",
+  "moving": "Déménagement",
+  "more": "Plus",
+  "selectDate": "Sélectionner une date",
+  "cantFindService": "Vous ne trouvez pas le bon service ?",
+  "cantFindServiceDescription": "Dites-nous ce dont vous avez besoin, et nous\ntrouverons le bon professionnel pour vous.",
+  "searchHint": "Rechercher un service ou un prestataire",
+  "tfa": "Authentification à deux facteurs",
+  "myaddress": "Mon adresse",
+  "messagesTitle": "Messages",
+  "noConversationsYet": "Aucune conversation pour le moment",
+  "startBooking": "Commencez par réserver un service pour\ncommencer à discuter avec un prestataire.",
+  "searchInConversation": "Rechercher dans la conversation...",
+  "typeYourMessage": "Tapez votre message...",
+  "reactToMessage": "Réagir au message",
+  "letUsKnowWhatYouNeed": "Dites-nous ce dont vous avez besoin, et nous\ntrouverons un professionnel pour vous aider.",
+  "openJobs": "Emplois ouverts",
+  "searchJobs": "Rechercher des emplois...",
+  "category": "Catégorie",
+  "wilaya": "Wilaya",
+  "posted": "Publié",
+  "sendOffer": "Envoyer une offre",
+  "offerSent": "Offre envoyée !",
+  "myBookings": "Mes réservations",
+  "myDemands": "Mes demandes",
+  "noDemandsFound": "Aucune demande trouvée",
+  "tryAdjustingSearch": "Essayez d'ajuster votre recherche ou vos filtres",
+  "postNewDemand": "Publier une nouvelle demande",
+  "searchByTitleOrCategory": "Rechercher par titre ou catégorie...",
+  "filterAndSort": "Filtrer et trier",
+  "reset": "Réinitialiser",
+  "sortBy": "Trier par",
+  "date": "Date",
+  "budget": "Budget",
+  "status": "Statut",
+  "categories": "Catégories",
+  "carpentry": "Menuiserie",
+  "budgetRange": "Fourchette budgétaire",
+  "applyFilters": "Appliquer les filtres",
+  "all": "Tout",
+  "pending": "En attente",
+  "inProgress": "En cours",
+  "completed": "Terminé",
+  "cancelled": "Annulé",
+  "serviceProvidersApplied": "{count, plural, =1{1 prestataire de services a postulé} other{{count} prestataires de services ont postulé}}",
+  "viewRequests": "Voir les demandes",
+  "editDemand": "Modifier la demande",
+  "cancelDemand": "Annuler la demande",
+  "providerHired": "Prestataire embauché",
+  "viewDetails": "Voir les détails",
+  "jobFinished": "Travail terminé",
+  "viewInvoice": "Voir la facture",
+  "upcoming": "À venir",
+  "rate": "Évaluer",
+  "details": "Détails",
+  "profileInformation": "Informations du profil",
+  "name": "Nom",
+  "profession": "Profession",
+  "location": "Localisation",
+  "statsInformation": "Informations statistiques",
+  "rating": "Évaluation",
+  "responseTime": "Temps de réponse",
+  "editService": "Modifier le service",
+
+  "deleteServiceTitle": "Supprimer le service",
+  "deleteServiceMessage": "Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.",
+  "serviceDetails": "Détails du service",
+  "serviceTitle": "Titre du service",
+  "enterServiceTitle": "Veuillez entrer le titre du service",
+  "price": "Prix",
+  "enterServicePrice": "Veuillez entrer le prix du service",
+  "priceExample": "ex : « À partir de 1500 DA » ou « 2500 DA par heure »",
+  "serviceStatus": "Statut du service",
+  "visibleToCustomers": "Le service est visible pour les clients",
+  "hiddenFromCustomers": "Le service est masqué des clients",
+  "pricingTips": "Conseils de tarification",
+  "tip1": "Utilisez des formats clairs comme « 1500 DA » ou « par heure »",
+  "tip2": "Envisagez d'ajouter un prix de départ pour les travaux complexes",
+  "tip3": "Soyez transparent sur les frais supplémentaires",
+  "tip4": "Vérifiez les prix de vos concurrents dans votre région",
+
+  "deleteService": "Supprimer le service",
+  "confirmDeleteService": "Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.",
+  "serviceVisible": "Le service est visible par les clients",
+  "serviceHidden": "Le service est masqué aux clients",
+  
+  "tipClearPricing": "Utilisez des formats clairs comme « 1500 DA » ou « à l’heure »",
+  "tipStartingPrices": "Proposez des prix de départ pour les prestations complexes",
+  "tipTransparency": "Soyez transparent sur les frais supplémentaires",
+  "tipCompetitorPricing": "Comparez vos tarifs avec ceux de la concurrence",
+
+  "serviceImages": "Images du service",
+  "addPhotosToAttractCustomers": "Ajoutez des photos de votre travail pour attirer plus de clients.",
+  "uploadImages": "Télécharger des images",
+  "tapToSelectFromGallery": "Appuyez ici pour sélectionner des photos depuis votre galerie",
+  "imageUploadComingSoon": "Téléchargement d’images – À venir",
+ 
+  "serviceName": "Nom du service",
+  "enterServiceName": "Saisissez le nom du service",
+  "description": "Description",
+  "describeYourService": "Décrivez votre service en détail",
+
+  "pricing": "Tarification",
+  "pricingModel": "Modèle de tarification",
+  "hourlyRate": "Tarif horaire",
+  "fixedPrice": "Prix fixe",
+
+  "enterPrice": "0,00",
+  "pleaseEnterServiceName": "Veuillez saisir un nom de service",
+  "pleaseEnterDescription": "Veuillez saisir une description",
+  "pleaseEnterPrice": "Veuillez saisir un prix",
+  "serviceAddedSuccessfully": "Service ajouté avec succès !"
+
+}

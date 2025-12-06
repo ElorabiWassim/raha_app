@@ -1,0 +1,648 @@
+{
+  "appTitle": "Ra7a",
+  "splashWelcome": "Welcome",
+  "languageEnglish": "English",
+  "languageFrench": "French",
+  "languageArabic": "Arabic",
+  "chooseLanguage": "Choose Your Language",
+  "@chooseLanguage": {
+    "description": "Title for language selection screen"
+  },
+  "onboardingTitle1": "Find trusted service providers near you.",
+  "@onboardingTitle1": {
+    "description": "First onboarding screen title"
+  },
+  "onboardingSubtitle1": "Easily book verified local professionals for all your home needs.",
+  "@onboardingSubtitle1": {
+    "description": "First onboarding screen subtitle"
+  },
+  "onboardingTitle2": "Schedule & Track your bookings",
+  "@onboardingTitle2": {
+    "description": "Second onboarding screen title"
+  },
+  "onboardingSubtitle2": "Manage your appointments and stay updated on your service.",
+  "@onboardingSubtitle2": {
+    "description": "Second onboarding screen subtitle"
+  },
+  "onboardingTitle3": "Rate & Review Providers",
+  "@onboardingTitle3": {
+    "description": "Third onboarding screen title"
+  },
+  "onboardingSubtitle3": "Share your experience and help others make informed choices.",
+  "@onboardingSubtitle3": {
+    "description": "Third onboarding screen subtitle"
+  },
+  "onboardingSkip": "Skip",
+  "@onboardingSkip": {
+    "description": "Skip button text on onboarding"
+  },
+  "onboardingNext": "Next",
+  "@onboardingNext": {
+    "description": "Next button text on onboarding"
+  },
+  "loginWelcomeBack": "Welcome Back",
+  "@loginWelcomeBack": {
+    "description": "Welcome message on login screen"
+  },
+  "loginUsername": "Username",
+  "@loginUsername": {
+    "description": "Username field label"
+  },
+  "loginUsernameHint": "Enter your username",
+  "@loginUsernameHint": {
+    "description": "Username field hint text"
+  },
+  "loginPassword": "Password",
+  "@loginPassword": {
+    "description": "Password field label"
+  },
+  "loginPasswordHint": "Enter your password",
+  "@loginPasswordHint": {
+    "description": "Password field hint text"
+  },
+  "loginForgotPassword": "Forgot Password?",
+  "@loginForgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "loginButton": "Login",
+  "@loginButton": {
+    "description": "Login button text"
+  },
+  "loginOr": "or",
+  "@loginOr": {
+    "description": "Divider text between login options"
+  },
+  "loginContinueWithGoogle": "Continue with Google",
+  "@loginContinueWithGoogle": {
+    "description": "Google login button text"
+  },
+  "loginNoAccount": "Don't have an account? ",
+  "@loginNoAccount": {
+    "description": "Text before sign up link"
+  },
+  "loginSignUp": "Sign Up",
+  "@loginSignUp": {
+    "description": "Sign up link text"
+  },
+  "loginInvalidUsername": "Invalid username. Please use: homeowner, serviceprovider, or admin",
+  "@loginInvalidUsername": {
+    "description": "Error message for invalid username"
+  },
+  "roleSelectionTitle": "Continue as",
+  "@roleSelectionTitle": {
+    "description": "Title on role selection screen"
+  },
+  "roleSelectionSubtitle": "Choose your role to start using Raha",
+  "@roleSelectionSubtitle": {
+    "description": "Subtitle on role selection screen"
+  },
+  "roleHomeowner": "Homeowner",
+  "@roleHomeowner": {
+    "description": "Homeowner role button text"
+  },
+  "roleHomeownerDescription": "Looking for help",
+  "@roleHomeownerDescription": {
+    "description": "Homeowner role description"
+  },
+  "roleServiceProvider": "Service Provider",
+  "@roleServiceProvider": {
+    "description": "Service provider role button text"
+  },
+  "roleServiceProviderDescription": "Offering my skills",
+  "@roleServiceProviderDescription": {
+    "description": "Service provider role description"
+  },
+  "roleSelectionBackToLogin": "Back to Login",
+  "@roleSelectionBackToLogin": {
+    "description": "Back to login button text"
+  },
+  "signupCreateAccount": "Create Your Account",
+  "@signupCreateAccount": {
+    "description": "Title for homeowner signup screen"
+  },
+  "signupCreateProviderAccount": "Create Provider Account",
+  "@signupCreateProviderAccount": {
+    "description": "Title for provider signup screen"
+  },
+  "signupFullName": "Full Name",
+  "@signupFullName": {
+    "description": "Full name field label"
+  },
+  "signupFullNameHint": "Enter your full name",
+  "@signupFullNameHint": {
+    "description": "Full name field hint"
+  },
+  "signupEmail": "Email",
+  "@signupEmail": {
+    "description": "Email field label"
+  },
+  "signupEmailHint": "Enter your email",
+  "@signupEmailHint": {
+    "description": "Email field hint"
+  },
+  "signupDateOfBirth": "Date of Birth",
+  "@signupDateOfBirth": {
+    "description": "Date of birth label"
+  },
+  "signupDateHint": "mm/dd/yyyy",
+  "@signupDateHint": {
+    "description": "Date picker hint"
+  },
+  "signupPhoneNumber": "Phone Number",
+  "@signupPhoneNumber": {
+    "description": "Phone number field label"
+  },
+  "signupPhoneNumberHint": "Enter your phone number",
+  "@signupPhoneNumberHint": {
+    "description": "Phone number field hint"
+  },
+  "signupCity": "City",
+  "@signupCity": {
+    "description": "City field label"
+  },
+  "signupCityHint": "e.g. Algiers",
+  "@signupCityHint": {
+    "description": "City field hint"
+  },
+  "signupNeighborhood": "Neighborhood / Street",
+  "@signupNeighborhood": {
+    "description": "Neighborhood field label"
+  },
+  "signupNeighborhoodHint": "e.g. 123 Main St",
+  "@signupNeighborhoodHint": {
+    "description": "Neighborhood field hint"
+  },
+  "signupUseCurrentLocation": "Use My Current Location",
+  "@signupUseCurrentLocation": {
+    "description": "Use current location button"
+  },
+  "signupPropertyType": "Property Type (Optional)",
+  "@signupPropertyType": {
+    "description": "Property type label"
+  },
+  "signupSelectPropertyType": "Select property type",
+  "@signupSelectPropertyType": {
+    "description": "Property type dropdown hint"
+  },
+  "signupPropertyTypeApartment": "Apartment",
+  "@signupPropertyTypeApartment": {
+    "description": "Apartment property type"
+  },
+  "signupPropertyTypeVilla": "Villa",
+  "@signupPropertyTypeVilla": {
+    "description": "Villa property type"
+  },
+  "signupPropertyTypeStudio": "Studio",
+  "@signupPropertyTypeStudio": {
+    "description": "Studio property type"
+  },
+  "signupServiceType": "Service Type",
+  "@signupServiceType": {
+    "description": "Service type label"
+  },
+  "signupSelectServiceType": "Select your service type",
+  "@signupSelectServiceType": {
+    "description": "Service type dropdown hint"
+  },
+  "signupSelectServiceTypeError": "Please select a service type",
+  "@signupSelectServiceTypeError": {
+    "description": "Service type validation error"
+  },
+  "signupServiceTypePlumbing": "Plumbing",
+  "@signupServiceTypePlumbing": {
+    "description": "Plumbing service type"
+  },
+  "signupServiceTypeElectrical": "Electrical",
+  "@signupServiceTypeElectrical": {
+    "description": "Electrical service type"
+  },
+  "signupServiceTypeCleaning": "Cleaning",
+  "@signupServiceTypeCleaning": {
+    "description": "Cleaning service type"
+  },
+  "signupServiceTypePainting": "Painting",
+  "@signupServiceTypePainting": {
+    "description": "Painting service type"
+  },
+  "signupServiceTypeCarpentry": "Carpentry",
+  "@signupServiceTypeCarpentry": {
+    "description": "Carpentry service type"
+  },
+  "signupServiceTypeHVAC": "HVAC",
+  "@signupServiceTypeHVAC": {
+    "description": "HVAC service type"
+  },
+  "signupServiceTypeGardening": "Gardening",
+  "@signupServiceTypeGardening": {
+    "description": "Gardening service type"
+  },
+  "signupServiceTypeOther": "Other",
+  "@signupServiceTypeOther": {
+    "description": "Other service type"
+  },
+  "signupPassword": "Password",
+  "@signupPassword": {
+    "description": "Password field label"
+  },
+  "signupPasswordHint": "Enter your password",
+  "@signupPasswordHint": {
+    "description": "Password field hint"
+  },
+  "signupConfirmPassword": "Confirm Password",
+  "@signupConfirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "signupConfirmPasswordHint": "Confirm your password",
+  "@signupConfirmPasswordHint": {
+    "description": "Confirm password field hint"
+  },
+  "signupAcceptTerms": "I accept the ",
+  "@signupAcceptTerms": {
+    "description": "Terms acceptance text prefix"
+  },
+  "signupTermsAndConditions": "Terms & Conditions",
+  "@signupTermsAndConditions": {
+    "description": "Terms and conditions link text"
+  },
+  "signupButton": "Sign Up",
+  "@signupButton": {
+    "description": "Sign up button text"
+  },
+  "signupVerifyAccount": "Verify Your Account",
+  "@signupVerifyAccount": {
+    "description": "Verify account button text for provider"
+  },
+  "signupOr": "OR",
+  "@signupOr": {
+    "description": "Divider text"
+  },
+  "signupWithGoogle": "Sign up with Google",
+  "@signupWithGoogle": {
+    "description": "Google sign up button text"
+  },
+  "signupAlreadyHaveAccount": "Already have an account? ",
+  "@signupAlreadyHaveAccount": {
+    "description": "Text before login link"
+  },
+  "dashboardTitle": "Dashboard",
+  "dashboardTotalUsers": "Total Users",
+  "dashboardVerifiedSPs": "Verified SPs",
+  "dashboardActiveBookings": "Active Bookings",
+  "dashboardRevenue": "Revenue",
+  "dashboardRecentActivity": "Recent Activity",
+  "dashboardLogout": "Logout",
+  "dashboardLogoutConfirm": "Are you sure you want to logout?",
+  "dashboardCancel": "Cancel",
+  "demandsTitle": "Open Jobs",
+  "demandsSearchHint": "Search jobs...",
+  "demandsCategory": "Category",
+  "demandsWilaya": "Wilaya",
+  "demandsCategoryPlumbing": "Plumbing",
+  "demandsCategoryElectrical": "Electrical",
+  "demandsCategoryGardening": "Gardening",
+  "demandsCategoryCleaning": "Cleaning",
+  "demandsPosted": "Posted",
+  "demandsSendOffer": "Send Offer",
+  "demandsOfferSent": "Offer sent!",
+  "applicationsTitle": "Provider Applications",
+  "applicationsSearchHint": "Search applications...",
+  "applicationsApplied": "Applied",
+  "applicationsServicesOffered": "Services Offered:",
+  "applicationsAccept": "Accept",
+  "applicationsDecline": "Decline",
+  "applicationsAccepted": "Accepted {name}",
+  "@applicationsAccepted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "applicationsDeclined": "Declined {name}",
+  "@applicationsDeclined": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "plansTitle": "Plans",
+  "plansRecommended": "Recommended",
+  "plansUpgradeNow": "Upgrade Now",
+  "plansSelectedPlan": "Selected plan: {plan}",
+  "@plansSelectedPlan": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "plansFree": "Free",
+  "plansFreePriceValue": "0 DA",
+  "plansFreeFeature1": "Create an account and list up to 3 services.",
+  "plansFreeFeature2": "List contact information.",
+  "plansFreeFeature3": "Lower priority in the listing of services.",
+  "plansFreeFeature4": "First 20 providers get Free Plan for 6 months.",
+  "plansPro": "Pro",
+  "plansProPriceValue": "700 DA/month",
+  "plansProPeriodValue": "7,000 DA/year",
+  "plansProFeature1": "List up to 10 services.",
+  "plansProFeature2": "Receive bookings, requests, and client messages.",
+  "plansProFeature3": "Create and publish posts.",
+  "plansProFeature4": "Respond to user demands.",
+  "plansProFeature5": "Medium priority in search results.",
+  "plansElite": "Elite",
+  "plansElitePriceValue": "1,500 DA/month",
+  "plansElitePeriodValue": "15,000 DA/year",
+  "plansEliteFeature1": "List up to 20 services.",
+  "plansEliteFeature2": "View detailed profile insights (profile views count).",
+  "plansEliteFeature3": "Highest priority in displaying search results.",
+  "plansEliteFeature4": "Obtain a verified badge for increased trust.",
+  "plansEliteFeature5": "Receive bookings, requests, and messages.",
+  "plansEliteFeature6": "Create and publish posts.",
+  "plansEliteFeature7": "Promote services through advertisements in the main feed.",
+  "plansEliteFeature8": "Respond to user demands.",
+  "verificationTitle": "Document Verification",
+  "verificationSubtitle": "Upload your documents for verification",
+  "verificationNationalID": "National ID / Passport",
+  "verificationCertificate": "Professional Certificate",
+  "verificationProfilePicture": "Profile Picture",
+  "verificationRequired": "Required",
+  "verificationClearHeadshot": "Clear headshot required",
+  "verificationTapToUpload": "Tap to Upload",
+  "verificationDocumentUploaded": "Document Uploaded",
+  "verificationAcceptedFormats": "Accepted: JPG, PNG, PDF. Max size: 5MB",
+  "verificationSubmit": "Submit for Review",
+  "verificationSuccess": "Application Submitted!",
+  "verificationSuccessMessage": "We're reviewing your documents. You'll receive a notification within 2-3 business days.",
+  "verificationBackToVerification": "Back to Verification",
+  "reportsTitle": "Manage Reports",
+  "reportsSearchHint": "Search reports...",
+  "reportsFilterNew": "New ({count})",
+  "@reportsFilterNew": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reportsFilterInProgress": "In Progress",
+  "reportsFilterResolved": "Resolved",
+  "reportsHomeowner": "HOMEOWNER",
+  "reportsProvider": "PROVIDER",
+  "reportsDetails": "Details",
+  "reportsResolve": "Resolve",
+  "requestsTitle": "Service Requests",
+  "requestsTabRequests": "Requests",
+  "requestsTabHistory": "History",
+  "requestsStatusPending": "Pending",
+  "requestsStatusConfirmed": "Confirmed",
+  "requestsStatusCompleted": "Completed",
+  "requestsAccept": "Accept",
+  "requestsDecline": "Decline",
+  "requestsViewDetails": "View Details",
+  "account": "Account",
+  "updatePersonalInfo": "Update your personal information",
+  "changePassword": "Change Password",
+  "updatePassword": "Update your password",
+  "verification": "Verification",
+  "verifyAccount": "Verify your account",
+  "verified": "Verified",
+  "notifications": "Notifications",
+  "pushNotifications": "Push Notifications",
+  "receivePushNotifications": "Receive push notifications",
+  "emailNotifications": "Email Notifications",
+  "receiveEmailNotifications": "Receive notifications via email",
+  "smsNotifications": "SMS Notifications",
+  "receiveSmsNotifications": "Receive notifications via SMS",
+  "preferences": "Preferences",
+  "darkMode": "Dark Mode",
+  "enableDarkTheme": "Enable dark theme",
+  "serviceArea": "Service Area",
+  "supportAbout": "Support & About",
+  "helpCenter": "Help Center",
+  "getHelpSupport": "Get help and support",
+  "privacyPolicy": "Privacy Policy",
+  "readPrivacyPolicy": "Read our privacy policy",
+  "termsOfService": "Terms of Service",
+  "readTermsOfService": "Read our terms of service",
+  "about": "About",
+  "version": "Version 1.0.0",
+  "dangerZone": "Danger Zone",
+  "logout": "Logout",
+  "signOutAccount": "Sign out of your account",
+  "deleteAccount": "Delete Account",
+  "permanentlyDeleteAccount": "Permanently delete your account",
+  "logoutConfirm": "Are you sure you want to logout?",
+  "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
+  "accountDeletionComingSoon": "Account deletion - Coming Soon",
+  "myAddresses": "My Addresses",
+  "twoFactorAuth": "Two-Factor Authentication",
+  "contactSupport": "Contact Support",
+  "securityPrivacy": "SECURITY & PRIVACY",
+  "greetingWassim": "Salam Wassim",
+  "browseCategories": "Browse Categories",
+  "topRatedNearYou": "Top Rated Near You",
+  "professionalAmineFaiz": "Amine Faiz",
+  "professionMasterPlumber": "Master Plumber",
+  "professionalMariaHaniya": "Maria Haniya",
+  "professionExpertCarpenter": "Expert Carpenter",
+  "professionalAliImem": "Ali Imem",
+  "professionGardeningLandscaping": "Gardening & Landscaping",
+  "editProfile": "Edit Profile",
+  "myProfile": "My Profile",
+  "editProfile": "Edit Profile",
+  "settings": "Settings",
+  "verifiedHomeowner": "Verified Homeowner",
+  "paymentMethods": "Payment Methods",
+  "helpSupport": "Help & Support",
+  "saveChanges": "Save Changes",
+  "cancel": "Cancel",
+  "fullName": "Full Name",
+  "email": "Email",
+  "phoneNumber": "Phone Number",
+  "homeAddress": "Home Address",
+  "profileUpdatedSuccess": "Profile updated successfully!",
+  "comingSoon": "Coming Soon",
+  "navigationTo": "Navigating to {page}",
+  "@navigationTo": {
+    "placeholders": {
+      "page": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "Language",
+  "english": "English",
+  "french": "French",
+  "arabic": "Arabic",
+  "changeLanguage": "Change Language",
+  "languageChanged": "Language changed to {language}",
+  "@languageChanged": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "profile": "Profile",
+  "reviews": "Reviews",
+  "message": "Message",
+  "call": "Call",
+  "jobsDone": "Jobs Done",
+  "experience": "Experience",
+  "response": "Response",
+  "backgroundChecked": "Background Checked",
+  "licensedInsured": "Licensed & Insured",
+  "services": "Services",
+  "reviewsTab": "Reviews",
+  "portfolio": "Portfolio",
+  "reviewsSummary": "Reviews Summary",
+  "basedOn": "Based on",
+  "portfolioDescription": "Portfolio items will be displayed here.",
+  "home": "Home",
+  "demands": "Demands",
+  "requests": "Requests",
+  "messages": "Messages",
+  "plans": "Plans",
+  "notificationsComingSoon": "Notifications - Coming Soon",
+  "welcomeBack": "Welcome back,",
+  "totalEarnings": "Total Earnings",
+  "quickActions": "Quick Actions",
+  "addService": "Add Service",
+  "myServices": "My Services",
+  "viewAll": "View All",
+  "active": "Active",
+  "inactive": "Inactive",
+  "delete": "Delete",
+  "accountDeletion": "Account Deletion",
+  "languageChangedTo": "Language changed to",
+  "bookings": "Bookings",
+  "availableServiceProviders": "Available Service Providers",
+  "selectWilaya": "Select Wilaya",
+  "dashboard": "Dashboard",
+  "applications": "Applications",
+  "reports": "Reports",
+  "cleaning": "Cleaning",
+  "plumbing": "Plumbing",
+  "electrical": "Electrical",
+  "gardening": "Gardening",
+  "handyman": "Handyman",
+  "painting": "Painting",
+  "moving": "Moving",
+  "more": "More",
+  "selectDate": "Select a date",
+  "cantFindService": "Can't find the right service?",
+  "cantFindServiceDescription": "Tell us what you need, and we'll find\nyou the right professional.",
+  "searchHint": "Search for a service or provider",
+  "tfa": "Two-Factor Authentication",
+  "myaddress": "My Address",
+  "messagesTitle": "Messages",
+  "noConversationsYet": "No conversations yet",
+  "startBooking": "Start by booking a service to begin\nchatting with a provider.",
+  "searchInConversation": "Search in conversation...",
+  "typeYourMessage": "Type your message...",
+  "reactToMessage": "React to message",
+  "letUsKnowWhatYouNeed": "Let us know what you need, and we'll find\na professional to help you.",
+  "openJobs": "Open Jobs",
+  "searchJobs": "Search jobs...",
+  "category": "Category",
+  "wilaya": "Wilaya",
+  "posted": "Posted",
+  "sendOffer": "Send Offer",
+  "offerSent": "Offer Sent!",
+  "myBookings": "My Bookings",
+  "myDemands": "My Demands",
+  "noDemandsFound": "No demands found",
+  "tryAdjustingSearch": "Try adjusting your search or filters",
+  "postNewDemand": "Post New Demand",
+  "searchByTitleOrCategory": "Search by title or category...",
+  "filterAndSort": "Filter & Sort",
+  "reset": "Reset",
+  "sortBy": "Sort By",
+  "date": "Date",
+  "budget": "Budget",
+  "status": "Status",
+  "categories": "Categories",
+  "carpentry": "Carpentry",
+  "budgetRange": "Budget Range",
+  "applyFilters": "Apply Filters",
+  "all": "All",
+  "pending": "Pending",
+  "inProgress": "In Progress",
+  "completed": "Completed",
+  "cancelled": "Cancelled",
+  "serviceProvidersApplied": "{count, plural, =1{1 service provider applied} other{{count} service providers applied}}",
+  "@serviceProvidersApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewRequests": "View Requests",
+  "editDemand": "Edit Demand",
+  "cancelDemand": "Cancel Demand",
+  "providerHired": "Provider Hired",
+  "viewDetails": "View Details",
+  "jobFinished": "Job Finished",
+  "viewInvoice": "View Invoice",
+  "upcoming": "Upcoming",
+  "rate": "Rate",
+  "details": "Details",
+  "profileInformation": "Profile Information",
+  "name": "Name",
+  "profession": "Profession",
+  "location": "Location",
+  "statsInformation": "Statistics Information",
+  "rating": "Rating",
+  "responseTime": "Response Time",
+  "editService": "Edit Service",
+  "deleteServiceTitle": "Delete Service",
+  "deleteServiceMessage": "Are you sure you want to delete this service? This action cannot be undone.",
+  "serviceDetails": "Service Details",
+  "serviceTitle": "Service Title",
+  "enterServiceTitle": "Please enter service title",
+  "price": "Price",
+  "enterServicePrice": "Please enter service price",
+  "priceExample": "e.g., \"Starts at 1500 DA\" or \"2500 DA per hour\"",
+  "serviceStatus": "Service Status",
+  "visibleToCustomers": "Service is visible to customers",
+  "hiddenFromCustomers": "Service is hidden from customers",
+  "pricingTips": "Pricing Tips",
+  "tip1": "Use clear pricing formats like \"1500 DA\" or \"per hour\"",
+  "tip2": "Consider offering starting prices for complex jobs",
+  "tip3": "Be transparent about additional charges",
+  "tip4": "Review competitor pricing in your area",
+  "deleteService": "Delete Service",
+  "confirmDeleteService": "Are you sure you want to delete this service? This action cannot be undone.",
+ 
+  "serviceVisible": "Service is visible to customers",
+  "serviceHidden": "Service is hidden from customers",
+ 
+  "tipClearPricing": "Use clear pricing formats like \"1500 DA\" or \"per hour\"",
+  "tipStartingPrices": "Consider offering starting prices for complex jobs",
+  "tipTransparency": "Be transparent about additional charges",
+  "tipCompetitorPricing": "Review competitor pricing in your area",
+ 
+  "serviceImages": "Service Images",
+  "addPhotosToAttractCustomers": "Add photos of your work to attract more customers.",
+  "uploadImages": "Upload Images",
+  "tapToSelectFromGallery": "Tap here to select photos from your gallery",
+  "imageUploadComingSoon": "Image upload - Coming Soon",
+  "serviceName": "Service Name",
+  "enterServiceName": "Enter service name",
+  "description": "Description",
+  "describeYourService": "Describe your service in detail",
+
+  "pricing": "Pricing",
+  "pricingModel": "Pricing Model",
+  "hourlyRate": "Hourly Rate",
+  "fixedPrice": "Fixed Price",
+
+  "enterPrice": "0.00",
+  "pleaseEnterServiceName": "Please enter a service name",
+  "pleaseEnterDescription": "Please enter a description",
+  "pleaseEnterPrice": "Please enter a price",
+  "serviceAddedSuccessfully": "Service added successfully!"
+}

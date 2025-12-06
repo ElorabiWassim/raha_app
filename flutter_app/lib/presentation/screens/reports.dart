@@ -1,0 +1,331 @@
+import 'package:flutter/material.dart';
+import '../widgets/bottom_nav_admin.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
+
+class ReportsPage extends StatefulWidget {
+  const ReportsPage({super.key});
+
+  @override
+  State<ReportsPage> createState() => _ReportsPageState();
+}
+
+class _ReportsPageState extends State<ReportsPage> {
+  int selectedFilter = 0;
+
+  final List<Map<String, String>> reports = [
+    {
+      'homeowner': 'Lina Saleh',
+      'provider': 'Khalid Electricians',
+      'issue': 'Poor Workmanship',
+      'description': 'The wiring was left exposed and is a safety hazard.',
+    },
+    {
+      'homeowner': 'Youssef El-Masri',
+      'provider': 'Ahmed Hassan',
+      'issue': 'No Show',
+      'description': 'The plumber never arrived for the appointment.',
+    },
+    {
+      'homeowner': 'Aisha Mohammed',
+      'provider': 'Clean Sweep Pro',
+      'issue': 'Incomplete Service',
+      'description': 'Several areas were missed during cleaning.',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F8F8),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.flag,
+                        color: Color(0xFF4CAF50),
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        localizations.reportsTitle,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF388E3C),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Search Bar
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: localizations.reportsSearchHint,
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Color(0xFF6B7280),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Filter Tabs
+                  Row(
+                    children: [
+                      _buildFilterButton(localizations.reportsFilterNew(3), 0),
+                      const SizedBox(width: 8),
+                      _buildFilterButton(
+                        localizations.reportsFilterInProgress,
+                        1,
+                      ),
+                      const SizedBox(width: 8),
+                      _buildFilterButton(
+                        localizations.reportsFilterResolved,
+                        2,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Reports List
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: reports.length,
+                itemBuilder: (context, index) {
+                  final report = reports[index];
+                  return ReportCard(
+                    homeowner: report['homeowner']!,
+                    provider: report['provider']!,
+                    issue: report['issue']!,
+                    description: report['description']!,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: const Ra7aBottomNav(currentIndex: 2),
+    );
+  }
+
+  Widget _buildFilterButton(String text, int index) {
+    final isSelected = selectedFilter == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            selectedFilter = index;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFF4CAF50)
+                  : const Color(0xFFE5E7EB),
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              color: isSelected
+                  ? const Color(0xFF4CAF50)
+                  : const Color(0xFF6B7280),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ReportCard extends StatelessWidget {
+  final String homeowner;
+  final String provider;
+  final String issue;
+  final String description;
+
+  const ReportCard({
+    super.key,
+    required this.homeowner,
+    required this.provider,
+    required this.issue,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Homeowner and Provider
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.reportsHomeowner,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF4CAF50),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      homeowner,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.reportsProvider,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF4CAF50),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      provider,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1),
+          const SizedBox(height: 12),
+
+          // Issue Title
+          Text(
+            issue,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF4CAF50),
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Description
+          Text(
+            description,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFF6B7280),
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Action Buttons
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4CAF50),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: Text(
+                    localizations.reportsDetails,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF4CAF50),
+                    side: const BorderSide(color: Color(0xFF4CAF50)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: Text(
+                    localizations.reportsResolve,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
