@@ -1020,4 +1020,154 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get details => 'Détails';
+
+  @override
+  String get profileInformation => 'Informations du profil';
+
+  @override
+  String get name => 'Nom';
+
+  @override
+  String get profession => 'Profession';
+
+  @override
+  String get location => 'Localisation';
+
+  @override
+  String get statsInformation => 'Informations statistiques';
+
+  @override
+  String get rating => 'Évaluation';
+
+  @override
+  String get responseTime => 'Temps de réponse';
+
+  @override
+  String get editService => 'Modifier le service';
+
+  @override
+  String get deleteServiceTitle => 'Supprimer le service';
+
+  @override
+  String get deleteServiceMessage => 'Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.';
+
+  @override
+  String get serviceDetails => 'Détails du service';
+
+  @override
+  String get serviceTitle => 'Titre du service';
+
+  @override
+  String get enterServiceTitle => 'Veuillez entrer le titre du service';
+
+  @override
+  String get price => 'Prix';
+
+  @override
+  String get enterServicePrice => 'Veuillez entrer le prix du service';
+
+  @override
+  String get priceExample => 'ex : « À partir de 1500 DA » ou « 2500 DA par heure »';
+
+  @override
+  String get serviceStatus => 'Statut du service';
+
+  @override
+  String get visibleToCustomers => 'Le service est visible pour les clients';
+
+  @override
+  String get hiddenFromCustomers => 'Le service est masqué des clients';
+
+  @override
+  String get pricingTips => 'Conseils de tarification';
+
+  @override
+  String get tip1 => 'Utilisez des formats clairs comme « 1500 DA » ou « par heure »';
+
+  @override
+  String get tip2 => 'Envisagez d\'ajouter un prix de départ pour les travaux complexes';
+
+  @override
+  String get tip3 => 'Soyez transparent sur les frais supplémentaires';
+
+  @override
+  String get tip4 => 'Vérifiez les prix de vos concurrents dans votre région';
+
+  @override
+  String get deleteService => 'Supprimer le service';
+
+  @override
+  String get confirmDeleteService => 'Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.';
+
+  @override
+  String get serviceVisible => 'Le service est visible par les clients';
+
+  @override
+  String get serviceHidden => 'Le service est masqué aux clients';
+
+  @override
+  String get tipClearPricing => 'Utilisez des formats clairs comme « 1500 DA » ou « à l’heure »';
+
+  @override
+  String get tipStartingPrices => 'Proposez des prix de départ pour les prestations complexes';
+
+  @override
+  String get tipTransparency => 'Soyez transparent sur les frais supplémentaires';
+
+  @override
+  String get tipCompetitorPricing => 'Comparez vos tarifs avec ceux de la concurrence';
+
+  @override
+  String get serviceImages => 'Images du service';
+
+  @override
+  String get addPhotosToAttractCustomers => 'Ajoutez des photos de votre travail pour attirer plus de clients.';
+
+  @override
+  String get uploadImages => 'Télécharger des images';
+
+  @override
+  String get tapToSelectFromGallery => 'Appuyez ici pour sélectionner des photos depuis votre galerie';
+
+  @override
+  String get imageUploadComingSoon => 'Téléchargement d’images – À venir';
+
+  @override
+  String get serviceName => 'Nom du service';
+
+  @override
+  String get enterServiceName => 'Saisissez le nom du service';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get describeYourService => 'Décrivez votre service en détail';
+
+  @override
+  String get pricing => 'Tarification';
+
+  @override
+  String get pricingModel => 'Modèle de tarification';
+
+  @override
+  String get hourlyRate => 'Tarif horaire';
+
+  @override
+  String get fixedPrice => 'Prix fixe';
+
+  @override
+  String get enterPrice => '0,00';
+
+  @override
+  String get pleaseEnterServiceName => 'Veuillez saisir un nom de service';
+
+  @override
+  String get pleaseEnterDescription => 'Veuillez saisir une description';
+
+  @override
+  String get pleaseEnterPrice => 'Veuillez saisir un prix';
+
+  @override
+  String get serviceAddedSuccessfully => 'Service ajouté avec succès !';
 }
