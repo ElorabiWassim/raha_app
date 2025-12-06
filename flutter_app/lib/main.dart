@@ -8,6 +8,8 @@ import 'package:ra7a/cubits/language_cubit.dart';
 import 'package:ra7a/cubits/profile_cubit.dart';
 import 'package:ra7a/cubits/booking_cubit.dart';
 import 'package:ra7a/presentation/screens/add_demand.dart';
+import 'package:ra7a/cubits/serviceprovider_cubit.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => AddDemandCubit(), child: AddDemand()),
         BlocProvider(create: (context) => BookServiceCubit()),
+        BlocProvider(create: (context) => ServiceProviderCubit()),
       ],
       child: const MyAppView(),
     );

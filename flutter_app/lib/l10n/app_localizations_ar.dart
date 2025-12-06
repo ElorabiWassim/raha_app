@@ -1020,4 +1020,154 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get details => 'التفاصيل';
+
+  @override
+  String get profileInformation => 'Profile Information';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get profession => 'Profession';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get statsInformation => 'Statistics Information';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get responseTime => 'Response Time';
+
+  @override
+  String get editService => 'Edit Service';
+
+  @override
+  String get deleteServiceTitle => 'Delete Service';
+
+  @override
+  String get deleteServiceMessage => 'Are you sure you want to delete this service? This action cannot be undone.';
+
+  @override
+  String get serviceDetails => 'Service Details';
+
+  @override
+  String get serviceTitle => 'Service Title';
+
+  @override
+  String get enterServiceTitle => 'Please enter service title';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get enterServicePrice => 'Please enter service price';
+
+  @override
+  String get priceExample => 'e.g., \"Starts at 1500 DA\" or \"2500 DA per hour\"';
+
+  @override
+  String get serviceStatus => 'Service Status';
+
+  @override
+  String get visibleToCustomers => 'Service is visible to customers';
+
+  @override
+  String get hiddenFromCustomers => 'Service is hidden from customers';
+
+  @override
+  String get pricingTips => 'Pricing Tips';
+
+  @override
+  String get tip1 => 'Use clear pricing formats like \"1500 DA\" or \"per hour\"';
+
+  @override
+  String get tip2 => 'Consider offering starting prices for complex jobs';
+
+  @override
+  String get tip3 => 'Be transparent about additional charges';
+
+  @override
+  String get tip4 => 'Review competitor pricing in your area';
+
+  @override
+  String get deleteService => 'Delete Service';
+
+  @override
+  String get confirmDeleteService => 'Are you sure you want to delete this service? This action cannot be undone.';
+
+  @override
+  String get serviceVisible => 'Service is visible to customers';
+
+  @override
+  String get serviceHidden => 'Service is hidden from customers';
+
+  @override
+  String get tipClearPricing => 'Use clear pricing formats like \"1500 DA\" or \"per hour\"';
+
+  @override
+  String get tipStartingPrices => 'Consider offering starting prices for complex jobs';
+
+  @override
+  String get tipTransparency => 'Be transparent about additional charges';
+
+  @override
+  String get tipCompetitorPricing => 'Review competitor pricing in your area';
+
+  @override
+  String get serviceImages => 'Service Images';
+
+  @override
+  String get addPhotosToAttractCustomers => 'Add photos of your work to attract more customers.';
+
+  @override
+  String get uploadImages => 'Upload Images';
+
+  @override
+  String get tapToSelectFromGallery => 'Tap here to select photos from your gallery';
+
+  @override
+  String get imageUploadComingSoon => 'Image upload - Coming Soon';
+
+  @override
+  String get serviceName => 'Service Name';
+
+  @override
+  String get enterServiceName => 'Enter service name';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get describeYourService => 'Describe your service in detail';
+
+  @override
+  String get pricing => 'Pricing';
+
+  @override
+  String get pricingModel => 'Pricing Model';
+
+  @override
+  String get hourlyRate => 'Hourly Rate';
+
+  @override
+  String get fixedPrice => 'Fixed Price';
+
+  @override
+  String get enterPrice => '0.00';
+
+  @override
+  String get pleaseEnterServiceName => 'Please enter a service name';
+
+  @override
+  String get pleaseEnterDescription => 'Please enter a description';
+
+  @override
+  String get pleaseEnterPrice => 'Please enter a price';
+
+  @override
+  String get serviceAddedSuccessfully => 'Service added successfully!';
 }
