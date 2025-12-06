@@ -33,10 +33,7 @@ class DatabaseHelper {
 
     // List of wilayas with French and Arabic names
     List<Map<String, String>> wilayas = [
-      {'name_fr': 'Béjaïa', 'name_ar': 'بجاية'},
-      {'name_fr': 'Biskra', 'name_ar': 'بسكرة'},
       {'name_fr': 'Blida', 'name_ar': 'البليدة'},
-      {'name_fr': 'Bouira', 'name_ar': 'البويرة'},
       {'name_fr': 'Algiers', 'name_ar': 'الجزائر'},
       {'name_fr': 'Oran', 'name_ar': 'وهران'},
     ];
