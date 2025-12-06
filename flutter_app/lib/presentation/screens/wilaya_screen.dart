@@ -4,10 +4,22 @@ import '../../data/models/Wilayas.dart';
 import '../../cubits/wilaya_cubit.dart';
 import 'service_provider_screen.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import '../../cubits/load_service_providers_cubit.dart';
 
 class WilayaScreen extends StatelessWidget {
   final String category;
-  const WilayaScreen({super.key, required this.category});
+
+  WilayaScreen({super.key, required this.category});
+
+  final Map<String, String> categoryToId = {
+    "Electrical": "069dc664-5fd9-435c-a688-cc002e46243b",
+    "Gardening": "3e53048d-1367-4e9f-ac4e-e39e5936dc0e",
+    "Cleaning": "6ca0c6a3-efa3-481e-b40a-a173bbcdb283",
+    "Handyman": "74738160-4b3e-4c15-a8e6-9a2dd26f0c03",
+    "Moving": "837ecd35-78de-4320-be91-9cfa67a8bd1f",
+    "Plumbing": "a75af59d-3e61-402d-9bd2-54a5e64fc950",
+    "Painting": "da59048e-86e6-4a7e-b342-1784687004f7",
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -85,19 +97,19 @@ class WilayaScreen extends StatelessWidget {
                           vertical: 8,
                         ),
                         onTap: () {
-                          if (wilaya.serviceProvidersByCategory.containsKey(
-                            category,
-                          )) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ServiceProviderScreen(
-                                  serviceProviders: wilaya
-                                      .serviceProvidersByCategory[category]!,
-                                ),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider(
+                                create: (_) =>
+                                    ServiceProviderCubit()..fetchProviders(
+                                      categoryId: categoryToId[category]!,
+                                      location: wilaya.name,
+                                    ),
+                                child: ServiceProviderScreen(),
                               ),
-                            );
-                          }
+                            ),
+                          );
                         },
                       ),
                     ),

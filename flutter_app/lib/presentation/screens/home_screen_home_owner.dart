@@ -16,7 +16,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -75,21 +75,18 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
                 name: l10n.professionalAmineFaiz,
                 profession: l10n.professionMasterPlumber,
                 rating: 4.9,
-                reviews: 124,
                 imagePath: 'assets/images/JohnDoe.png',
               ),
               ProfessionalCard(
                 name: l10n.professionalMariaHaniya,
                 profession: l10n.professionExpertCarpenter,
                 rating: 5.0,
-                reviews: 88,
                 imagePath: 'assets/images/Maria.png',
               ),
               ProfessionalCard(
                 name: l10n.professionalAliImem,
                 profession: l10n.professionGardeningLandscaping,
                 rating: 4.8,
-                reviews: 150,
                 imagePath: 'assets/images/AliImem.png',
               ),
             ],
