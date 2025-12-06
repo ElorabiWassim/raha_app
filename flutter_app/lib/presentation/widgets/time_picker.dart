@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class TimePickerField extends StatefulWidget {
-  const TimePickerField({super.key});
+  const TimePickerField({super.key, this.onTimeSelected});
+
+  // 🔹 callback to send selected time to parent
+  final void Function(String)? onTimeSelected;
 
   @override
   State<TimePickerField> createState() => _TimePickerFieldState();
@@ -30,6 +33,13 @@ class _TimePickerFieldState extends State<TimePickerField> {
     if (picked != null) {
       setState(() {
         _selectedTime = picked;
+
+        // 🔹 send selected time to parent in "HH:mm" format
+        if (widget.onTimeSelected != null) {
+          final formattedTime =
+              "${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
+          widget.onTimeSelected!(formattedTime);
+        }
       });
     }
   }
