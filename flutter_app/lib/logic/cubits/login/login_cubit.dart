@@ -1,25 +1,57 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:ra7a/data/local/local_cache_repository.dart';
+import 'package:ra7a/data/local/local_models.dart';
+import 'package:ra7a/data/remote/auth_api.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(LoginInitial());
+  LoginCubit({
+    required AuthApi authApi,
+    required LocalCacheRepository cacheRepository,
+  }) : _authApi = authApi,
+       _cacheRepository = cacheRepository,
+       super(LoginInitial());
 
-  Future<void> login(String username, String password) async {
+  final AuthApi _authApi;
+  final LocalCacheRepository _cacheRepository;
+
+  Future<void> login(String email, String password) async {
     emit(LoginLoading());
-    await Future.delayed(const Duration(seconds: 1)); // Simulate API
+    try {
+      final response = await _authApi.login(email: email, password: password);
 
-    final lowerUser = username.toLowerCase().trim();
-    if (lowerUser == 'homeowner' ||
-        lowerUser == 'serviceprovider' ||
-        lowerUser == 'admin') {
-      emit(LoginSuccess(username: username, role: lowerUser));
-    } else {
-      // For demo purposes, treat any other user as homeowner if not empty
-      if (username.isNotEmpty && password.isNotEmpty) {
-        emit(LoginSuccess(username: username, role: 'homeowner'));
-      } else {
-        emit(const LoginFailure("Invalid credentials"));
-      }
+      final session = response['session'] as Map<String, dynamic>;
+      final user = response['user'] as Map<String, dynamic>;
+
+      final accessToken = session['access_token'] as String? ?? '';
+      final refreshToken = session['refresh_token'] as String? ?? '';
+      final userId = user['id'] as String? ?? '';
+      final role = (user['role'] as String? ?? 'homeowner');
+      final fullName = user['full_name'] as String? ?? email;
+
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final tokens = AuthTokens(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        userId: userId,
+        userRole: role,
+        updatedAt: now,
+      );
+      await _cacheRepository.saveAuthTokens(tokens);
+
+      final profile = LocalUserProfile(
+        userId: userId,
+        fullName: fullName,
+        role: role,
+        profileImageUrl: null,
+        updatedAt: now,
+      );
+      await _cacheRepository.saveUserProfile(profile);
+
+      emit(LoginSuccess(username: fullName, role: role));
+    } catch (e) {
+      emit(LoginFailure(e.toString()));
     }
   }
 }

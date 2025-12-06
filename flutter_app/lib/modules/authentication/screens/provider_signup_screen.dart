@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ra7a/data/remote/auth_api.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../../../logic/cubits/signup/signup_cubit.dart';
 import '../../../../logic/cubits/signup/signup_state.dart';
@@ -19,7 +20,14 @@ class ProviderSignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignupCubit(),
+      create: (context) => SignupCubit(
+        authApi: AuthApi(
+          baseUrl: const String.fromEnvironment(
+            'BACKEND_BASE_URL',
+            defaultValue: 'http://10.0.2.2:3000',
+          ),
+        ),
+      ),
       child: const _ProviderSignUpScreenContent(),
     );
   }
@@ -124,7 +132,9 @@ class _ProviderSignUpScreenContentState
         phone: _phoneController.text,
         city: _cityController.text,
         neighborhood: _neighborhoodController.text,
-        serviceType: _selectedServiceType!,
+        // Temporary: send fixed Electrical category UUID.
+        // TODO: replace with selected category.id when wiring dynamic categories.
+        serviceType: '069dc664-5fd9-435c-a688-cc002e46243b',
       );
     } else if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -147,12 +157,12 @@ class _ProviderSignUpScreenContentState
       child: BlocListener<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state is SignupSuccess) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MainNavigationScreen(),
-                ),
-              );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MainNavigationScreen(),
+              ),
+            );
           } else if (state is SignupFailure) {
             ScaffoldMessenger.of(
               context,

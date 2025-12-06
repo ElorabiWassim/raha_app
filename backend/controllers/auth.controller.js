@@ -18,14 +18,20 @@ const signupHomeowner = async (req, res) => {
 
     if (authError) return res.status(400).json({ error: authError.message });
 
-    const userId = authData.user.id;
+    // user is created in Auth. If email confirmation is enabled, we might not get a session immediately unless "Auto Confirm" is on.
+    // However, if we get a session, we proceed.
+    // If no session (email confirmation required), we can't do the rest easily without logic handling.
+    // Assuming for dev/test that auto-confirm is on or we handle "user without session".
+    
+    const user = authData.user;
+    if (!user) return res.status(400).json({ error: 'User creation failed' });
 
     // 2. Insert into users table
     const { error: userError } = await supabase
       .from('users')
       .insert([
         {
-          user_id: userId,
+          user_id: user.id,
           email,
           full_name: fullName,
           phone_number: phoneNumber,
@@ -36,7 +42,12 @@ const signupHomeowner = async (req, res) => {
 
     if (userError) {
       console.error('User insert error:', userError);
-      return res.status(400).json({ error: userError.message });
+      return res.status(400).json({ 
+        error: 'User Insert Failed', 
+        details: userError.message, 
+        code: userError.code,
+        hint: userError.hint 
+      });
     }
 
     // 3. Insert into homeowners table
@@ -44,7 +55,7 @@ const signupHomeowner = async (req, res) => {
       .from('homeowners')
       .insert([
         {
-          homeowner_id: userId,
+          homeowner_id: user.id,
           home_address: homeAddress,
           date_of_birth: dateOfBirth,
         },
@@ -95,14 +106,15 @@ const signupProvider = async (req, res) => {
 
     if (authError) return res.status(400).json({ error: authError.message });
 
-    const userId = authData.user.id;
+    const user = authData.user;
+    if (!user) return res.status(400).json({ error: 'User creation failed' });
 
     // 2. Insert into users table
     const { error: userError } = await supabase
       .from('users')
       .insert([
         {
-          user_id: userId,
+          user_id: user.id,
           email,
           full_name: fullName,
           phone_number: phoneNumber,
@@ -117,25 +129,32 @@ const signupProvider = async (req, res) => {
     }
 
     // 3. Insert into service_providers table
+    const spData = {
+      sp_id: user.id,
+      working_address: workingAddress,
+      date_of_birth: dateOfBirth,
+      experience_years: experienceYears,
+      description,
+      verification_status: 'pending',
+      jobs_done: 0,
+      rating_avg: 0,
+    };
+            
+    if (serviceType) {
+        spData.service_type = serviceType;
+    }
+
     const { error: spError } = await supabase
       .from('service_providers')
-      .insert([
-        {
-          sp_id: userId,
-          working_address: workingAddress,
-          date_of_birth: dateOfBirth,
-          service_type: serviceType,
-          experience_years: experienceYears,
-          description,
-          verification_status: 'pending',
-          jobs_done: 0,
-          rating_avg: 0,
-        },
-      ]);
+      .insert([spData]);
 
     if (spError) {
       console.error('Service provider insert error:', spError);
-      return res.status(400).json({ error: spError.message });
+      return res.status(400).json({ 
+        error: 'SP Insert Failed', 
+        details: spError.message,
+        code: spError.code
+      });
     }
 
     // 4. Insert into provider_application table
@@ -143,7 +162,7 @@ const signupProvider = async (req, res) => {
       .from('provider_application')
       .insert([
         {
-          user_id: userId,
+          user_id: user.id,
           documents_urls: documentsUrls || {},
           status: 'pending',
         },
@@ -176,7 +195,7 @@ const login = async (req, res) => {
 
     if (error) return res.status(401).json({ error: error.message });
 
-    // Fetch user data from DB
+    // Fetch user role from DB
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('role, status, full_name')
@@ -185,23 +204,23 @@ const login = async (req, res) => {
 
     if (userError) {
       console.warn("User logged in but not found in 'users' table");
-      return res.status(404).json({ error: 'User profile not found' });
     }
 
-    // Check if user is banned or disabled
-    if (userData.status === 'banned' || userData.status === 'disabled') {
-      return res.status(403).json({ 
-        error: `Account is ${userData.status}. Please contact support.` 
-      });
+    if (userData) {
+        if (userData.status === 'banned' || userData.status === 'disabled') {
+            return res.status(403).json({ 
+                error: `Account is ${userData.status}. Please contact support.` 
+            });
+        }
     }
 
     res.json({
       message: 'Login successful',
       user: { 
         ...data.user, 
-        role: userData.role, 
-        status: userData.status,
-        full_name: userData.full_name
+        role: userData?.role,
+        status: userData?.status, 
+        full_name: userData?.full_name 
       },
       session: data.session,
     });
@@ -213,8 +232,9 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    const { error } = await supabase.auth.signOut();
-
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    const { error } = await supabase.auth.signOut(token); 
+    
     if (error) return res.status(400).json({ error: error.message });
 
     res.json({ message: 'Logged out successfully' });

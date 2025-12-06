@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ra7a/data/local/local_cache_repository.dart';
+import 'package:ra7a/data/remote/auth_api.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import 'package:ra7a/presentation/screens/bottomNavbar.dart';
 import 'package:ra7a/logic/cubits/auth/auth_cubit.dart';
@@ -32,9 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleLogin(BuildContext context) {
-    final username = _usernameController.text;
+    final email = _usernameController.text;
     final password = _passwordController.text;
-    context.read<LoginCubit>().login(username, password);
+    context.read<LoginCubit>().login(email, password);
   }
 
   @override
@@ -44,7 +46,15 @@ class _LoginScreenState extends State<LoginScreen> {
     const textDark = Color(0xFF101C0D);
 
     return BlocProvider(
-      create: (context) => LoginCubit(),
+      create: (context) => LoginCubit(
+        authApi: AuthApi(
+          baseUrl: const String.fromEnvironment(
+            'BACKEND_BASE_URL',
+            defaultValue: 'http://10.0.2.2:3000',
+          ),
+        ),
+        cacheRepository: context.read<LocalCacheRepository>(),
+      ),
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {

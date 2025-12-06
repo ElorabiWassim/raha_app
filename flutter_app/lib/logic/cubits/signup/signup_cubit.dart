@@ -1,8 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:ra7a/data/remote/auth_api.dart';
 import 'signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
-  SignupCubit() : super(SignupInitial());
+  SignupCubit({required AuthApi authApi})
+    : _authApi = authApi,
+      super(SignupInitial());
+
+  final AuthApi _authApi;
 
   Future<void> signupHomeowner({
     required String fullName,
@@ -14,10 +20,19 @@ class SignupCubit extends Cubit<SignupState> {
     String? propertyType,
   }) async {
     emit(SignupLoading());
-    await Future.delayed(const Duration(seconds: 2)); // Simulate API
-
-    // Mock success
-    emit(const SignupSuccess('homeowner'));
+    try {
+      await _authApi.signupHomeowner(
+        fullName: fullName,
+        email: email,
+        password: password,
+        phoneNumber: phone,
+        homeAddress: '$city, $neighborhood',
+        dateOfBirth: DateTime.now().toIso8601String(),
+      );
+      emit(const SignupSuccess('homeowner'));
+    } catch (e) {
+      emit(SignupFailure(e.toString()));
+    }
   }
 
   Future<void> signupProvider({
@@ -30,9 +45,21 @@ class SignupCubit extends Cubit<SignupState> {
     required String serviceType,
   }) async {
     emit(SignupLoading());
-    await Future.delayed(const Duration(seconds: 2)); // Simulate API
-
-    // Mock success
-    emit(const SignupSuccess('serviceprovider'));
+    try {
+      await _authApi.signupProvider(
+        fullName: fullName,
+        email: email,
+        password: password,
+        phoneNumber: phone,
+        workingAddress: '$city, $neighborhood',
+        dateOfBirth: DateTime.now().toIso8601String(),
+        // TODO: replace this hardcoded UUID with the real
+        // category_id from Supabase once categories are wired.
+        serviceType: serviceType,
+      );
+      emit(const SignupSuccess('serviceprovider'));
+    } catch (e) {
+      emit(SignupFailure(e.toString()));
+    }
   }
 }
