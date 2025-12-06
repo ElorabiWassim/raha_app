@@ -35,7 +35,12 @@ class ProfessionalCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(radius: 28, backgroundImage: AssetImage(imagePath)),
+          CircleAvatar(
+            radius: 28,
+            backgroundImage: (imagePath != null && imagePath.isNotEmpty)
+                ? NetworkImage(imagePath)
+                : AssetImage(imagePath),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

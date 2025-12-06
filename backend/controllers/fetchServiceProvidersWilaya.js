@@ -75,6 +75,7 @@ async function getServiceProviderProfile(req, res) {
         working_address,
         experience_years,
         jobs_done,
+        profile_picture_url,
         users:users!service_providers_sp_id_fkey (
           full_name
         )
@@ -123,7 +124,8 @@ async function getServiceProviderProfile(req, res) {
       review_percentages: reviewPercentages,
       location: spData.working_address,
       jobs_done: spData.jobs_done,
-      experience: spData.experience
+      experience: spData.experience,
+      profile_picture_url : spData.profile_picture_url
     };
 
     return res.status(200).json(profile);

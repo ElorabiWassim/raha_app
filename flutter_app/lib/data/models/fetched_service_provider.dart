@@ -3,7 +3,7 @@ class FetchedServiceProvider {
   final String name;
   final String profession;
   final String workingAddress;
-  final String imageUrl;
+  final String profile_picture_url;
   final double rating;
 
   FetchedServiceProvider({
@@ -11,7 +11,7 @@ class FetchedServiceProvider {
     required this.name,
     required this.profession,
     required this.workingAddress,
-    required this.imageUrl,
+    required this.profile_picture_url,
     required this.rating,
   });
 
@@ -21,7 +21,7 @@ class FetchedServiceProvider {
       name: json['users']?['full_name'] ?? 'Unknown',
       profession: json['service_type']?['name'] ?? '',
       workingAddress: json['working_address'] ?? '',
-      imageUrl: json['profile_picture_url'] ?? '',
+      profile_picture_url: json['profile_picture_url'] ?? '',
       rating: (json['average_rating'] ?? 0).toDouble(),
     );
   }

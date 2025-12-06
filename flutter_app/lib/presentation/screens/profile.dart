@@ -186,7 +186,9 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundImage: NetworkImage(p['image'] ?? ''),
+                            backgroundImage: NetworkImage(
+                              p['profile_picture_url'] ?? '',
+                            ),
                           ),
                           SizedBox(height: 12),
                           Text(
@@ -281,7 +283,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
                                   ),
                                   Expanded(
                                     child: _buildStat(
-                                      (p['experience_years'] ?? 0).toString(),
+                                      (p['experience'] ?? 0).toString(),
                                       l10n.experience,
                                     ),
                                   ),

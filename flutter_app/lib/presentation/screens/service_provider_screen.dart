@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/proffesionalCardWidget.dart';
 import '../../data/models/fetched_service_provider.dart';
+
 import 'profile.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../cubits/load_service_providers_cubit.dart';
@@ -77,7 +78,7 @@ class ServiceProviderScreen extends StatelessWidget {
                       name: p.name,
                       profession: p.profession,
                       rating: p.rating,
-                      imagePath: p.imageUrl,
+                      imagePath: p.profile_picture_url,
                     ),
                   ),
                 );
