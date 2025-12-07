@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import '../screens/dashboard.dart';
 import '../screens/applications.dart';
 import '../screens/reports.dart';
+import '../../cubits/dashboard_cubit.dart';
+import '../../cubits/applications_cubit.dart';
+import '../../cubits/reports_cubit.dart';
 
 class Ra7aBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -18,16 +23,31 @@ class Ra7aBottomNav extends StatelessWidget {
         Widget nextPage;
         switch (index) {
           case 0:
-            nextPage = const DashboardPage();
+            nextPage = BlocProvider(
+              create: (_) =>
+                  GetIt.instance<DashboardCubit>()..loadDashboardStats(),
+              child: const DashboardPage(),
+            );
             break;
           case 1:
-            nextPage = const ApplicationsPage();
+            nextPage = BlocProvider(
+              create: (_) =>
+                  GetIt.instance<ApplicationsCubit>()..loadApplications(),
+              child: const ApplicationsPage(),
+            );
             break;
           case 2:
-            nextPage = const ReportsPage();
+            nextPage = BlocProvider(
+              create: (_) => GetIt.instance<ReportsCubit>()..loadReports(),
+              child: const ReportsPage(),
+            );
             break;
           default:
-            nextPage = const DashboardPage();
+            nextPage = BlocProvider(
+              create: (_) =>
+                  GetIt.instance<DashboardCubit>()..loadDashboardStats(),
+              child: const DashboardPage(),
+            );
         }
 
         Navigator.pushReplacement(

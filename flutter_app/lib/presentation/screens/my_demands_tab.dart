@@ -72,7 +72,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
           const SizedBox(height: 8),
           Text(
             l10n.tryAdjustingSearch,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textLight),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textLight,
+            ),
           ),
         ],
       ),
@@ -97,7 +99,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
             foregroundColor: AppColors.primary,
             side: BorderSide(color: AppColors.primary, width: 1.5),
             elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(19)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(19),
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -136,16 +140,24 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 12, right: 8),
-                    child: Icon(Icons.search, color: AppColors.textHint, size: 20),
+                    child: Icon(
+                      Icons.search,
+                      color: AppColors.textHint,
+                      size: 20,
+                    ),
                   ),
                   Expanded(
                     child: TextField(
                       controller: _searchController,
-                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.primary),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.primary,
+                      ),
                       cursorColor: AppColors.primary,
                       decoration: InputDecoration(
                         hintText: l10n.searchByTitleOrCategory,
-                        hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textHint),
+                        hintStyle: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textHint,
+                        ),
                         border: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
@@ -154,7 +166,11 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                   ),
                   if (_searchQuery.isNotEmpty)
                     IconButton(
-                      icon: Icon(Icons.clear, color: AppColors.textLight, size: 18),
+                      icon: Icon(
+                        Icons.clear,
+                        color: AppColors.textLight,
+                        size: 18,
+                      ),
                       onPressed: () => _searchController.clear(),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -186,7 +202,11 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 onTap: () => _showFilterBottomSheet(l10n),
                 borderRadius: BorderRadius.circular(8),
                 child: Center(
-                  child: Icon(Icons.filter_list, color: AppColors.textMedium, size: 20),
+                  child: Icon(
+                    Icons.filter_list,
+                    color: AppColors.textMedium,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
@@ -237,7 +257,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                         },
                         child: Text(
                           l10n.reset,
-                          style: AppTextStyles.buttonMedium.copyWith(color: AppColors.primary),
+                          style: AppTextStyles.buttonMedium.copyWith(
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ],
@@ -257,8 +279,16 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           runSpacing: 8,
                           children: [
                             _buildSortChip(l10n.date, 'date', setModalState),
-                            _buildSortChip(l10n.budget, 'budget', setModalState),
-                            _buildSortChip(l10n.status, 'status', setModalState),
+                            _buildSortChip(
+                              l10n.budget,
+                              'budget',
+                              setModalState,
+                            ),
+                            _buildSortChip(
+                              l10n.status,
+                              'status',
+                              setModalState,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 24),
@@ -269,10 +299,18 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            _buildCategoryChip('Electrical', setModalState, l10n),
+                            _buildCategoryChip(
+                              'Electrical',
+                              setModalState,
+                              l10n,
+                            ),
                             _buildCategoryChip('Plumbing', setModalState, l10n),
                             _buildCategoryChip('Painting', setModalState, l10n),
-                            _buildCategoryChip('Carpentry', setModalState, l10n),
+                            _buildCategoryChip(
+                              'Carpentry',
+                              setModalState,
+                              l10n,
+                            ),
                             _buildCategoryChip('Cleaning', setModalState, l10n),
                           ],
                         ),
@@ -303,11 +341,15 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                             children: [
                               Text(
                                 '${_budgetRange.start.round()} DZD',
-                                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMedium),
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.textMedium,
+                                ),
                               ),
                               Text(
                                 '${_budgetRange.end.round()} DZD',
-                                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMedium),
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.textMedium,
+                                ),
                               ),
                             ],
                           ),
@@ -330,9 +372,14 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      child: Text(l10n.applyFilters, style: AppTextStyles.buttonMedium),
+                      child: Text(
+                        l10n.applyFilters,
+                        style: AppTextStyles.buttonMedium,
+                      ),
                     ),
                   ),
                 ),
@@ -376,7 +423,11 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     );
   }
 
-  Widget _buildCategoryChip(String categoryKey, StateSetter setModalState, AppLocalizations l10n) {
+  Widget _buildCategoryChip(
+    String categoryKey,
+    StateSetter setModalState,
+    AppLocalizations l10n,
+  ) {
     final isSelected = _selectedCategories.contains(categoryKey);
     final categoryName = _localizeCategory(categoryKey, l10n);
 
@@ -408,7 +459,11 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
             if (isSelected)
               Padding(
                 padding: const EdgeInsets.only(right: 4),
-                child: Icon(Icons.check_circle, size: 16, color: AppColors.primary),
+                child: Icon(
+                  Icons.check_circle,
+                  size: 16,
+                  color: AppColors.primary,
+                ),
               ),
             Text(
               categoryName,
@@ -425,12 +480,18 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
 
   String _localizeCategory(String category, AppLocalizations l10n) {
     switch (category) {
-      case 'Electrical': return l10n.electrical;
-      case 'Plumbing': return l10n.plumbing;
-      case 'Painting': return l10n.painting;
-      case 'Carpentry': return l10n.carpentry;
-      case 'Cleaning': return l10n.cleaning;
-      default: return category;
+      case 'Electrical':
+        return l10n.electrical;
+      case 'Plumbing':
+        return l10n.plumbing;
+      case 'Painting':
+        return l10n.painting;
+      case 'Carpentry':
+        return l10n.carpentry;
+      case 'Cleaning':
+        return l10n.cleaning;
+      default:
+        return category;
     }
   }
 
@@ -463,7 +524,10 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primary.withValues(alpha: .1)
@@ -473,7 +537,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 child: Text(
                   filterLabel,
                   style: AppTextStyles.label.copyWith(
-                    color: isSelected ? AppColors.primary : AppColors.textMedium,
+                    color: isSelected
+                        ? AppColors.primary
+                        : AppColors.textMedium,
                   ),
                 ),
               ),
@@ -523,13 +589,17 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                     children: [
                       Text(
                         demand.title,
-                        style: AppTextStyles.heading5.copyWith(color: AppColors.textDark),
+                        style: AppTextStyles.heading5.copyWith(
+                          color: AppColors.textDark,
+                        ),
                         softWrap: true,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         _localizeCategory(demand.category, l10n),
-                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textLight),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textLight,
+                        ),
                       ),
                     ],
                   ),
@@ -541,7 +611,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
             const SizedBox(height: 16),
             Text(
               demand.description,
-              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMedium),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textMedium,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -605,7 +677,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
         Expanded(
           child: Text(
             text,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textLight),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textLight,
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -645,7 +719,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.backgroundWhite,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
             ),
             child: Text(l10n.viewRequests, style: AppTextStyles.buttonMedium),
           ),
@@ -657,25 +733,35 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
                 l10n.editDemand,
-                style: AppTextStyles.buttonMedium.copyWith(color: AppColors.textLight),
+                style: AppTextStyles.buttonMedium.copyWith(
+                  color: AppColors.textLight,
+                ),
               ),
             ),
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
                 l10n.cancelDemand,
-                style: AppTextStyles.buttonMedium.copyWith(color: AppColors.error),
+                style: AppTextStyles.buttonMedium.copyWith(
+                  color: AppColors.error,
+                ),
               ),
             ),
           ],
@@ -689,7 +775,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
       children: [
         Text(
           l10n.providerHired,
-          style: AppTextStyles.buttonMedium.copyWith(color: AppColors.textMedium),
+          style: AppTextStyles.buttonMedium.copyWith(
+            color: AppColors.textMedium,
+          ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
@@ -702,7 +790,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.backgroundWhite,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
             ),
             child: Text(l10n.viewDetails, style: AppTextStyles.buttonMedium),
           ),
@@ -716,7 +806,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
       children: [
         Text(
           l10n.jobFinished,
-          style: AppTextStyles.buttonMedium.copyWith(color: AppColors.textMedium),
+          style: AppTextStyles.buttonMedium.copyWith(
+            color: AppColors.textMedium,
+          ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
@@ -729,7 +821,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.backgroundWhite,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
             ),
             child: Text(l10n.viewInvoice, style: AppTextStyles.buttonMedium),
           ),
@@ -803,9 +897,11 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     // Your existing demand list (hardcoded or from API)
     return [
       Demand(
+        id: '1',
         title: 'Fix AC Unit',
         category: 'Electrical',
-        description: 'AC not cooling properly, making strange noises when turned on...',
+        description:
+            'AC not cooling properly, making strange noises when turned on...',
         postedDate: 'Oct 26, 2023',
         location: 'Algiers',
         budget: '8,000 DZD',

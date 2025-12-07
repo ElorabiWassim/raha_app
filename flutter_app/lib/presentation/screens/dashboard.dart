@@ -1,316 +1,193 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../cubits/dashboard_cubit.dart';
+import '../../cubits/dashboard_state.dart';
+import '../../data/models/dashboard_stats.dart';
 import '../widgets/bottom_nav_admin.dart';
 import '../../modules/authentication/screens/login.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
-}
+  Widget build(BuildContext context) {
+    return BlocBuilder<DashboardCubit, DashboardState>(
+      builder: (context, state) {
+        if (state is DashboardLoading) {
+          return Scaffold(
+            appBar: _buildAppBar(context),
+            body: const Center(child: CircularProgressIndicator()),
+            bottomNavigationBar: const Ra7aBottomNav(currentIndex: 0),
+          );
+        }
 
-class _DashboardPageState extends State<DashboardPage> {
-  int totalUsers = 1245;
-  int verifiedSPs = 218;
-  int activeBookings = 86;
-  int revenue = 1520;
-
-  List<Map<String, String>> activities = [
-    {'title': 'New user registered', 'time': '1 hour ago'},
-    {'title': 'Service completed', 'time': '2 hours ago'},
-    {'title': 'Payment received', 'time': '3 hours ago'},
-  ];
-
-  bool isLoading = false;
-
-  void _refreshData() {
-    setState(() {
-      isLoading = true;
-    });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        totalUsers += 5;
-        verifiedSPs += 1;
-        activeBookings -= 2;
-        revenue += 100;
-
-        activities.insert(0, {
-          'title': 'Dashboard refreshed',
-          'time': 'Just now',
-        });
-
-        isLoading = false;
-      });
-    });
-  }
-
-  void _addActivity(String title, String time) {
-    setState(() {
-      activities.insert(0, {'title': title, 'time': time});
-
-      if (activities.length > 5) {
-        activities.removeAt(activities.length - 1);
-      }
-    });
-  }
-
-  void _handleLogout() {
-    final localizations = AppLocalizations.of(context)!;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              const Icon(Icons.logout, color: Color(0xFF4CAF50)),
-              const SizedBox(width: 8),
-              Text(
-                localizations.dashboardLogout,
-                style: const TextStyle(
-                  color: Color(0xFF388E3C),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            localizations.dashboardLogoutConfirm,
-            style: const TextStyle(color: Color(0xFF333333)),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                localizations.dashboardCancel,
-                style: const TextStyle(color: Color(0xFF6B7280)),
+        if (state is DashboardError) {
+          return Scaffold(
+            appBar: _buildAppBar(context),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<DashboardCubit>().refreshStats(),
+                    child: const Text('Retry'),
+                  ),
+                ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4CAF50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                localizations.dashboardLogout,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
+            bottomNavigationBar: const Ra7aBottomNav(currentIndex: 0),
+          );
+        }
+
+        if (state is DashboardLoaded) {
+          return _buildDashboard(context, state.stats);
+        }
+
+        return Scaffold(
+          appBar: _buildAppBar(context),
+          body: const Center(child: Text('No data available')),
+          bottomNavigationBar: const Ra7aBottomNav(currentIndex: 0),
         );
       },
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
+  Widget _buildDashboard(BuildContext context, DashboardStats stats) {
     return Scaffold(
+      appBar: _buildAppBar(context),
       backgroundColor: const Color(0xFFF5F8F8),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8F5E9),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.space_dashboard,
-                      color: Color(0xFF4CAF50),
-                      size: 28,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        localizations.dashboardTitle,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF388E3C),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Color(0xFF4CAF50),
-                              ),
-                            )
-                          : const Icon(Icons.refresh, color: Color(0xFF4CAF50)),
-                      onPressed: isLoading ? null : _refreshData,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.logout, color: Color(0xFF4CAF50)),
-                      onPressed: _handleLogout,
-                      tooltip: localizations.dashboardLogout,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Stats Grid
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 1.3,
-                children: [
-                  StatCard(
-                    title: localizations.dashboardTotalUsers,
-                    value: totalUsers.toString(),
-                    change: '+5.2%',
-                    isPositive: true,
-                    icon: Icons.people,
-                    onTap: () {
-                      _addActivity('Viewed Total Users', 'Just now');
-                    },
-                  ),
-                  StatCard(
-                    title: localizations.dashboardVerifiedSPs,
-                    value: verifiedSPs.toString(),
-                    change: '+2.1%',
-                    isPositive: true,
-                    icon: Icons.verified_user,
-                    onTap: () {
-                      _addActivity('Viewed Verified SPs', 'Just now');
-                    },
-                  ),
-                  StatCard(
-                    title: localizations.dashboardActiveBookings,
-                    value: activeBookings.toString(),
-                    change: '-1.5%',
-                    isPositive: false,
-                    icon: Icons.book_online,
-                    onTap: () {
-                      _addActivity('Viewed Active Bookings', 'Just now');
-                    },
-                  ),
-                  StatCard(
-                    title: localizations.dashboardRevenue,
-                    value: '\$${revenue.toString()}',
-                    change: '+12.8%',
-                    isPositive: true,
-                    icon: Icons.attach_money,
-                    onTap: () {
-                      _addActivity('Viewed Revenue', 'Just now');
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // Recent Activity Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    localizations.dashboardRecentActivity,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF333333),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${activities.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    for (int i = 0; i < activities.length; i++) ...[
-                      _buildActivityItem(
-                        activities[i]['title']!,
-                        activities[i]['time']!,
-                      ),
-                      if (i < activities.length - 1) const Divider(height: 1),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await context.read<DashboardCubit>().refreshStats();
+        },
+        child: _buildDashboardContent(context, stats),
       ),
       bottomNavigationBar: const Ra7aBottomNav(currentIndex: 0),
     );
   }
 
-  Widget _buildActivityItem(String title, String time) {
-    return Padding(
+  Widget _buildDashboardContent(BuildContext context, DashboardStats stats) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: const Color(0xFFE8F5E9),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
-              Icons.notifications,
-              color: Color(0xFF4CAF50),
-              size: 20,
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.space_dashboard,
+                  color: Color(0xFF4CAF50),
+                  size: 28,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    localizations.dashboardTitle,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF388E3C),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 20),
+
+          // Stats Grid
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.3,
+            children: [
+              _StatCard(
+                title: localizations.dashboardTotalUsers,
+                value: '${stats.totalUsers}',
+                icon: Icons.people,
+                color: const Color(0xFF2196F3),
+              ),
+              _StatCard(
+                title: localizations.dashboardVerifiedSPs,
+                value: '${stats.verifiedSPs}',
+                icon: Icons.verified_user,
+                color: const Color(0xFF4CAF50),
+              ),
+              _StatCard(
+                title: localizations.dashboardActiveBookings,
+                value: '${stats.activeBookings}',
+                icon: Icons.event_available,
+                color: const Color(0xFFFF9800),
+              ),
+              _StatCard(
+                title: localizations.dashboardRevenue,
+                value: '\$${stats.revenue.toStringAsFixed(0)}',
+                icon: Icons.attach_money,
+                color: const Color(0xFF9C27B0),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // Recent Activities Section
+          Text(
+            localizations.dashboardRecentActivity,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildActivityCard('New user registered', '1 hour ago'),
+          _buildActivityCard('Service completed', '2 hours ago'),
+          _buildActivityCard('Payment received', '3 hours ago'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActivityCard(String title, String time) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.notifications, color: Color(0xFF4CAF50)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -321,10 +198,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF333333),
                   ),
                 ),
-                const SizedBox(height: 2),
                 Text(
                   time,
                   style: const TextStyle(
@@ -339,82 +214,87 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
+
+  AppBar _buildAppBar(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    return AppBar(
+      title: Text(localizations.dashboard),
+      backgroundColor: const Color(0xFF4CAF50),
+      foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false,
+            );
+          },
+        ),
+      ],
+    );
+  }
 }
 
-class StatCard extends StatelessWidget {
+class _StatCard extends StatelessWidget {
   final String title;
   final String value;
-  final String change;
-  final bool isPositive;
   final IconData icon;
-  final VoidCallback? onTap;
+  final Color color;
 
-  const StatCard({
-    super.key,
+  const _StatCard({
     required this.title,
     required this.value,
-    required this.change,
-    required this.isPositive,
     required this.icon,
-    this.onTap,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF388E3C),
+                    fontSize: 12,
+                    color: Color(0xFF6B7280),
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Icon(icon, color: const Color(0xFF4CAF50), size: 20),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333333),
               ),
+              Icon(icon, color: color, size: 24),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: color,
             ),
-            Text(
-              change,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: isPositive
-                    ? const Color(0xFF4CAF50)
-                    : const Color(0xFFF44336),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

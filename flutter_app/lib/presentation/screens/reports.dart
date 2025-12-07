@@ -1,41 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../cubits/reports_cubit.dart';
+import '../../cubits/reports_state.dart';
+import '../../data/models/report.dart';
 import '../widgets/bottom_nav_admin.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
-class ReportsPage extends StatefulWidget {
+class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
 
   @override
-  State<ReportsPage> createState() => _ReportsPageState();
+  Widget build(BuildContext context) {
+    return BlocBuilder<ReportsCubit, ReportsState>(
+      builder: (context, state) {
+        if (state is ReportsLoading) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F8F8),
+            body: const Center(child: CircularProgressIndicator()),
+            bottomNavigationBar: const Ra7aBottomNav(currentIndex: 2),
+          );
+        }
+
+        if (state is ReportsError) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F8F8),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => context.read<ReportsCubit>().loadReports(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+            bottomNavigationBar: const Ra7aBottomNav(currentIndex: 2),
+          );
+        }
+
+        if (state is ReportsLoaded) {
+          return _ReportsContent(reports: state.reports);
+        }
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F8F8),
+          body: const Center(child: Text('No data available')),
+          bottomNavigationBar: const Ra7aBottomNav(currentIndex: 2),
+        );
+      },
+    );
+  }
 }
 
-class _ReportsPageState extends State<ReportsPage> {
-  int selectedFilter = 0;
+class _ReportsContent extends StatefulWidget {
+  final List<Report> reports;
 
-  final List<Map<String, String>> reports = [
-    {
-      'homeowner': 'Lina Saleh',
-      'provider': 'Khalid Electricians',
-      'issue': 'Poor Workmanship',
-      'description': 'The wiring was left exposed and is a safety hazard.',
-    },
-    {
-      'homeowner': 'Youssef El-Masri',
-      'provider': 'Ahmed Hassan',
-      'issue': 'No Show',
-      'description': 'The plumber never arrived for the appointment.',
-    },
-    {
-      'homeowner': 'Aisha Mohammed',
-      'provider': 'Clean Sweep Pro',
-      'issue': 'Incomplete Service',
-      'description': 'Several areas were missed during cleaning.',
-    },
-  ];
+  const _ReportsContent({required this.reports});
+
+  @override
+  State<_ReportsContent> createState() => _ReportsContentState();
+}
+
+class _ReportsContentState extends State<_ReportsContent> {
+  int selectedFilter = 0;
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+
+    // Filter reports based on search query
+    final filteredReports = widget.reports.where((report) {
+      if (searchQuery.isEmpty) return true;
+      final homeowner = report.homeownerName.toLowerCase();
+      final provider = report.providerName.toLowerCase();
+      final issue = report.issue.toLowerCase();
+      return homeowner.contains(searchQuery.toLowerCase()) ||
+          provider.contains(searchQuery.toLowerCase()) ||
+          issue.contains(searchQuery.toLowerCase());
+    }).toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
@@ -69,6 +121,11 @@ class _ReportsPageState extends State<ReportsPage> {
                   const SizedBox(height: 16),
                   // Search Bar
                   TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value;
+                      });
+                    },
                     decoration: InputDecoration(
                       hintText: localizations.reportsSearchHint,
                       prefixIcon: const Icon(
@@ -110,19 +167,35 @@ class _ReportsPageState extends State<ReportsPage> {
 
             // Reports List
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: reports.length,
-                itemBuilder: (context, index) {
-                  final report = reports[index];
-                  return ReportCard(
-                    homeowner: report['homeowner']!,
-                    provider: report['provider']!,
-                    issue: report['issue']!,
-                    description: report['description']!,
-                  );
-                },
-              ),
+              child: filteredReports.isEmpty
+                  ? Center(
+                      child: Text(
+                        searchQuery.isEmpty
+                            ? 'No reports available'
+                            : 'No reports found',
+                        style: const TextStyle(color: Color(0xFF6B7280)),
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        await context.read<ReportsCubit>().loadReports();
+                      },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: filteredReports.length,
+                        itemBuilder: (context, index) {
+                          final report = filteredReports[index];
+                          return ReportCard(
+                            reportId: report.reportId,
+                            homeowner: report.homeownerName,
+                            provider: report.providerName,
+                            issue: report.issue,
+                            description: report.description,
+                            status: report.status,
+                          );
+                        },
+                      ),
+                    ),
             ),
           ],
         ),
@@ -170,17 +243,21 @@ class _ReportsPageState extends State<ReportsPage> {
 }
 
 class ReportCard extends StatelessWidget {
+  final String reportId;
   final String homeowner;
   final String provider;
   final String issue;
   final String description;
+  final String status;
 
   const ReportCard({
     super.key,
+    required this.reportId,
     required this.homeowner,
     required this.provider,
     required this.issue,
     required this.description,
+    required this.status,
   });
 
   @override
