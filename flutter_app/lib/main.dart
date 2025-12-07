@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ra7a/cubits/demands_cubits.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import 'package:ra7a/modules/authentication/screens/splash.dart';
 import 'package:ra7a/cubits/language_cubit.dart';
 import 'package:ra7a/cubits/profile_cubit.dart';
 import 'package:ra7a/service_locator.dart';
+import 'package:ra7a/cubits/booking_cubit.dart';
+import 'package:ra7a/presentation/screens/add_demand.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +34,8 @@ class MyApp extends StatelessWidget {
         // Feature Cubits from GetIt (use getIt to get instances)
         // These are provided globally for easy access throughout the app
         // Note: For specific pages, you can also provide them locally
+        BlocProvider(create: (context) => AddDemandCubit(), child: AddDemand()),
+        BlocProvider(create: (context) => BookServiceCubit()),
       ],
       child: const MyAppView(),
     );

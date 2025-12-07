@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ra7a/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/cubits/bookings/bookings_cubit.dart';
+import '../../logic/cubits/demands/demands_cubit.dart';
+import '../../l10n_amine/app_localizations.dart';
 import '../themes/app_text_style.dart';
 import 'my_bookings_tab.dart';
 import 'my_demands_tab.dart';
@@ -16,35 +19,39 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => BookingsCubit()..loadBookings()),
+        BlocProvider(create: (context) => DemandsCubit()..loadDemands()),
+      ],
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(l10n),
-              _buildTabSelector(l10n),
-              Expanded(
-                child: _selectedTabIndex == 0
-                    ? const MyBookingsTab()
-                    : const MyDemandsTab(),
-              ),
-            ],
+          child: SafeArea(
+            child: Column(
+              children: [
+                _buildAppBar(),
+                _buildTabSelector(),
+                Expanded(
+                  child: _selectedTabIndex == 0
+                      ? const MyBookingsTab()
+                      : const MyDemandsTab(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildAppBar(AppLocalizations l10n) {
+  Widget _buildAppBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -55,7 +62,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           Container(width: 48, height: 48, alignment: Alignment.centerLeft),
           Expanded(
             child: Text(
-              l10n.myServices, // ← LOCALIZED
+              AppLocalizations.of(context)!.myServicesTitle,
               textAlign: TextAlign.center,
               style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
             ),
@@ -76,7 +83,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
     );
   }
 
-  Widget _buildTabSelector(AppLocalizations l10n) {
+  Widget _buildTabSelector() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Container(
@@ -90,14 +97,14 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           children: [
             Expanded(
               child: _buildTabButton(
-                label: l10n.myBookings, // ← LOCALIZED
+                label: AppLocalizations.of(context)!.myBookingsTab,
                 isSelected: _selectedTabIndex == 0,
                 onTap: () => setState(() => _selectedTabIndex = 0),
               ),
             ),
             Expanded(
               child: _buildTabButton(
-                label: l10n.myDemands, // ← LOCALIZED
+                label: AppLocalizations.of(context)!.myDemandsTab,
                 isSelected: _selectedTabIndex == 1,
                 onTap: () => setState(() => _selectedTabIndex = 1),
               ),
@@ -135,8 +142,6 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
             style: AppTextStyles.label.copyWith(
               color: isSelected ? AppColors.primary : AppColors.textLight,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),

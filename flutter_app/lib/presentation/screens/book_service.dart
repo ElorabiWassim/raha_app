@@ -4,6 +4,10 @@ import '../widgets/date_picker.dart';
 import '../widgets/time_picker.dart';
 import '../widgets/elevatedButton.dart';
 import '../widgets/service_card.dart';
+import '../../cubits/booking_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class BookService extends StatefulWidget {
   final String service_name;
@@ -17,12 +21,62 @@ class _BookService extends State<BookService> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
+  late DateTime selectedDate;
+  late String selectedTime;
+  List<File> selectedImages = [];
+
   void onPressSubmit() {
     if (_formKey.currentState!.validate()) {
-      Navigator.pop(context);
-    }
+      final cubit = context.read<BookServiceCubit>();
 
-    //we will add the business logic later .
+      final spIdv = "d342a8f9-652d-42d9-965e-c3a5b3e5500c";
+      final homeownerIdv = "0de85f0b-f9aa-4a5e-932b-8d2120db9f83";
+      final serviceIdv = "93f83a4c-19b6-43a2-b0ef-5901e32d2963";
+      final photos = selectedImages.map((file) => file.path).toList();
+      final request = BookServiceRequest(
+        description: descriptionController.text.trim(),
+        serviceId: serviceIdv,
+        homeownerId: homeownerIdv,
+        spId: spIdv,
+        date: selectedDate.toIso8601String(),
+        time: selectedTime,
+        location: addressController.text.trim(),
+        photosPaths: photos,
+      );
+
+      // Listen to state changes for submission result
+      cubit.stream.listen((state) {
+        if (state is BookServiceSuccess) {
+          Navigator.of(context).pop(); // close the screen
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Service booked successfully!')),
+          );
+        } else if (state is BookServiceFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Failed to book service')));
+        }
+      });
+
+      cubit.bookService(request);
+    }
+  }
+
+  Future<void> pickImages() async {
+    final ImagePicker picker = ImagePicker();
+    final List<XFile>? images = await picker.pickMultiImage();
+
+    if (images != null) {
+      setState(() {
+        selectedImages = images.map((img) => File(img.path)).toList();
+      });
+      // Print file paths to verify
+      for (var img in selectedImages) {
+        print('Selected image: ${img.path}');
+      }
+    } else {
+      print('No images selected.');
+    }
   }
 
   @override
@@ -82,7 +136,7 @@ class _BookService extends State<BookService> {
                     value!.isEmpty ? 'Please enter a description' : null,
               ),
               SizedBox(height: 10),
-              btn2(() => {}, "Add Photos"),
+              btn2(pickImages, "Add Photos"),
               SizedBox(height: 10),
               QuestionDemand(question: "When do you need the service ?"),
               SizedBox(height: 5),
@@ -91,13 +145,29 @@ class _BookService extends State<BookService> {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [SimpleDatePicker()],
+                    children: [
+                      SimpleDatePicker(
+                        onDateSelected: (date) {
+                          setState(() {
+                            selectedDate = date;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                   SizedBox(width: 10),
                   Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [TimePickerField()],
+                      children: [
+                        TimePickerField(
+                          onTimeSelected: (time) {
+                            setState(() {
+                              selectedTime = time;
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],

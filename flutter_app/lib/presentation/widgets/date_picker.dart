@@ -3,7 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
 class SimpleDatePicker extends StatefulWidget {
-  const SimpleDatePicker({super.key});
+  const SimpleDatePicker({super.key, this.onDateSelected});
+
+  //call back function to inform the parent
+  final void Function(DateTime)? onDateSelected;
 
   @override
   State<SimpleDatePicker> createState() => _SimpleDatePickerState();
@@ -30,8 +33,8 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
     final DateTime today = DateTime(now.year, now.month, now.day);
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: today.add(const Duration(days: 0)),
-      firstDate: today.add(const Duration(days: 0)),
+      initialDate: today,
+      firstDate: today,
       lastDate: DateTime(2027),
       builder: (context, child) {
         return Theme(
@@ -51,6 +54,11 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
       setState(() {
         selectedDate = pickedDate;
         _controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+
+        //sending the selected date to the parent
+        if (widget.onDateSelected != null) {
+          widget.onDateSelected!(pickedDate);
+        }
       });
     }
   }
@@ -67,7 +75,7 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
         onTap: _selectDate,
         decoration: InputDecoration(
           labelText: l10n.selectDate,
-          labelStyle: TextStyle(color: Colors.black),
+          labelStyle: const TextStyle(color: Colors.black),
           prefixIcon: const Icon(
             Icons.calendar_today,
             color: Color(0xFF73BF60),

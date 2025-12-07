@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ra7a/l10n/app_localizations.dart';
 
 class PlansPage extends StatefulWidget {
   const PlansPage({super.key});
@@ -11,76 +10,68 @@ class PlansPage extends StatefulWidget {
 class _PlansPageState extends State<PlansPage> {
   String selectedPlan = 'Pro';
 
-  List<Map<String, dynamic>> _getPlans(AppLocalizations localizations) {
-    return [
-      {
-        'name': localizations.plansFree,
-        'price': localizations.plansFreePriceValue,
-        'period': '',
-        'features': [
-          localizations.plansFreeFeature1,
-          localizations.plansFreeFeature2,
-          localizations.plansFreeFeature3,
-          localizations.plansFreeFeature4,
-        ],
-        'isRecommended': false,
-      },
-      {
-        'name': localizations.plansPro,
-        'price': localizations.plansProPriceValue,
-        'period': localizations.plansProPeriodValue,
-        'features': [
-          localizations.plansProFeature1,
-          localizations.plansProFeature2,
-          localizations.plansProFeature3,
-          localizations.plansProFeature4,
-          localizations.plansProFeature5,
-        ],
-        'isRecommended': true,
-      },
-      {
-        'name': localizations.plansElite,
-        'price': localizations.plansElitePriceValue,
-        'period': localizations.plansElitePeriodValue,
-        'features': [
-          localizations.plansEliteFeature1,
-          localizations.plansEliteFeature2,
-          localizations.plansEliteFeature3,
-          localizations.plansEliteFeature4,
-          localizations.plansEliteFeature5,
-          localizations.plansEliteFeature6,
-          localizations.plansEliteFeature7,
-          localizations.plansEliteFeature8,
-        ],
-        'isRecommended': false,
-      },
-    ];
-  }
+  final List<Map<String, dynamic>> plans = [
+    {
+      'name': 'Free',
+      'price': '0 DA',
+      'period': '',
+      'features': [
+        'Create an account and list up to 3 services.',
+        'List contact information.',
+        'Lower priority in the listing of services.',
+        'First 20 providers get Free Plan for 6 months.',
+      ],
+      'isRecommended': false,
+    },
+    {
+      'name': 'Pro',
+      'price': '700 DA/month',
+      'period': '7,000 DA/year',
+      'features': [
+        'List up to 10 services.',
+        'Receive bookings, requests, and client messages.',
+        'Create and publish posts.',
+        'Respond to user demands.',
+        'Medium priority in search results.',
+      ],
+      'isRecommended': true,
+    },
+    {
+      'name': 'Elite',
+      'price': '1,500 DA/month',
+      'period': '15,000 DA/year',
+      'features': [
+        'List up to 20 services.',
+        'View detailed profile insights (profile views count).',
+        'Highest priority in displaying search results.',
+        'Obtain a verified badge for increased trust.',
+        'Receive bookings, requests, and messages.',
+        'Create and publish posts.',
+        'Promote services through advertisements in the main feed.',
+        'Respond to user demands.',
+      ],
+      'isRecommended': false,
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    final plans = _getPlans(localizations);
-
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
         child: Column(
           children: [
+            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
-              child: Row(
+              child: const Row(
                 children: [
-                  const Icon(
-                    Icons.credit_card,
-                    color: Color(0xFF4CAF50),
-                    size: 28,
-                  ),
-                  const SizedBox(width: 12),
+                  Icon(Icons.credit_card, color: Color(0xFF4CAF50), size: 28),
+                  SizedBox(width: 12),
                   Text(
-                    localizations.plansTitle,
-                    style: const TextStyle(
+                    'Plans',
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF388E3C),
@@ -132,11 +123,7 @@ class _PlansPageState extends State<PlansPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          localizations.plansSelectedPlan(selectedPlan),
-                        ),
-                      ),
+                      SnackBar(content: Text('Selected plan: $selectedPlan')),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -148,12 +135,9 @@ class _PlansPageState extends State<PlansPage> {
                     ),
                     elevation: 0,
                   ),
-                  child: Text(
-                    localizations.plansUpgradeNow,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: const Text(
+                    'Upgrade Now',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -187,8 +171,6 @@ class PlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -237,9 +219,9 @@ class PlanCard extends StatelessWidget {
                       color: const Color(0xFF4CAF50),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Text(
-                      localizations.plansRecommended,
-                      style: const TextStyle(
+                    child: const Text(
+                      'Recommended',
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -250,6 +232,7 @@ class PlanCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
+            
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -277,6 +260,7 @@ class PlanCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
+            
             ...features.map(
               (feature) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),

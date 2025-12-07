@@ -3,6 +3,12 @@ import '../widgets/question_demand.dart';
 import '../widgets/date_picker.dart';
 import '../widgets/time_picker.dart';
 import '../widgets/elevatedButton.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../cubits/demands_cubits.dart';
 
 class AddDemand extends StatefulWidget {
   const AddDemand({super.key});
@@ -15,6 +21,8 @@ class _AddDemand extends State<AddDemand> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController serviceTitleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  DateTime? selectedDate;
+  String? selectedTime;
   List<String> categories = [
     'Cleaning',
     'Plumbing',
@@ -26,12 +34,35 @@ class _AddDemand extends State<AddDemand> {
   ];
 
   String? selectedCategory;
-  void onPressSubmit() {
+  void onPressSubmit() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.pop(context);
-    }
+      final cubit = context.read<AddDemandCubit>();
 
-    //we will add the business logic later .
+      try {
+        await cubit.addDemand(
+          homeownerId: "5cc32637-3714-416d-ac57-177e353ca30d",
+          categoryName: selectedCategory!,
+          title: serviceTitleController.text,
+          location: addressController.text,
+          date: selectedDate!.toIso8601String(),
+          time: selectedTime!,
+          description: descriptionController.text,
+        );
+
+        //going back to home page
+        Navigator.pop(context);
+
+        //success message
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Demand added successfully!")));
+      } catch (e) {
+        //showing error
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Failed to add demand: $e")));
+      }
+    }
   }
 
   @override
@@ -138,7 +169,13 @@ class _AddDemand extends State<AddDemand> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         QuestionDemand(question: 'Date'),
-                        SimpleDatePicker(),
+                        SimpleDatePicker(
+                          onDateSelected: (date) {
+                            setState(() {
+                              selectedDate = date;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -147,7 +184,13 @@ class _AddDemand extends State<AddDemand> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       QuestionDemand(question: 'Time'),
-                      TimePickerField(),
+                      TimePickerField(
+                        onTimeSelected: (time) {
+                          setState(() {
+                            selectedTime = time;
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ],
