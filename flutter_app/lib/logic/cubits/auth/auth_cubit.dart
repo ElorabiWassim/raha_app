@@ -18,9 +18,18 @@ class AuthLoading extends AuthState {}
 class AuthAuthenticated extends AuthState {
   final String username;
   final String role; // 'homeowner', 'serviceprovider', 'admin'
-  const AuthAuthenticated(this.username, this.role);
+  final String userId;
+  final String accessToken;
+
+  const AuthAuthenticated({
+    required this.username,
+    required this.role,
+    required this.userId,
+    required this.accessToken,
+  });
+
   @override
-  List<Object> get props => [username, role];
+  List<Object> get props => [username, role, userId, accessToken];
 }
 
 class AuthUnauthenticated extends AuthState {}
@@ -44,13 +53,17 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       final tokens = await _cacheRepository.getAuthTokens();
-      final profile = await _cacheRepository.getUserProfile();
-
       if (tokens != null) {
+        final profile = await _cacheRepository.getUserProfile(
+          userId: tokens.userId,
+        );
+
         emit(
           AuthAuthenticated(
-            profile?.fullName ?? tokens.userId,
-            profile?.role ?? tokens.userRole,
+            username: profile?.fullName ?? tokens.userId,
+            role: profile?.role ?? tokens.userRole,
+            userId: tokens.userId,
+            accessToken: tokens.accessToken,
           ),
         );
       } else {
@@ -90,7 +103,14 @@ class AuthCubit extends Cubit<AuthState> {
       );
       await _cacheRepository.saveUserProfile(profile);
 
-      emit(AuthAuthenticated(username, role));
+      emit(
+        AuthAuthenticated(
+          username: username,
+          role: role,
+          userId: userId ?? username,
+          accessToken: accessToken,
+        ),
+      );
     } catch (error) {
       emit(AuthError(error.toString()));
     }

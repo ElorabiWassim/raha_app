@@ -50,7 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
         authApi: AuthApi(
           baseUrl: const String.fromEnvironment(
             'BACKEND_BASE_URL',
-            defaultValue: 'http://10.0.2.2:3000',
+            defaultValue:
+                'http://10.162.71.174:3000', // Point to PC IP for real device
           ),
         ),
         cacheRepository: context.read<LocalCacheRepository>(),
@@ -58,17 +59,13 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            final timestamp = DateTime.now().millisecondsSinceEpoch;
-            final accessToken = 'demo_access_${state.username}_$timestamp';
-            final refreshToken = 'demo_refresh_${state.username}_$timestamp';
-
-            // Update AuthCubit and persist the session locally
+            // Keep real backend tokens & user info
             context.read<AuthCubit>().authenticate(
               username: state.username,
               role: state.role,
-              userId: state.username,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
+              userId: state.userId,
+              accessToken: state.accessToken,
+              refreshToken: state.refreshToken,
             );
 
             Widget destinationPage;

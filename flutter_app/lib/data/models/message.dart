@@ -6,6 +6,7 @@ class Message {
   final String time;
   final bool isUnread;
   final bool isOnline;
+  final bool isOfflineSource;
 
   Message({
     required this.name,
@@ -15,5 +16,6 @@ class Message {
     required this.time,
     this.isUnread = false,
     this.isOnline = false,
+    this.isOfflineSource = false,
   });
 }

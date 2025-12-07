@@ -281,6 +281,30 @@
     "description": "Google sign up button text"
   },
   "signupAlreadyHaveAccount": "Vous avez déjà un compte ? ",
+  "signupSuccessMessage": "Inscription réussie ! Veuillez vous connecter.",
+  "@signupSuccessMessage": {
+    "description": "Snackbar message shown after successful signup"
+  },
+  "navHome": "Accueil",
+  "@navHome": {
+    "description": "Bottom navigation Home label"
+  },
+  "navBookings": "Réservations",
+  "@navBookings": {
+    "description": "Bottom navigation bookings label"
+  },
+  "navMessages": "Messages",
+  "@navMessages": {
+    "description": "Bottom navigation messages label"
+  },
+  "navProfile": "Profil",
+  "@navProfile": {
+    "description": "Bottom navigation profile label"
+  },
+  "messagesOfflineFlag": "Données hors ligne",
+  "@messagesOfflineFlag": {
+    "description": "Badge indiquant que les messages proviennent du cache local"
+  },
   "@signupAlreadyHaveAccount": {
     "description": "Text before login link"
   },
@@ -320,5 +344,40 @@
   "providerHired": "Prestataire engagé",
   "viewDetails": "Voir les détails",
   "jobFinished": "Travail terminé",
-  "viewInvoice": "Voir la facture"
+  "viewInvoice": "Voir la facture",
+  "providerOffersTitle": "Offres des prestataires",
+  "providerOffersCount": "Offres des prestataires ({count})",
+  "providerOffersPostedOn": "Publiée le : {date}",
+  "providerOffersAccepted": "Acceptée",
+  "providerOffersAccept": "Accepter",
+  "providerOffersReject": "Refuser",
+  "providerOffersNoOffersTitle": "Aucune offre disponible",
+  "providerOffersNoOffersSubtitle": "Toutes les offres des prestataires ont été examinées.",
+  "providerOffersConfirmTitle": "Confirmer la sélection du prestataire ?",
+  "providerOffersConfirmBody": "Voulez-vous vraiment accepter l'offre de {providerName} ?",
+  "providerOffersRejectTitle": "Refuser cette offre ?",
+  "providerOffersRejectBody": "Voulez-vous vraiment refuser l'offre de {providerName} ? Cette action est irréversible.",
+  "providerOffersRejectToast": "Offre de {providerName} refusée",
+  "providerOffersCancel": "Annuler",
+  "providerOffersConfirm": "Confirmer",
+  "messagesTitle": "Messages",
+  "messagesEmptyTitle": "Aucune conversation",
+  "messagesEmptySubtitle": "Réservez un service pour commencer\nà discuter avec un prestataire.",
+  "messagesSearchHint": "Rechercher dans la conversation...",
+  "messagesReactTitle": "Réagir au message",
+  "messagesInputHint": "Tapez votre message...",
+  "rateReportTitle": "Évaluer et signaler le prestataire",
+  "rateReportCompletedOn": "Terminé le : {date}",
+  "rateReportRateExperience": "Évaluez votre expérience",
+  "rateReportWriteFeedback": "Rédigez votre avis",
+  "rateReportFeedbackHint": "Partagez les détails de votre expérience...",
+  "rateReportReportProblem": "Signaler un problème",
+  "rateReportProblemTitle": "Signaler un problème",
+  "rateReportProblemDescription": "Description du problème",
+  "rateReportProblemHint": "Veuillez donner des détails sur le problème...",
+  "rateReportSubmitFeedback": "Envoyer l'avis",
+  "rateReportSubmit": "Envoyer",
+  "rateReportCancel": "Annuler",
+  "rateReportSuccessTitle": "Merci !",
+  "rateReportSuccessBody": "Votre avis a été envoyé avec succès."
 }

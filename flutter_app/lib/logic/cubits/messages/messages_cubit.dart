@@ -5,7 +5,7 @@ import '../../../data/models/message.dart';
 class MessagesCubit extends Cubit<MessagesState> {
   MessagesCubit() : super(MessagesInitial());
 
-  Future<void> loadMessages() async {
+  Future<void> loadMessages({bool fromLocalCache = false}) async {
     emit(MessagesLoading());
     await Future.delayed(const Duration(seconds: 1)); // Simulate API
 
@@ -19,6 +19,7 @@ class MessagesCubit extends Cubit<MessagesState> {
         time: '10:45 AM',
         isUnread: true,
         isOnline: true,
+        isOfflineSource: fromLocalCache,
       ),
       Message(
         name: 'Amina Z.',
@@ -28,6 +29,7 @@ class MessagesCubit extends Cubit<MessagesState> {
         time: 'Yesterday',
         isUnread: false,
         isOnline: false,
+        isOfflineSource: fromLocalCache,
       ),
       Message(
         name: 'Yacine M.',
@@ -37,9 +39,12 @@ class MessagesCubit extends Cubit<MessagesState> {
         time: 'Wed',
         isUnread: false,
         isOnline: false,
+        isOfflineSource: fromLocalCache,
       ),
     ];
 
     emit(MessagesLoaded(messages));
   }
+
+  Future<void> loadMessagesFromCache() => loadMessages(fromLocalCache: true);
 }

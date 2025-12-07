@@ -234,7 +234,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signupWithGoogle => 'التسجيل مع Google';
 
   @override
+  String get signupSuccessMessage =>
+      'تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.';
+
+  @override
   String get signupAlreadyHaveAccount => 'لديك حساب بالفعل؟ ';
+
+  @override
+  String get navHome => 'الرئيسية';
+
+  @override
+  String get navBookings => 'الحجوزات';
+
+  @override
+  String get navMessages => 'الرسائل';
+
+  @override
+  String get navProfile => 'الملف الشخصي';
+
+  @override
+  String get messagesOfflineFlag => 'بيانات غير متصلة';
 
   @override
   String get myServicesTitle => 'خدماتي';
@@ -348,4 +367,244 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get viewInvoice => 'عرض الفاتورة';
+
+  @override
+  String get profileTitle => 'ملفي الشخصي';
+
+  @override
+  String get profileEditProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get profileSettings => 'الإعدادات';
+
+  @override
+  String get profileVerifiedHomeowner => 'صاحب منزل موثق';
+
+  @override
+  String get profileVerifiedProvider => 'مقدم خدمة موثق';
+
+  @override
+  String get profileContactInfo => 'معلومات الاتصال';
+
+  @override
+  String get profileEmail => 'البريد الإلكتروني';
+
+  @override
+  String get profilePhone => 'الهاتف';
+
+  @override
+  String get profileAddress => 'العنوان';
+
+  @override
+  String get profilePaymentMethods => 'طرق الدفع';
+
+  @override
+  String get profileHelpSupport => 'المساعدة والدعم';
+
+  @override
+  String get profileLanguage => 'اللغة';
+
+  @override
+  String get profileLanguageDescription => 'اختر لغتك المفضلة';
+
+  @override
+  String get profileLanguageEnglish => 'English';
+
+  @override
+  String get profileLanguageFrench => 'Français';
+
+  @override
+  String get profileLanguageArabic => 'العربية';
+
+  @override
+  String get profileChangeLanguage => 'تغيير اللغة';
+
+  @override
+  String get profileLanguageChanged => 'تم تغيير اللغة بنجاح';
+
+  @override
+  String get settingsEditProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get settingsPaymentMethods => 'طرق الدفع';
+
+  @override
+  String get settingsMyAddresses => 'عناويني';
+
+  @override
+  String get settingsNotifications => 'الإشعارات';
+
+  @override
+  String get settingsPushNotifications => 'إشعارات الدفع';
+
+  @override
+  String get settingsEmailNotifications => 'إشعارات البريد الإلكتروني';
+
+  @override
+  String get settingsSMSNotifications => 'إشعارات الرسائل القصيرة';
+
+  @override
+  String get settingsSecurity => 'الأمان والخصوصية';
+
+  @override
+  String get settingsChangePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get settingsTwoFactor => 'المصادقة الثنائية';
+
+  @override
+  String get settingsPrivacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get settingsSupport => 'الدعم والقانونية';
+
+  @override
+  String get settingsHelpCenter => 'مركز المساعدة';
+
+  @override
+  String get settingsContactSupport => 'الاتصال بالدعم';
+
+  @override
+  String get settingsTermsOfService => 'شروط الخدمة';
+
+  @override
+  String get settingsLogout => 'تسجيل الخروج';
+
+  @override
+  String get settingsDeleteAccount => 'حذف الحساب';
+
+  @override
+  String get settingsLogoutConfirm => 'هل أنت متأكد من تسجيل الخروج؟';
+
+  @override
+  String get settingsDeleteAccountConfirm => 'هل أنت متأكد أنك تريد حذف حسابك؟';
+
+  @override
+  String get settingsDeleteAccountWarning =>
+      'لا يمكن التراجع عن هذا الإجراء. سيتم حذف جميع بياناتك نهائيًا.';
+
+  @override
+  String get settingsCancel => 'إلغاء';
+
+  @override
+  String get settingsAccountDeleted => 'تم حذف الحساب بنجاح';
+
+  @override
+  String get providerOffersTitle => 'عروض مقدمي الخدمة';
+
+  @override
+  String providerOffersCount(Object count) {
+    return 'عروض مقدمي الخدمة ($count)';
+  }
+
+  @override
+  String providerOffersPostedOn(Object date) {
+    return 'تم النشر في: $date';
+  }
+
+  @override
+  String get providerOffersAccepted => 'تم قبولها';
+
+  @override
+  String get providerOffersAccept => 'قبول';
+
+  @override
+  String get providerOffersReject => 'رفض';
+
+  @override
+  String get providerOffersNoOffersTitle => 'لا توجد عروض';
+
+  @override
+  String get providerOffersNoOffersSubtitle =>
+      'تمت مراجعة جميع عروض مقدمي الخدمة.';
+
+  @override
+  String get providerOffersConfirmTitle => 'تأكيد اختيار مقدم الخدمة؟';
+
+  @override
+  String providerOffersConfirmBody(Object providerName) {
+    return 'هل أنت متأكد من قبول عرض $providerName؟';
+  }
+
+  @override
+  String get providerOffersRejectTitle => 'رفض هذا العرض؟';
+
+  @override
+  String providerOffersRejectBody(Object providerName) {
+    return 'هل أنت متأكد من رفض عرض $providerName؟ هذا الإجراء لا يمكن التراجع عنه.';
+  }
+
+  @override
+  String providerOffersRejectToast(Object providerName) {
+    return 'تم رفض عرض $providerName';
+  }
+
+  @override
+  String get providerOffersCancel => 'إلغاء';
+
+  @override
+  String get providerOffersConfirm => 'تأكيد';
+
+  @override
+  String get messagesTitle => 'الرسائل';
+
+  @override
+  String get messagesEmptyTitle => 'لا توجد محادثات بعد';
+
+  @override
+  String get messagesEmptySubtitle =>
+      'ابدأ بحجز خدمة لتبدأ\nالدردشة مع مقدم الخدمة.';
+
+  @override
+  String get messagesSearchHint => 'ابحث في المحادثة...';
+
+  @override
+  String get messagesReactTitle => 'تفاعل مع الرسالة';
+
+  @override
+  String get messagesInputHint => 'اكتب رسالتك...';
+
+  @override
+  String get rateReportTitle => 'تقييم والإبلاغ عن مقدم الخدمة';
+
+  @override
+  String rateReportCompletedOn(Object date) {
+    return 'اكتمل في: $date';
+  }
+
+  @override
+  String get rateReportRateExperience => 'قيّم تجربتك';
+
+  @override
+  String get rateReportWriteFeedback => 'اكتب ملاحظاتك';
+
+  @override
+  String get rateReportFeedbackHint => 'شارك تفاصيل تجربتك...';
+
+  @override
+  String get rateReportReportProblem => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get rateReportProblemTitle => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get rateReportProblemDescription => 'وصف المشكلة';
+
+  @override
+  String get rateReportProblemHint => 'يرجى تقديم تفاصيل حول المشكلة...';
+
+  @override
+  String get rateReportSubmitFeedback => 'إرسال التقييم';
+
+  @override
+  String get rateReportSubmit => 'إرسال';
+
+  @override
+  String get rateReportCancel => 'إلغاء';
+
+  @override
+  String get rateReportSuccessTitle => 'شكراً لك!';
+
+  @override
+  String get rateReportSuccessBody => 'تم إرسال ملاحظاتك بنجاح.';
 }

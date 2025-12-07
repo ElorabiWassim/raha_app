@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 import '../../data/models/chat_message.dart';
 import '../../data/models/message.dart';
 import '../../logic/cubits/messages/messages_cubit.dart';
@@ -40,7 +41,7 @@ class _MessagesScreenContent extends StatelessWidget {
                       return const Center(child: CircularProgressIndicator());
                     } else if (state is MessagesLoaded) {
                       if (state.messages.isEmpty) {
-                        return _buildEmptyState();
+                        return _buildEmptyState(context);
                       }
                       return ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -67,6 +68,7 @@ class _MessagesScreenContent extends StatelessWidget {
   }
 
   Widget _buildAppBar(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -86,7 +88,7 @@ class _MessagesScreenContent extends StatelessWidget {
             ],
           ),
           Text(
-            'Messages',
+            l10n.messagesTitle,
             style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
           ),
         ],
@@ -95,6 +97,7 @@ class _MessagesScreenContent extends StatelessWidget {
   }
 
   Widget _buildMessageCard(BuildContext context, Message message) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -206,6 +209,27 @@ class _MessagesScreenContent extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      if (message.isOfflineSource) ...[
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFEED8),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            l10n.messagesOfflineFlag,
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFFB26A00),
+                            ),
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 4),
                     ],
                   ),
@@ -231,7 +255,8 @@ class _MessagesScreenContent extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -253,7 +278,7 @@ class _MessagesScreenContent extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'No Conversations Yet',
+              l10n.messagesEmptyTitle,
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -262,7 +287,7 @@ class _MessagesScreenContent extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Start booking a service to begin\nchatting with a provider.',
+              l10n.messagesEmptySubtitle,
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 14,
@@ -541,6 +566,7 @@ class _ConversationState extends State<Conversation> {
   }
 
   Widget _buildSearchBar() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -548,7 +574,7 @@ class _ConversationState extends State<Conversation> {
         controller: _searchController,
         autofocus: true,
         decoration: InputDecoration(
-          hintText: 'Search in conversation...',
+          hintText: l10n.messagesSearchHint,
           prefixIcon: const Icon(Icons.search, color: Colors.grey),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
@@ -686,9 +712,9 @@ class MessageBubble extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'React to message',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.messagesReactTitle,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
@@ -730,6 +756,7 @@ class ChatInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -739,7 +766,7 @@ class ChatInputField extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: "Type your message...",
+                hintText: l10n.messagesInputHint,
                 hintStyle: const TextStyle(color: Colors.grey),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

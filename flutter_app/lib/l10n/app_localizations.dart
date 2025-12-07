@@ -544,11 +544,47 @@ abstract class AppLocalizations {
   /// **'Sign up with Google'**
   String get signupWithGoogle;
 
+  /// Snackbar message shown after successful signup
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful! Please login.'**
+  String get signupSuccessMessage;
+
   /// Text before login link
   ///
   /// In en, this message translates to:
   /// **'Already have an account? '**
   String get signupAlreadyHaveAccount;
+
+  /// Bottom navigation Home label
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// Bottom navigation bookings label
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get navBookings;
+
+  /// Bottom navigation messages label
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get navMessages;
+
+  /// Bottom navigation profile label
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
+  /// Badge indicating messages are loaded from local cache
+  ///
+  /// In en, this message translates to:
+  /// **'Offline data'**
+  String get messagesOfflineFlag;
 
   /// No description provided for @myServicesTitle.
   ///
@@ -771,6 +807,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View Invoice'**
   String get viewInvoice;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get profileTitle;
+
+  /// No description provided for @profileEditProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get profileEditProfile;
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get profileSettings;
+
+  /// No description provided for @profileVerifiedHomeowner.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Homeowner'**
+  String get profileVerifiedHomeowner;
+
+  /// No description provided for @profileVerifiedProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Service Provider'**
+  String get profileVerifiedProvider;
+
+  /// No description provided for @profileContactInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get profileContactInfo;
+
+  /// No description provided for @profileEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get profileEmail;
+
+  /// No description provided for @profilePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get profilePhone;
+
+  /// No description provided for @profileAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get profileAddress;
+
+  /// No description provided for @profilePaymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Methods'**
+  String get profilePaymentMethods;
+
+  /// No description provided for @profileHelpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get profileHelpSupport;
+
+  /// No description provided for @profileLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get profileLanguage;
+
+  /// No description provided for @profileLanguageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your preferred language'**
+  String get profileLanguageDescription;
+
+  /// No description provided for @profileLanguageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get profileLanguageEnglish;
+
+  /// No description provided for @profileLanguageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'Français'**
+  String get profileLanguageFrench;
+
+  /// No description provided for @profileLanguageArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية'**
+  String get profileLanguageArabic;
+
+  /// No description provided for @profileChangeLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Language'**
+  String get profileChangeLanguage;
+
+  /// No description provided for @profileLanguageChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed successfully'**
+  String get profileLanguageChanged;
+
+  /// No description provided for @settingsEditProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get settingsEditProfile;
+
+  /// No description provided for @settingsPaymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Methods'**
+  String get settingsPaymentMethods;
+
+  /// No description provided for @settingsMyAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'My Addresses'**
+  String get settingsMyAddresses;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsPushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get settingsPushNotifications;
+
+  /// No description provided for @settingsEmailNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Notifications'**
+  String get settingsEmailNotifications;
+
+  /// No description provided for @settingsSMSNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS Notifications'**
+  String get settingsSMSNotifications;
+
+  /// No description provided for @settingsSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security & Privacy'**
+  String get settingsSecurity;
+
+  /// No description provided for @settingsChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get settingsChangePassword;
+
+  /// No description provided for @settingsTwoFactor.
+  ///
+  /// In en, this message translates to:
+  /// **'Two-Factor Authentication'**
+  String get settingsTwoFactor;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Support & Legal'**
+  String get settingsSupport;
+
+  /// No description provided for @settingsHelpCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get settingsHelpCenter;
+
+  /// No description provided for @settingsContactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get settingsContactSupport;
+
+  /// No description provided for @settingsTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get settingsTermsOfService;
+
+  /// No description provided for @settingsLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get settingsLogout;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @settingsLogoutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get settingsLogoutConfirm;
+
+  /// No description provided for @settingsDeleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account?'**
+  String get settingsDeleteAccountConfirm;
+
+  /// No description provided for @settingsDeleteAccountWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone. All your data will be permanently deleted.'**
+  String get settingsDeleteAccountWarning;
+
+  /// No description provided for @settingsCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get settingsCancel;
+
+  /// No description provided for @settingsAccountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get settingsAccountDeleted;
+
+  /// No description provided for @providerOffersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Provider Offers'**
+  String get providerOffersTitle;
+
+  /// No description provided for @providerOffersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Offers ({count})'**
+  String providerOffersCount(Object count);
+
+  /// No description provided for @providerOffersPostedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted on: {date}'**
+  String providerOffersPostedOn(Object date);
+
+  /// No description provided for @providerOffersAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get providerOffersAccepted;
+
+  /// No description provided for @providerOffersAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get providerOffersAccept;
+
+  /// No description provided for @providerOffersReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get providerOffersReject;
+
+  /// No description provided for @providerOffersNoOffersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Offers Available'**
+  String get providerOffersNoOffersTitle;
+
+  /// No description provided for @providerOffersNoOffersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All provider offers have been reviewed.'**
+  String get providerOffersNoOffersSubtitle;
+
+  /// No description provided for @providerOffersConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm provider selection?'**
+  String get providerOffersConfirmTitle;
+
+  /// No description provided for @providerOffersConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to accept the offer from {providerName}?'**
+  String providerOffersConfirmBody(Object providerName);
+
+  /// No description provided for @providerOffersRejectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject this offer?'**
+  String get providerOffersRejectTitle;
+
+  /// No description provided for @providerOffersRejectBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reject the offer from {providerName}? This action cannot be undone.'**
+  String providerOffersRejectBody(Object providerName);
+
+  /// No description provided for @providerOffersRejectToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer from {providerName} rejected'**
+  String providerOffersRejectToast(Object providerName);
+
+  /// No description provided for @providerOffersCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get providerOffersCancel;
+
+  /// No description provided for @providerOffersConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get providerOffersConfirm;
+
+  /// No description provided for @messagesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get messagesTitle;
+
+  /// No description provided for @messagesEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Conversations Yet'**
+  String get messagesEmptyTitle;
+
+  /// No description provided for @messagesEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start booking a service to begin\nchatting with a provider.'**
+  String get messagesEmptySubtitle;
+
+  /// No description provided for @messagesSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search in conversation...'**
+  String get messagesSearchHint;
+
+  /// No description provided for @messagesReactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'React to message'**
+  String get messagesReactTitle;
+
+  /// No description provided for @messagesInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your message...'**
+  String get messagesInputHint;
+
+  /// No description provided for @rateReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate & Report Provider'**
+  String get rateReportTitle;
+
+  /// No description provided for @rateReportCompletedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed on: {date}'**
+  String rateReportCompletedOn(Object date);
+
+  /// No description provided for @rateReportRateExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your experience'**
+  String get rateReportRateExperience;
+
+  /// No description provided for @rateReportWriteFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your feedback'**
+  String get rateReportWriteFeedback;
+
+  /// No description provided for @rateReportFeedbackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share details of your experience...'**
+  String get rateReportFeedbackHint;
+
+  /// No description provided for @rateReportReportProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get rateReportReportProblem;
+
+  /// No description provided for @rateReportProblemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a Problem'**
+  String get rateReportProblemTitle;
+
+  /// No description provided for @rateReportProblemDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem Description'**
+  String get rateReportProblemDescription;
+
+  /// No description provided for @rateReportProblemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide details about the issue...'**
+  String get rateReportProblemHint;
+
+  /// No description provided for @rateReportSubmitFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Feedback'**
+  String get rateReportSubmitFeedback;
+
+  /// No description provided for @rateReportSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get rateReportSubmit;
+
+  /// No description provided for @rateReportCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rateReportCancel;
+
+  /// No description provided for @rateReportSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you!'**
+  String get rateReportSuccessTitle;
+
+  /// No description provided for @rateReportSuccessBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback has been submitted successfully.'**
+  String get rateReportSuccessBody;
 }
 
 class _AppLocalizationsDelegate

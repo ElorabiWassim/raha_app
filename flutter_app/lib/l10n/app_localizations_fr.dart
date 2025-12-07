@@ -238,7 +238,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signupWithGoogle => 'S\'inscrire avec Google';
 
   @override
+  String get signupSuccessMessage =>
+      'Inscription réussie ! Veuillez vous connecter.';
+
+  @override
   String get signupAlreadyHaveAccount => 'Vous avez déjà un compte ? ';
+
+  @override
+  String get navHome => 'Accueil';
+
+  @override
+  String get navBookings => 'Réservations';
+
+  @override
+  String get navMessages => 'Messages';
+
+  @override
+  String get navProfile => 'Profil';
+
+  @override
+  String get messagesOfflineFlag => 'Données hors ligne';
 
   @override
   String get myServicesTitle => 'Mes Services';
@@ -353,4 +372,248 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get viewInvoice => 'Voir la facture';
+
+  @override
+  String get profileTitle => 'My Profile';
+
+  @override
+  String get profileEditProfile => 'Edit Profile';
+
+  @override
+  String get profileSettings => 'Settings';
+
+  @override
+  String get profileVerifiedHomeowner => 'Verified Homeowner';
+
+  @override
+  String get profileVerifiedProvider => 'Verified Service Provider';
+
+  @override
+  String get profileContactInfo => 'Contact Information';
+
+  @override
+  String get profileEmail => 'Email';
+
+  @override
+  String get profilePhone => 'Phone';
+
+  @override
+  String get profileAddress => 'Address';
+
+  @override
+  String get profilePaymentMethods => 'Payment Methods';
+
+  @override
+  String get profileHelpSupport => 'Help & Support';
+
+  @override
+  String get profileLanguage => 'Language';
+
+  @override
+  String get profileLanguageDescription => 'Select your preferred language';
+
+  @override
+  String get profileLanguageEnglish => 'English';
+
+  @override
+  String get profileLanguageFrench => 'Français';
+
+  @override
+  String get profileLanguageArabic => 'العربية';
+
+  @override
+  String get profileChangeLanguage => 'Change Language';
+
+  @override
+  String get profileLanguageChanged => 'Language changed successfully';
+
+  @override
+  String get settingsEditProfile => 'Edit Profile';
+
+  @override
+  String get settingsPaymentMethods => 'Payment Methods';
+
+  @override
+  String get settingsMyAddresses => 'My Addresses';
+
+  @override
+  String get settingsNotifications => 'Notifications';
+
+  @override
+  String get settingsPushNotifications => 'Push Notifications';
+
+  @override
+  String get settingsEmailNotifications => 'Email Notifications';
+
+  @override
+  String get settingsSMSNotifications => 'SMS Notifications';
+
+  @override
+  String get settingsSecurity => 'Security & Privacy';
+
+  @override
+  String get settingsChangePassword => 'Change Password';
+
+  @override
+  String get settingsTwoFactor => 'Two-Factor Authentication';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get settingsSupport => 'Support & Legal';
+
+  @override
+  String get settingsHelpCenter => 'Help Center';
+
+  @override
+  String get settingsContactSupport => 'Contact Support';
+
+  @override
+  String get settingsTermsOfService => 'Terms of Service';
+
+  @override
+  String get settingsLogout => 'Log Out';
+
+  @override
+  String get settingsDeleteAccount => 'Delete Account';
+
+  @override
+  String get settingsLogoutConfirm => 'Are you sure you want to logout?';
+
+  @override
+  String get settingsDeleteAccountConfirm =>
+      'Are you sure you want to delete your account?';
+
+  @override
+  String get settingsDeleteAccountWarning =>
+      'This action cannot be undone. All your data will be permanently deleted.';
+
+  @override
+  String get settingsCancel => 'Cancel';
+
+  @override
+  String get settingsAccountDeleted => 'Account deleted successfully';
+
+  @override
+  String get providerOffersTitle => 'Offres des prestataires';
+
+  @override
+  String providerOffersCount(Object count) {
+    return 'Offres des prestataires ($count)';
+  }
+
+  @override
+  String providerOffersPostedOn(Object date) {
+    return 'Publiée le : $date';
+  }
+
+  @override
+  String get providerOffersAccepted => 'Acceptée';
+
+  @override
+  String get providerOffersAccept => 'Accepter';
+
+  @override
+  String get providerOffersReject => 'Refuser';
+
+  @override
+  String get providerOffersNoOffersTitle => 'Aucune offre disponible';
+
+  @override
+  String get providerOffersNoOffersSubtitle =>
+      'Toutes les offres des prestataires ont été examinées.';
+
+  @override
+  String get providerOffersConfirmTitle =>
+      'Confirmer la sélection du prestataire ?';
+
+  @override
+  String providerOffersConfirmBody(Object providerName) {
+    return 'Voulez-vous vraiment accepter l\'offre de $providerName ?';
+  }
+
+  @override
+  String get providerOffersRejectTitle => 'Refuser cette offre ?';
+
+  @override
+  String providerOffersRejectBody(Object providerName) {
+    return 'Voulez-vous vraiment refuser l\'offre de $providerName ? Cette action est irréversible.';
+  }
+
+  @override
+  String providerOffersRejectToast(Object providerName) {
+    return 'Offre de $providerName refusée';
+  }
+
+  @override
+  String get providerOffersCancel => 'Annuler';
+
+  @override
+  String get providerOffersConfirm => 'Confirmer';
+
+  @override
+  String get messagesTitle => 'Messages';
+
+  @override
+  String get messagesEmptyTitle => 'Aucune conversation';
+
+  @override
+  String get messagesEmptySubtitle =>
+      'Réservez un service pour commencer\nà discuter avec un prestataire.';
+
+  @override
+  String get messagesSearchHint => 'Rechercher dans la conversation...';
+
+  @override
+  String get messagesReactTitle => 'Réagir au message';
+
+  @override
+  String get messagesInputHint => 'Tapez votre message...';
+
+  @override
+  String get rateReportTitle => 'Évaluer et signaler le prestataire';
+
+  @override
+  String rateReportCompletedOn(Object date) {
+    return 'Terminé le : $date';
+  }
+
+  @override
+  String get rateReportRateExperience => 'Évaluez votre expérience';
+
+  @override
+  String get rateReportWriteFeedback => 'Rédigez votre avis';
+
+  @override
+  String get rateReportFeedbackHint =>
+      'Partagez les détails de votre expérience...';
+
+  @override
+  String get rateReportReportProblem => 'Signaler un problème';
+
+  @override
+  String get rateReportProblemTitle => 'Signaler un problème';
+
+  @override
+  String get rateReportProblemDescription => 'Description du problème';
+
+  @override
+  String get rateReportProblemHint =>
+      'Veuillez donner des détails sur le problème...';
+
+  @override
+  String get rateReportSubmitFeedback => 'Envoyer l\'avis';
+
+  @override
+  String get rateReportSubmit => 'Envoyer';
+
+  @override
+  String get rateReportCancel => 'Annuler';
+
+  @override
+  String get rateReportSuccessTitle => 'Merci !';
+
+  @override
+  String get rateReportSuccessBody => 'Votre avis a été envoyé avec succès.';
 }

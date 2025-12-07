@@ -22,7 +22,7 @@ class HomeownerSignUpScreen extends StatelessWidget {
         authApi: AuthApi(
           baseUrl: const String.fromEnvironment(
             'BACKEND_BASE_URL',
-            defaultValue: 'http://10.0.2.2:3000',
+            defaultValue: 'http://10.162.71.174:3000',
           ),
         ),
       ),
@@ -49,13 +49,11 @@ class _HomeownerSignUpScreenContentState
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _neighborhoodController = TextEditingController();
+  final TextEditingController _homeAddressController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  String? _selectedPropertyType;
   DateTime? _selectedDate;
 
   @override
@@ -63,20 +61,10 @@ class _HomeownerSignUpScreenContentState
     _fullNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _cityController.dispose();
-    _neighborhoodController.dispose();
+    _homeAddressController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  List<String> _getPropertyTypes(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    return [
-      localizations.signupPropertyTypeApartment,
-      localizations.signupPropertyTypeVilla,
-      localizations.signupPropertyTypeStudio,
-    ];
   }
 
   Future<void> _pickDate(BuildContext context) async {
@@ -112,14 +100,20 @@ class _HomeownerSignUpScreenContentState
         return;
       }
 
+      if (_selectedDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select your date of birth')),
+        );
+        return;
+      }
+
       context.read<SignupCubit>().signupHomeowner(
         fullName: _fullNameController.text,
         email: _emailController.text,
         password: _passwordController.text,
-        phone: _phoneController.text,
-        city: _cityController.text,
-        neighborhood: _neighborhoodController.text,
-        propertyType: _selectedPropertyType,
+        phoneNumber: _phoneController.text,
+        homeAddress: _homeAddressController.text,
+        dateOfBirth: _selectedDate!,
       );
     } else if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -142,15 +136,23 @@ class _HomeownerSignUpScreenContentState
       child: BlocListener<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state is SignupSuccess) {
-            // Navigate to home or login
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(localizations.signupSuccessMessage),
+                backgroundColor: primaryColor,
+              ),
+            );
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const LoginScreen()),
             );
           } else if (state is SignupFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error),
+                backgroundColor: Colors.red.shade700,
+              ),
+            );
           }
         },
         child: Scaffold(
@@ -216,25 +218,34 @@ class _HomeownerSignUpScreenContentState
 
                       // Full Name
                       _buildTextField(
-                        context,
-                        localizations.signupFullName,
-                        Icons.person_outline,
-                        localizations.signupFullNameHint,
+                        label: localizations.signupFullName,
+                        icon: Icons.person_outline,
                         controller: _fullNameController,
                       ),
+                      const SizedBox(height: 16),
 
                       // Email
                       _buildTextField(
-                        context,
-                        localizations.signupEmail,
-                        Icons.email_outlined,
-                        localizations.signupEmailHint,
+                        label: localizations.signupEmail,
+                        icon: Icons.email_outlined,
                         inputType: TextInputType.emailAddress,
                         controller: _emailController,
                       ),
+                      const SizedBox(height: 16),
 
                       // Date of Birth
-                      _buildLabel(context, localizations.signupDateOfBirth),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          localizations.signupDateOfBirth,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: textDark,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                       GestureDetector(
                         onTap: () => _pickDate(context),
                         child: AbsorbPointer(
@@ -283,149 +294,46 @@ class _HomeownerSignUpScreenContentState
 
                       // Phone Number
                       _buildTextField(
-                        context,
-                        localizations.signupPhoneNumber,
-                        Icons.phone_outlined,
-                        localizations.signupPhoneNumberHint,
+                        label: localizations.signupPhoneNumber,
+                        icon: Icons.phone_outlined,
                         inputType: TextInputType.phone,
                         controller: _phoneController,
                       ),
+                      const SizedBox(height: 16),
 
-                      // City
+                      // Home Address
                       _buildTextField(
-                        context,
-                        localizations.signupCity,
-                        Icons.location_city_outlined,
-                        localizations.signupCityHint,
-                        controller: _cityController,
-                      ),
-
-                      // Neighborhood / Street
-                      _buildTextField(
-                        context,
-                        localizations.signupNeighborhood,
-                        Icons.signpost_outlined,
-                        localizations.signupNeighborhoodHint,
-                        controller: _neighborhoodController,
-                      ),
-
-                      // Use Current Location Button
-                      Container(
-                        width: double.infinity,
-                        height: 56,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            // Get current location
-                          },
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: primaryColor.withValues(alpha: .1),
-                            side: const BorderSide(color: primaryColor),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(
-                            Icons.my_location,
-                            color: primaryColor,
-                          ),
-                          label: Text(
-                            localizations.signupUseCurrentLocation,
-                            style: GoogleFonts.poppins(
-                              color: primaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Property Type Dropdown
-                      _buildLabel(context, localizations.signupPropertyType),
-                      Container(
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFAEE599)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: .03),
-                              blurRadius: 4,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Icon(
-                              Icons.home_outlined,
-                              color: Colors.grey[600],
-                              size: 22,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: _selectedPropertyType,
-                                  hint: Text(
-                                    localizations.signupSelectPropertyType,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      color: Colors.grey[400],
-                                    ),
-                                  ),
-                                  isExpanded: true,
-                                  icon: Icon(
-                                    Icons.expand_more,
-                                    color: Colors.grey[600],
-                                  ),
-                                  items: _getPropertyTypes(context)
-                                      .map(
-                                        (type) => DropdownMenuItem(
-                                          value: type,
-                                          child: Text(
-                                            type,
-                                            style: GoogleFonts.poppins(),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (value) => setState(
-                                    () => _selectedPropertyType = value,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                        ),
+                        label: localizations.signupNeighborhood,
+                        icon: Icons.home_outlined,
+                        controller: _homeAddressController,
                       ),
                       const SizedBox(height: 16),
 
                       // Password
-                      _buildPasswordField(
-                        context,
-                        localizations.signupPassword,
-                        localizations.signupPasswordHint,
-                        _obscurePassword,
-                        () => setState(
+                      _buildTextField(
+                        label: localizations.signupPassword,
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                        isPasswordVisible: !_obscurePassword,
+                        onVisibilityToggle: () => setState(
                           () => _obscurePassword = !_obscurePassword,
                         ),
                         controller: _passwordController,
                       ),
+                      const SizedBox(height: 16),
 
                       // Confirm Password
-                      _buildPasswordField(
-                        context,
-                        localizations.signupConfirmPassword,
-                        localizations.signupConfirmPasswordHint,
-                        _obscureConfirm,
-                        () =>
+                      _buildTextField(
+                        label: localizations.signupConfirmPassword,
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                        isPasswordVisible: !_obscureConfirm,
+                        onVisibilityToggle: () =>
                             setState(() => _obscureConfirm = !_obscureConfirm),
                         controller: _confirmPasswordController,
                       ),
+
+                      const SizedBox(height: 24),
 
                       // Terms Checkbox
                       Row(
@@ -469,6 +377,13 @@ class _HomeownerSignUpScreenContentState
                       // Sign Up Button
                       BlocBuilder<SignupCubit, SignupState>(
                         builder: (context, state) {
+                          if (state is SignupLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ),
+                            );
+                          }
                           return SizedBox(
                             width: double.infinity,
                             height: 56,
@@ -480,21 +395,15 @@ class _HomeownerSignUpScreenContentState
                                 ),
                                 elevation: 2,
                               ),
-                              onPressed: state is SignupLoading
-                                  ? null
-                                  : () => _handleSignup(context),
-                              child: state is SignupLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : Text(
-                                      localizations.signupButton,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                              onPressed: () => _handleSignup(context),
+                              child: Text(
+                                localizations.signupButton,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           );
                         },
@@ -618,157 +527,78 @@ class _HomeownerSignUpScreenContentState
     );
   }
 
-  Widget _buildLabel(BuildContext context, String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Text(
-          text,
+  Widget _buildTextField({
+    required String label,
+    required IconData icon,
+    required TextEditingController controller,
+    TextInputType inputType = TextInputType.text,
+    bool isPassword = false,
+    bool isPasswordVisible = false,
+    VoidCallback? onVisibilityToggle,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
           style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: textDark,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    BuildContext context,
-    String label,
-    IconData icon,
-    String placeholder, {
-    TextInputType inputType = TextInputType.text,
-    required TextEditingController controller,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabel(context, label),
-        Container(
-          height: 56,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFAEE599)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: .03),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            controller: controller,
-            cursorColor: primaryColor,
-            keyboardType: inputType,
-            style: GoogleFonts.poppins(fontSize: 16, color: textDark),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter $label';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              hintText: placeholder,
-              hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-              prefixIcon: Icon(icon, color: Colors.grey[600], size: 22),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: primaryColor, width: 2),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.transparent),
-              ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          obscureText: isPassword && !isPasswordVisible,
+          keyboardType: inputType,
+          style: GoogleFonts.poppins(fontSize: 16, color: textDark),
+          cursorColor: primaryColor,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Required';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: 'Enter your $label',
+            hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400),
+            prefixIcon: Icon(icon, color: primaryColor),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.grey.shade500,
+                    ),
+                    onPressed: onVisibilityToggle,
+                  )
+                : null,
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 16,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: primaryColor, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
             ),
           ),
         ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _buildPasswordField(
-    BuildContext context,
-    String label,
-    String placeholder,
-    bool obscure,
-    VoidCallback toggleVisibility, {
-    required TextEditingController controller,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabel(context, label),
-        Container(
-          height: 56,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFAEE599)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: .03),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            controller: controller,
-            cursorColor: primaryColor,
-            obscureText: obscure,
-            style: GoogleFonts.poppins(fontSize: 16, color: textDark),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter $label';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              hintText: placeholder,
-              hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-              prefixIcon: Icon(
-                Icons.lock_outline,
-                color: Colors.grey[600],
-                size: 22,
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  obscure
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  color: Colors.grey[600],
-                  size: 22,
-                ),
-                onPressed: toggleVisibility,
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: primaryColor, width: 2),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.transparent),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
       ],
     );
   }

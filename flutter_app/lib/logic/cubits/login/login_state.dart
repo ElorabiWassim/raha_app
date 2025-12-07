@@ -14,11 +14,20 @@ class LoginLoading extends LoginState {}
 class LoginSuccess extends LoginState {
   final String username;
   final String role;
+  final String userId;
+  final String accessToken;
+  final String refreshToken;
 
-  const LoginSuccess({required this.username, required this.role});
+  const LoginSuccess({
+    required this.username,
+    required this.role,
+    required this.userId,
+    required this.accessToken,
+    required this.refreshToken,
+  });
 
   @override
-  List<Object> get props => [username, role];
+  List<Object> get props => [username, role, userId, accessToken, refreshToken];
 }
 
 class LoginFailure extends LoginState {

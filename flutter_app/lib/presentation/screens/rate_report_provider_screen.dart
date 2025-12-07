@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
+import 'package:ra7a/l10n/app_localizations.dart';
 import '../../data/models/booking_model.dart';
 import '../../logic/cubits/rate/rate_cubit.dart';
 import '../../logic/cubits/rate/rate_state.dart';
@@ -65,13 +66,14 @@ class _RateReportProviderScreenContentState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Check if keyboard is visible
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return BlocListener<RateCubit, RateState>(
       listener: (context, state) {
         if (state is RateSuccess) {
-          _showSuccessDialog(context);
+          _showSuccessDialog(context, l10n);
         } else if (state is RateFailure) {
           ScaffoldMessenger.of(
             context,
@@ -118,7 +120,7 @@ class _RateReportProviderScreenContentState
                           ),
                           Expanded(
                             child: Text(
-                              'Rate & Report Provider',
+                              l10n.rateReportTitle,
                               textAlign: TextAlign.center,
                               style: AppTextStyles.heading4.copyWith(
                                 color: AppColors.textDark,
@@ -188,7 +190,9 @@ class _RateReportProviderScreenContentState
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        'Completed on: ${widget.booking.dateTime.split(',')[0]}',
+                                        l10n.rateReportCompletedOn(
+                                          widget.booking.dateTime.split(',')[0],
+                                        ),
                                         style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           color: AppColors.textLight,
@@ -205,7 +209,7 @@ class _RateReportProviderScreenContentState
                           Padding(
                             padding: const EdgeInsets.only(left: 4, bottom: 12),
                             child: Text(
-                              'Rate your experience',
+                              l10n.rateReportRateExperience,
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -256,7 +260,7 @@ class _RateReportProviderScreenContentState
                           Padding(
                             padding: const EdgeInsets.only(left: 4, bottom: 8),
                             child: Text(
-                              'Write your feedback',
+                              l10n.rateReportWriteFeedback,
                               style: GoogleFonts.poppins(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -287,7 +291,7 @@ class _RateReportProviderScreenContentState
                                 color: AppColors.textDark,
                               ),
                               decoration: InputDecoration(
-                                hintText: 'Share details of your experience...',
+                                hintText: l10n.rateReportFeedbackHint,
                                 hintStyle: GoogleFonts.poppins(
                                   color: const Color(0xFFA1A1AA),
                                 ),
@@ -323,7 +327,7 @@ class _RateReportProviderScreenContentState
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Report a problem',
+                                    l10n.rateReportReportProblem,
                                     style: GoogleFonts.poppins(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
@@ -371,7 +375,7 @@ class _RateReportProviderScreenContentState
                                           ),
                                         )
                                       : Text(
-                                          'Submit Feedback',
+                                          l10n.rateReportSubmitFeedback,
                                           style: GoogleFonts.poppins(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
@@ -426,7 +430,7 @@ class _RateReportProviderScreenContentState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Report a Problem',
+                                      l10n.rateReportProblemTitle,
                                       style: GoogleFonts.poppins(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w700,
@@ -435,7 +439,7 @@ class _RateReportProviderScreenContentState
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      'Problem Description',
+                                      l10n.rateReportProblemDescription,
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
@@ -461,8 +465,7 @@ class _RateReportProviderScreenContentState
                                           color: AppColors.textDark,
                                         ),
                                         decoration: InputDecoration(
-                                          hintText:
-                                              'Please provide details about the issue...',
+                                          hintText: l10n.rateReportProblemHint,
                                           hintStyle: GoogleFonts.poppins(
                                             color: const Color(0xFFA1A1AA),
                                           ),
@@ -500,7 +503,7 @@ class _RateReportProviderScreenContentState
                                               ),
                                             ),
                                             child: Text(
-                                              'Cancel',
+                                              l10n.rateReportCancel,
                                               style: GoogleFonts.poppins(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w600,
@@ -550,7 +553,7 @@ class _RateReportProviderScreenContentState
                                                             ),
                                                       )
                                                     : Text(
-                                                        'Submit',
+                                                        l10n.rateReportSubmit,
                                                         style:
                                                             GoogleFonts.poppins(
                                                               fontSize: 15,
@@ -582,7 +585,7 @@ class _RateReportProviderScreenContentState
     );
   }
 
-  void _showSuccessDialog(BuildContext context) {
+  void _showSuccessDialog(BuildContext context, AppLocalizations l10n) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -629,7 +632,7 @@ class _RateReportProviderScreenContentState
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Thank you!',
+                    l10n.rateReportSuccessTitle,
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -639,7 +642,7 @@ class _RateReportProviderScreenContentState
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Your feedback has been submitted successfully.',
+                    l10n.rateReportSuccessBody,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: 14,

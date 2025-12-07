@@ -15,6 +15,12 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Debug logging middleware
+app.use((req, res, next) => {
+  console.log(`🟢 REQUEST: ${req.method} ${req.path}`);
+  next();
+});
+
 app.use('/api/sp', spRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);

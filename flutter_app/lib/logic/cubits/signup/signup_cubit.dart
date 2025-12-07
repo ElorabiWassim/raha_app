@@ -14,10 +14,9 @@ class SignupCubit extends Cubit<SignupState> {
     required String fullName,
     required String email,
     required String password,
-    required String phone,
-    required String city,
-    required String neighborhood,
-    String? propertyType,
+    required String phoneNumber,
+    required String homeAddress,
+    required DateTime dateOfBirth,
   }) async {
     emit(SignupLoading());
     try {
@@ -25,9 +24,9 @@ class SignupCubit extends Cubit<SignupState> {
         fullName: fullName,
         email: email,
         password: password,
-        phoneNumber: phone,
-        homeAddress: '$city, $neighborhood',
-        dateOfBirth: DateTime.now().toIso8601String(),
+        phoneNumber: phoneNumber,
+        homeAddress: homeAddress,
+        dateOfBirth: dateOfBirth.toIso8601String(),
       );
       emit(const SignupSuccess('homeowner'));
     } catch (e) {
@@ -39,9 +38,9 @@ class SignupCubit extends Cubit<SignupState> {
     required String fullName,
     required String email,
     required String password,
-    required String phone,
-    required String city,
-    required String neighborhood,
+    required String phoneNumber,
+    required String workingAddress,
+    required DateTime dateOfBirth,
     required String serviceType,
   }) async {
     emit(SignupLoading());
@@ -50,14 +49,12 @@ class SignupCubit extends Cubit<SignupState> {
         fullName: fullName,
         email: email,
         password: password,
-        phoneNumber: phone,
-        workingAddress: '$city, $neighborhood',
-        dateOfBirth: DateTime.now().toIso8601String(),
-        // TODO: replace this hardcoded UUID with the real
-        // category_id from Supabase once categories are wired.
+        phoneNumber: phoneNumber,
+        workingAddress: workingAddress,
+        dateOfBirth: dateOfBirth.toIso8601String(),
         serviceType: serviceType,
       );
-      emit(const SignupSuccess('serviceprovider'));
+      emit(const SignupSuccess('service_provider'));
     } catch (e) {
       emit(SignupFailure(e.toString()));
     }

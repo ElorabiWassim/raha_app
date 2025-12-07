@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubits/bookings/bookings_cubit.dart';
 import '../../logic/cubits/demands/demands_cubit.dart';
+import '../../logic/cubits/auth/auth_cubit.dart';
+import '../../data/local/local_cache_repository.dart';
+import '../../data/remote/bookings_api.dart';
 import '../../l10n/app_localizations.dart';
 import '../themes/app_text_style.dart';
 import 'my_bookings_tab.dart';
@@ -19,9 +22,26 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get userId and access token from AuthCubit
+    final authState = context.read<AuthCubit>().state;
+    String? userId;
+    String? accessToken;
+    
+    if (authState is AuthAuthenticated) {
+      userId = authState.userId;
+      accessToken = authState.accessToken;
+    }
+    
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => BookingsCubit()..loadBookings()),
+        BlocProvider(
+          create: (context) => BookingsCubit(
+            cacheRepository: context.read<LocalCacheRepository>(),
+            bookingsApi: BookingsApi(),
+            userId: userId,
+            accessToken: accessToken,
+          )..loadBookings(),
+        ),
         BlocProvider(create: (context) => DemandsCubit()..loadDemands()),
       ],
       child: Scaffold(
@@ -52,34 +72,68 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
   }
 
   Widget _buildAppBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF7E6).withValues(alpha: .8),
-      ),
-      child: Row(
-        children: [
-          Container(width: 48, height: 48, alignment: Alignment.centerLeft),
-          Expanded(
-            child: Text(
-              AppLocalizations.of(context)!.myServicesTitle,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
-            ),
+    return BlocBuilder<BookingsCubit, BookingsState>(
+      builder: (context, state) {
+        final isOffline = state is BookingsLoaded && !state.isOnline;
+        
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFEAF7E6).withValues(alpha: .8),
           ),
-          SizedBox(
-            width: 48,
-            height: 48,
-            child: IconButton(
-              icon: Icon(
-                Icons.notifications_outlined,
-                color: AppColors.textDark,
+          child: Row(
+            children: [
+              Container(width: 48, height: 48, alignment: Alignment.centerLeft),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.myServicesTitle,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
+                    ),
+                    if (isOffline)
+                      Container(
+                        margin: const EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.cloud_off, size: 12, color: Colors.orange.shade700),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Offline Mode',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.orange.shade700,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
-              onPressed: () {},
-            ),
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.notifications_outlined,
+                    color: AppColors.textDark,
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

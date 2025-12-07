@@ -75,6 +75,18 @@ class AuthApi {
     return _handleResponse(response);
   }
 
+  Future<Map<String, dynamic>> getProfile({required String accessToken}) async {
+    final response = await http.get(
+      _uri('/api/profile'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    return _handleResponse(response);
+  }
+
   Map<String, dynamic> _handleResponse(http.Response response) {
     final statusCode = response.statusCode;
     final dynamic decoded = jsonDecode(response.body);

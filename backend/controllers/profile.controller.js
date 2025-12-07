@@ -5,7 +5,19 @@ const getProfile = async (req, res) => {
     const userId = req.user.user_id;
     const role = req.user.role;
 
-    let profileData = { ...req.user };
+    // Fetch base user row to include full_name, phone_number, etc.
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('user_id, email, full_name, phone_number, role, status')
+      .eq('user_id', userId)
+      .single();
+
+    if (userError || !userData) {
+      console.error('Error fetching user profile:', userError);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    let profileData = { ...userData }; // start with users table payload
 
     if (role === 'homeowner') {
       const { data: homeownerData, error } = await supabase
@@ -37,6 +49,7 @@ const getProfile = async (req, res) => {
       }
     }
 
+    console.log('Profile response:', profileData);
     res.json({ profile: profileData });
   } catch (error) {
     console.error('Get Profile Error:', error);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 import '../themes/app_text_style.dart';
 import '../../data/models/provider_offers_model.dart';
 import 'dart:ui';
@@ -29,6 +30,8 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
   String? acceptedProviderId;
   List<ProviderOffer> offers = [];
   List<String> rejectedOfferIds = [];
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -62,7 +65,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                     _buildDemandSummaryCard(),
                     const SizedBox(height: 24),
                     Text(
-                      'Provider Offers (${visibleOffers.length})',
+                      l10n.providerOffersCount(visibleOffers.length),
                       style: AppTextStyles.custom(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -104,7 +107,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
           ),
           Expanded(
             child: Text(
-              'Service Provider Offers',
+              l10n.providerOffersTitle,
               textAlign: TextAlign.center,
               style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
             ),
@@ -154,7 +157,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Posted on: ${widget.postedDate}',
+                  l10n.providerOffersPostedOn(widget.postedDate),
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textLight,
                   ),
@@ -315,7 +318,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Accepted',
+                        l10n.providerOffersAccepted,
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -353,7 +356,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                           disabledForegroundColor: AppColors.textLight,
                         ),
                         child: Text(
-                          'Accept',
+                          l10n.providerOffersAccept,
                           style: AppTextStyles.buttonMedium,
                         ),
                       ),
@@ -382,7 +385,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                           disabledForegroundColor: AppColors.textLight,
                         ),
                         child: Text(
-                          'Reject',
+                          l10n.providerOffersReject,
                           style: AppTextStyles.buttonMedium,
                         ),
                       ),
@@ -421,7 +424,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Confirm provider selection?',
+                      l10n.providerOffersConfirmTitle,
                       textAlign: TextAlign.center,
                       style: AppTextStyles.custom(
                         fontSize: 20,
@@ -430,26 +433,11 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    RichText(
+                    Text(
+                      l10n.providerOffersConfirmBody(offer.providerName),
                       textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textMedium,
-                        ),
-                        children: [
-                          const TextSpan(
-                            text:
-                                'Are you sure you want to accept the offer from ',
-                          ),
-                          TextSpan(
-                            text: offer.providerName,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textDark,
-                            ),
-                          ),
-                          const TextSpan(text: '?'),
-                        ],
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textMedium,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -468,7 +456,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                                 ),
                               ),
                               child: Text(
-                                'Cancel',
+                                l10n.providerOffersCancel,
                                 style: AppTextStyles.buttonMedium,
                               ),
                             ),
@@ -493,7 +481,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                                 ),
                               ),
                               child: Text(
-                                'Confirm',
+                                l10n.providerOffersConfirm,
                                 style: AppTextStyles.buttonMedium,
                               ),
                             ),
@@ -549,7 +537,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Reject this offer?',
+                      l10n.providerOffersRejectTitle,
                       textAlign: TextAlign.center,
                       style: AppTextStyles.custom(
                         fontSize: 20,
@@ -558,28 +546,11 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    RichText(
+                    Text(
+                      l10n.providerOffersRejectBody(offer.providerName),
                       textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textMedium,
-                        ),
-                        children: [
-                          const TextSpan(
-                            text:
-                                'Are you sure you want to reject the offer from ',
-                          ),
-                          TextSpan(
-                            text: offer.providerName,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textDark,
-                            ),
-                          ),
-                          const TextSpan(
-                            text: '? This action cannot be undone.',
-                          ),
-                        ],
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textMedium,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -598,7 +569,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                                 ),
                               ),
                               child: Text(
-                                'Cancel',
+                                l10n.providerOffersCancel,
                                 style: AppTextStyles.buttonMedium,
                               ),
                             ),
@@ -617,7 +588,9 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Offer from ${offer.providerName} rejected',
+                                      l10n.providerOffersRejectToast(
+                                        offer.providerName,
+                                      ),
                                     ),
                                     backgroundColor: AppColors.error,
                                     behavior: SnackBarBehavior.floating,
@@ -633,7 +606,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                                 ),
                               ),
                               child: Text(
-                                'Reject',
+                                l10n.providerOffersReject,
                                 style: AppTextStyles.buttonMedium,
                               ),
                             ),
@@ -673,7 +646,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'No Offers Available',
+              l10n.providerOffersNoOffersTitle,
               style: AppTextStyles.custom(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -682,7 +655,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'All provider offers have been reviewed.',
+              l10n.providerOffersNoOffersSubtitle,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textLight,

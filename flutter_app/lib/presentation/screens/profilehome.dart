@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 import './hosetting.dart';
 import '../../data/models/profile_data.dart';
+import '../../data/local/local_cache_repository.dart';
+import '../../logic/cubits/auth/auth_cubit.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
@@ -10,8 +14,7 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  
-
+  late final LocalCacheRepository _cacheRepository;
   // Profile data
   ProfileData profileData = ProfileData(
     name: 'Mohamed RGB',
@@ -20,7 +23,45 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     address: '123 Main Draria, Algiers, Algeria',
   );
 
-  
+  @override
+  void initState() {
+    super.initState();
+    _cacheRepository = LocalCacheRepository();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    await _cacheRepository.init();
+    final authState = mounted ? context.read<AuthCubit>().state : null;
+    final authUserId = authState is AuthAuthenticated ? authState.userId : null;
+    final authName = authState is AuthAuthenticated ? authState.username : null;
+
+    final cachedProfile = await _cacheRepository.getUserProfile(
+      userId: authUserId,
+    );
+
+    if (cachedProfile != null) {
+      setState(() {
+        profileData = ProfileData(
+          name: cachedProfile.fullName.isNotEmpty
+              ? cachedProfile.fullName
+              : (authName ?? profileData.name),
+          email: cachedProfile.email ?? profileData.email,
+          phone: cachedProfile.phoneNumber ?? profileData.phone,
+          address: cachedProfile.address ?? profileData.address,
+        );
+      });
+    } else if (authName != null) {
+      setState(() {
+        profileData = ProfileData(
+          name: authName,
+          email: profileData.email,
+          phone: profileData.phone,
+          address: profileData.address,
+        );
+      });
+    }
+  }
 
   void _navigateToPage(String pageName) async {
     if (pageName == 'Edit Profile') {
@@ -79,7 +120,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         shadowColor: Colors.black,
         surfaceTintColor: Colors.transparent,
         title: Text(
-          'My Profile',
+          AppLocalizations.of(context)!.profileTitle,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
@@ -123,7 +164,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    'Verified Homeowner',
+                    AppLocalizations.of(context)!.profileVerifiedHomeowner,
                     style: TextStyle(
                       fontSize: 15,
                       color: Color(0xFF68E36C),
@@ -147,7 +188,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         ),
                       ),
                       child: Text(
-                        'Edit Profile',
+                        AppLocalizations.of(context)!.profileEditProfile,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -290,7 +331,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       ),
     );
   }
-
 }
 
 // Edit Profile Screen

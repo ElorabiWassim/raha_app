@@ -7,9 +7,7 @@ import 'package:ra7a/l10n/app_localizations.dart';
 import '../../../../logic/cubits/signup/signup_cubit.dart';
 import '../../../../logic/cubits/signup/signup_state.dart';
 import 'login.dart';
-import 'verification.dart';
 import 'splash.dart';
-import '../../../presentation/screens/homesp.dart';
 
 const primaryColor = Color(0xFF33AD04);
 const textDark = Color(0xFF333333);
@@ -24,7 +22,7 @@ class ProviderSignUpScreen extends StatelessWidget {
         authApi: AuthApi(
           baseUrl: const String.fromEnvironment(
             'BACKEND_BASE_URL',
-            defaultValue: 'http://10.0.2.2:3000',
+            defaultValue: 'http://10.162.71.174:3000',
           ),
         ),
       ),
@@ -51,8 +49,8 @@ class _ProviderSignUpScreenContentState
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _neighborhoodController = TextEditingController();
+  final TextEditingController _workingAddressController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -60,30 +58,30 @@ class _ProviderSignUpScreenContentState
   String? _selectedServiceType;
   DateTime? _selectedDate;
 
+  // Map of Display Name -> Category UUID (from database)
+  final Map<String, String> _serviceCategoryMap = {
+    'Electrical': '069dc664-5fd9-435c-a688-cc002e46243b',
+    'Gardening': '3e53048d-1367-4e9f-ac4e-e39e5936dc0e',
+    'Cleaning': '6ca0c6a3-efa3-481e-b40a-a173bcdb283',
+    'Handyman': '74738160-4b3e-4c15-a8e6-9a2dd26f0c03',
+    'Moving': '837ecd35-78de-4320-be91-9cfa67a8bd1f',
+    'Plumbing': 'a75af59d-3e61-402d-9bd2-54a5e64fc950',
+    'Painting': 'da59048e-86e6-4a7e-b342-1784687004f7',
+  };
+
+  List<String> _getServiceTypes(BuildContext context) {
+    return _serviceCategoryMap.keys.toList();
+  }
+
   @override
   void dispose() {
     _fullNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _cityController.dispose();
-    _neighborhoodController.dispose();
+    _workingAddressController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  List<String> _getServiceTypes(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    return [
-      localizations.signupServiceTypePlumbing,
-      localizations.signupServiceTypeElectrical,
-      localizations.signupServiceTypeCleaning,
-      localizations.signupServiceTypePainting,
-      localizations.signupServiceTypeCarpentry,
-      localizations.signupServiceTypeHVAC,
-      localizations.signupServiceTypeGardening,
-      localizations.signupServiceTypeOther,
-    ];
   }
 
   Future<void> _pickDate(BuildContext context) async {
@@ -118,6 +116,7 @@ class _ProviderSignUpScreenContentState
         );
         return;
       }
+
       if (_passwordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(
           context,
@@ -125,16 +124,29 @@ class _ProviderSignUpScreenContentState
         return;
       }
 
+      if (_selectedDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select your date of birth')),
+        );
+        return;
+      }
+
+      final categoryId = _serviceCategoryMap[_selectedServiceType];
+      if (categoryId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid service type selected')),
+        );
+        return;
+      }
+
       context.read<SignupCubit>().signupProvider(
         fullName: _fullNameController.text,
         email: _emailController.text,
         password: _passwordController.text,
-        phone: _phoneController.text,
-        city: _cityController.text,
-        neighborhood: _neighborhoodController.text,
-        // Temporary: send fixed Electrical category UUID.
-        // TODO: replace with selected category.id when wiring dynamic categories.
-        serviceType: '069dc664-5fd9-435c-a688-cc002e46243b',
+        phoneNumber: _phoneController.text,
+        workingAddress: _workingAddressController.text,
+        dateOfBirth: _selectedDate!,
+        serviceType: categoryId,
       );
     } else if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -157,16 +169,23 @@ class _ProviderSignUpScreenContentState
       child: BlocListener<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state is SignupSuccess) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MainNavigationScreen(),
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(localizations.signupSuccessMessage),
+                backgroundColor: primaryColor,
               ),
             );
-          } else if (state is SignupFailure) {
-            ScaffoldMessenger.of(
+            Navigator.pushReplacement(
               context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          } else if (state is SignupFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error),
+                backgroundColor: Colors.red.shade700,
+              ),
+            );
           }
         },
         child: Scaffold(
@@ -190,7 +209,6 @@ class _ProviderSignUpScreenContentState
                     children: [
                       const SizedBox(height: 10),
 
-                      // Logo
                       GestureDetector(
                         onTap: () {
                           Navigator.pushReplacement(
@@ -215,389 +233,370 @@ class _ProviderSignUpScreenContentState
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 16),
 
-                      // Title
-                      Text(
-                        localizations.signupCreateProviderAccount,
-                        style: GoogleFonts.poppins(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: textDark,
-                          letterSpacing: -0.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 30),
-
-                      // Full Name
-                      _buildTextField(
-                        context,
-                        localizations.signupFullName,
-                        Icons.person_outline,
-                        localizations.signupFullNameHint,
-                        controller: _fullNameController,
-                      ),
-
-                      // Email
-                      _buildTextField(
-                        context,
-                        localizations.signupEmail,
-                        Icons.email_outlined,
-                        localizations.signupEmailHint,
-                        inputType: TextInputType.emailAddress,
-                        controller: _emailController,
-                      ),
-
-                      // Date of Birth
-                      _buildLabel(context, localizations.signupDateOfBirth),
-                      GestureDetector(
-                        onTap: () => _pickDate(context),
-                        child: AbsorbPointer(
-                          child: Container(
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: const Color(0xFFAEE599),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: .03),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 16),
-                                Icon(
-                                  Icons.calendar_today_outlined,
-                                  color: Colors.grey[600],
-                                  size: 22,
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  _selectedDate == null
-                                      ? localizations.signupDateHint
-                                      : '${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.year}',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    color: _selectedDate == null
-                                        ? Colors.grey[400]
-                                        : textDark,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Phone Number
-                      _buildTextField(
-                        context,
-                        localizations.signupPhoneNumber,
-                        Icons.phone_outlined,
-                        localizations.signupPhoneNumberHint,
-                        inputType: TextInputType.phone,
-                        controller: _phoneController,
-                      ),
-
-                      // City
-                      _buildTextField(
-                        context,
-                        localizations.signupCity,
-                        Icons.location_city_outlined,
-                        localizations.signupCityHint,
-                        controller: _cityController,
-                      ),
-
-                      // Neighborhood / Street
-                      _buildTextField(
-                        context,
-                        localizations.signupNeighborhood,
-                        Icons.signpost_outlined,
-                        localizations.signupNeighborhoodHint,
-                        controller: _neighborhoodController,
-                      ),
-
-                      // Use Current Location Button
                       Container(
                         width: double.infinity,
-                        height: 56,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            // Get current location
-                          },
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: primaryColor.withValues(alpha: .1),
-                            side: const BorderSide(color: primaryColor),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(
-                            Icons.my_location,
-                            color: primaryColor,
-                          ),
-                          label: Text(
-                            localizations.signupUseCurrentLocation,
-                            style: GoogleFonts.poppins(
-                              color: primaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Service Type Dropdown
-                      _buildLabel(context, localizations.signupServiceType),
-                      Container(
-                        height: 56,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFAEE599)),
+                          borderRadius: BorderRadius.circular(18),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: .03),
-                              blurRadius: 4,
-                              offset: const Offset(0, 1),
+                              color: Colors.black.withValues(alpha: .04),
+                              blurRadius: 10,
+                              offset: const Offset(0, 6),
                             ),
                           ],
                         ),
-                        child: DropdownButtonFormField<String>(
-                          value: _selectedServiceType,
-                          decoration: InputDecoration(
-                            hintText: localizations.signupSelectServiceType,
-                            hintStyle: GoogleFonts.poppins(
-                              color: Colors.grey[400],
-                            ),
-                            prefixIcon: Icon(
-                              Icons.work_outline,
-                              color: Colors.grey[600],
-                              size: 22,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: primaryColor,
-                                width: 2,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 24,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              localizations.signupCreateProviderAccount,
+                              style: GoogleFonts.poppins(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: textDark,
+                                letterSpacing: -0.5,
                               ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Colors.transparent,
+                            const SizedBox(height: 6),
+                            Text(
+                              'Join our network of professional service providers.',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.grey[600],
                               ),
                             ),
-                          ),
-                          icon: Icon(
-                            Icons.expand_more,
-                            color: Colors.grey[600],
-                          ),
-                          dropdownColor: Colors.white,
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: textDark,
-                          ),
-                          items: _getServiceTypes(context).map((type) {
-                            return DropdownMenuItem(
-                              value: type,
+
+                            const SizedBox(height: 24),
+
+                            _buildTextField(
+                              label: localizations.signupFullName,
+                              icon: Icons.person_outline,
+                              controller: _fullNameController,
+                            ),
+                            const SizedBox(height: 16),
+
+                            _buildTextField(
+                              label: localizations.signupEmail,
+                              icon: Icons.email_outlined,
+                              inputType: TextInputType.emailAddress,
+                              controller: _emailController,
+                            ),
+                            const SizedBox(height: 16),
+
+                            Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(
-                                type,
+                                localizations.signupDateOfBirth,
                                 style: GoogleFonts.poppins(
-                                  fontSize: 16,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
                                   color: textDark,
                                 ),
                               ),
-                            );
-                          }).toList(),
-                          onChanged: (value) =>
-                              setState(() => _selectedServiceType = value),
-                          validator: (value) => value == null
-                              ? localizations.signupSelectServiceTypeError
-                              : null,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Password
-                      _buildPasswordField(
-                        context,
-                        localizations.signupPassword,
-                        localizations.signupPasswordHint,
-                        _obscurePassword,
-                        () => setState(
-                          () => _obscurePassword = !_obscurePassword,
-                        ),
-                        controller: _passwordController,
-                      ),
-
-                      // Confirm Password
-                      _buildPasswordField(
-                        context,
-                        localizations.signupConfirmPassword,
-                        localizations.signupConfirmPasswordHint,
-                        _obscureConfirm,
-                        () =>
-                            setState(() => _obscureConfirm = !_obscureConfirm),
-                        controller: _confirmPasswordController,
-                      ),
-
-                      // Terms Checkbox
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: _acceptTerms,
-                            activeColor: primaryColor,
-                            onChanged: (val) =>
-                                setState(() => _acceptTerms = val ?? false),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 12),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: localizations.signupAcceptTerms,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: localizations
-                                          .signupTermsAndConditions,
-                                      style: GoogleFonts.poppins(
-                                        color: primaryColor,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                            ),
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () => _pickDate(context),
+                              child: AbsorbPointer(
+                                child: Container(
+                                  height: 56,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: const Color(0xFFAEE599),
                                     ),
-                                  ],
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: .03,
+                                        ),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 16),
+                                      Icon(
+                                        Icons.calendar_today_outlined,
+                                        color: Colors.grey[600],
+                                        size: 22,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        _selectedDate == null
+                                            ? localizations.signupDateHint
+                                            : '${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.year}',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          color: _selectedDate == null
+                                              ? Colors.grey[400]
+                                              : textDark,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                            const SizedBox(height: 16),
 
-                      const SizedBox(height: 24),
+                            _buildTextField(
+                              label: localizations.signupPhoneNumber,
+                              icon: Icons.phone_outlined,
+                              inputType: TextInputType.phone,
+                              controller: _phoneController,
+                            ),
+                            const SizedBox(height: 16),
 
-                      // Verify Account Button (instead of Sign Up)
-                      BlocBuilder<SignupCubit, SignupState>(
-                        builder: (context, state) {
-                          return SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                elevation: 2,
+                            _buildTextField(
+                              label: localizations.signupCity,
+                              icon: Icons.location_city_outlined,
+                              controller: _workingAddressController,
+                            ),
+                            const SizedBox(height: 16),
+
+                            Text(
+                              localizations.signupServiceType,
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: textDark,
                               ),
-                              onPressed: state is SignupLoading
-                                  ? null
-                                  : () => _handleSignup(context),
-                              child: state is SignupLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : Text(
-                                      localizations.signupVerifyAccount,
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: const Color(0xFFAEE599),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: .03),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _selectedServiceType,
+                                  hint: Text(
+                                    localizations.signupSelectServiceType,
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                  isExpanded: true,
+                                  icon: const Icon(
+                                    Icons.expand_more,
+                                    color: Colors.grey,
+                                  ),
+                                  items: _getServiceTypes(context).map((type) {
+                                    return DropdownMenuItem(
+                                      value: type,
+                                      child: Text(
+                                        type,
+                                        style: GoogleFonts.poppins(
+                                          color: textDark,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) => setState(
+                                    () => _selectedServiceType = value,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            _buildTextField(
+                              label: localizations.signupPassword,
+                              icon: Icons.lock_outline,
+                              isPassword: true,
+                              isPasswordVisible: !_obscurePassword,
+                              onVisibilityToggle: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
+                              controller: _passwordController,
+                            ),
+                            const SizedBox(height: 16),
+
+                            _buildTextField(
+                              label: localizations.signupConfirmPassword,
+                              icon: Icons.lock_outline,
+                              isPassword: true,
+                              isPasswordVisible: !_obscureConfirm,
+                              onVisibilityToggle: () => setState(
+                                () => _obscureConfirm = !_obscureConfirm,
+                              ),
+                              controller: _confirmPasswordController,
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Checkbox(
+                                  value: _acceptTerms,
+                                  activeColor: primaryColor,
+                                  onChanged: (val) => setState(
+                                    () => _acceptTerms = val ?? false,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: Text.rich(
+                                      TextSpan(
+                                        text: localizations.signupAcceptTerms,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: localizations
+                                                .signupTermsAndConditions,
+                                            style: GoogleFonts.poppins(
+                                              color: primaryColor,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            BlocBuilder<SignupCubit, SignupState>(
+                              builder: (context, state) {
+                                if (state is SignupLoading) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(
+                                      color: primaryColor,
+                                    ),
+                                  );
+                                }
+                                return SizedBox(
+                                  width: double.infinity,
+                                  height: 56,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      elevation: 2,
+                                    ),
+                                    onPressed: () => _handleSignup(context),
+                                    child: Text(
+                                      localizations.signupButton,
                                       style: GoogleFonts.poppins(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
                                     ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
 
-                      const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                      // OR Divider
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              color: Colors.grey[300],
-                              thickness: 1,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.grey[300],
+                                    thickness: 1,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
+                                  child: Text(
+                                    localizations.signupOr,
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.grey[500],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.grey[300],
+                                    thickness: 1,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              localizations.signupOr,
-                              style: GoogleFonts.poppins(
-                                color: Colors.grey[500],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              color: Colors.grey[300],
-                              thickness: 1,
-                            ),
-                          ),
-                        ],
-                      ),
 
-                      const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                      // Google Sign Up Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.grey[300]!),
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icons/google.svg',
-                                height: 24,
-                                width: 24,
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                localizations.signupWithGoogle,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[700],
+                            SizedBox(
+                              width: double.infinity,
+                              height: 56,
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(color: Colors.grey[300]!),
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/google.svg',
+                                      height: 24,
+                                      width: 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      localizations.signupWithGoogle,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 18),
 
-                      // Already have account
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -646,157 +645,78 @@ class _ProviderSignUpScreenContentState
     );
   }
 
-  Widget _buildLabel(BuildContext context, String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Text(
-          text,
+  Widget _buildTextField({
+    required String label,
+    required IconData icon,
+    required TextEditingController controller,
+    TextInputType inputType = TextInputType.text,
+    bool isPassword = false,
+    bool isPasswordVisible = false,
+    VoidCallback? onVisibilityToggle,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
           style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: textDark,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    BuildContext context,
-    String label,
-    IconData icon,
-    String placeholder, {
-    TextInputType inputType = TextInputType.text,
-    required TextEditingController controller,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabel(context, label),
-        Container(
-          height: 56,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFAEE599)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: .03),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            controller: controller,
-            cursorColor: primaryColor,
-            keyboardType: inputType,
-            style: GoogleFonts.poppins(fontSize: 16, color: textDark),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter $label';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              hintText: placeholder,
-              hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-              prefixIcon: Icon(icon, color: Colors.grey[600], size: 22),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: primaryColor, width: 2),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.transparent),
-              ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          obscureText: isPassword && !isPasswordVisible,
+          keyboardType: inputType,
+          style: GoogleFonts.poppins(fontSize: 16, color: textDark),
+          cursorColor: primaryColor,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Required';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: 'Enter your $label',
+            hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400),
+            prefixIcon: Icon(icon, color: primaryColor),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.grey.shade500,
+                    ),
+                    onPressed: onVisibilityToggle,
+                  )
+                : null,
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 16,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: primaryColor, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
             ),
           ),
         ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _buildPasswordField(
-    BuildContext context,
-    String label,
-    String placeholder,
-    bool obscure,
-    VoidCallback toggleVisibility, {
-    required TextEditingController controller,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabel(context, label),
-        Container(
-          height: 56,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFAEE599)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: .03),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            controller: controller,
-            cursorColor: primaryColor,
-            obscureText: obscure,
-            style: GoogleFonts.poppins(fontSize: 16, color: textDark),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter $label';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              hintText: placeholder,
-              hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-              prefixIcon: Icon(
-                Icons.lock_outline,
-                color: Colors.grey[600],
-                size: 22,
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  obscure
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  color: Colors.grey[600],
-                  size: 22,
-                ),
-                onPressed: toggleVisibility,
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: primaryColor, width: 2),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.transparent),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
       ],
     );
   }

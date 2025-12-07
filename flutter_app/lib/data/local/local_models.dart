@@ -37,6 +37,9 @@ class LocalUserProfile {
   final String userId;
   final String fullName;
   final String role;
+  final String? email;
+  final String? phoneNumber;
+  final String? address;
   final String? profileImageUrl;
   final int updatedAt;
 
@@ -45,6 +48,9 @@ class LocalUserProfile {
     required this.fullName,
     required this.role,
     required this.updatedAt,
+    this.email,
+    this.phoneNumber,
+    this.address,
     this.profileImageUrl,
   });
 
@@ -52,6 +58,9 @@ class LocalUserProfile {
     'user_id': userId,
     'full_name': fullName,
     'role': role,
+    'email': email,
+    'phone_number': phoneNumber,
+    'address': address,
     'profile_image_url': profileImageUrl,
     'updated_at': updatedAt,
   };
@@ -61,6 +70,9 @@ class LocalUserProfile {
         userId: map['user_id'] as String? ?? '',
         fullName: map['full_name'] as String? ?? '',
         role: map['role'] as String? ?? '',
+        email: map['email'] as String?,
+        phoneNumber: map['phone_number'] as String?,
+        address: map['address'] as String?,
         profileImageUrl: map['profile_image_url'] as String?,
         updatedAt: (map['updated_at'] as int?) ?? 0,
       );

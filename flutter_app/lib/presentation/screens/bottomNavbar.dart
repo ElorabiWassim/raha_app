@@ -3,6 +3,7 @@ import './home_screen_home_owner.dart';
 import './profilehome.dart';
 import './my_services_screen.dart';
 import './messages_screen.dart';
+import 'package:ra7a/l10n/app_localizations.dart';
 
 class HomeBottomNav extends StatefulWidget {
   const HomeBottomNav({super.key});
@@ -21,7 +22,12 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
     MyProfileScreen(),
   ];
 
-  final List<String> _labels = ['Home', 'Bookings', 'Messages', 'Profile'];
+  List<String> _labels(BuildContext context) => [
+    AppLocalizations.of(context)!.navHome,
+    AppLocalizations.of(context)!.navBookings,
+    AppLocalizations.of(context)!.navMessages,
+    AppLocalizations.of(context)!.navProfile,
+  ];
   final List<IconData> _icons = [
     Icons.home_outlined,
     Icons.calendar_today_outlined,
@@ -112,7 +118,7 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
                         fontSize: isSelected ? 12 : 11,
                       ),
                       duration: const Duration(milliseconds: 300),
-                      child: Text(_labels[index]),
+                      child: Text(_labels(context)[index]),
                     ),
                   ],
                 ),
