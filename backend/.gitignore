@@ -16,6 +16,6 @@ config/local.*
 # Session files
 sessions/
 
-# Already covered by root .gitignore (kept for reference):
-# .env
-# node_modules/
+# Environment files
+.env
+node_modules/

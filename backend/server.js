@@ -6,6 +6,8 @@ require('dotenv').config();
 
 const spRoutes = require('./routes/sp.routes');
 const adminRoutes = require('./routes/admin.routes');
+const conversationRoutes = require('./routes/conversation.routes');
+const reviewRoutes = require('./routes/review.routes');
 
 const app = express();
 app.use(helmet());
@@ -15,6 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/sp', spRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api', conversationRoutes);
+app.use('/api', reviewRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
