@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ra7a/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/cubits/bookings/bookings_cubit.dart';
+import '../../l10n_amine/app_localizations.dart';
 import '../../data/models/booking_model.dart';
 import '../themes/app_text_style.dart';
 import 'rate_report_provider_screen.dart';
@@ -9,19 +11,27 @@ class MyBookingsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final bookings = _getBookings();
-
-    return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-      itemCount: bookings.length,
-      itemBuilder: (context, index) {
-        return _buildBookingCard(context, bookings[index], l10n);
+    return BlocBuilder<BookingsCubit, BookingsState>(
+      builder: (context, state) {
+        if (state is BookingsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is BookingsLoaded) {
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+            itemCount: state.bookings.length,
+            itemBuilder: (context, index) {
+              return _buildBookingCard(context, state.bookings[index]);
+            },
+          );
+        } else if (state is BookingsError) {
+          return Center(child: Text(state.message));
+        }
+        return const SizedBox.shrink();
       },
     );
   }
 
-  Widget _buildBookingCard(BuildContext context, Booking booking, AppLocalizations l10n) {
+  Widget _buildBookingCard(BuildContext context, Booking booking) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -46,7 +56,7 @@ class MyBookingsTab extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(booking.providerImage.trim()),
+                  backgroundImage: NetworkImage(booking.providerImage),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -58,7 +68,6 @@ class MyBookingsTab extends StatelessWidget {
                         style: AppTextStyles.heading5.copyWith(
                           color: AppColors.textDark,
                         ),
-                        softWrap: true,
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -66,13 +75,12 @@ class MyBookingsTab extends StatelessWidget {
                         style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textLight,
                         ),
-                        softWrap: true,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 16),
-                _buildStatusBadge(booking.status, l10n),
+                _buildStatusBadge(context, booking.status),
               ],
             ),
             Container(
@@ -102,10 +110,12 @@ class MyBookingsTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: 100,
+                Container(
+                  height: 36,
+                  constraints: const BoxConstraints(minWidth: 84),
                   child: ElevatedButton(
                     onPressed: () {
+                      // Navigate to Rate screen if booking is completed
                       if (booking.status == BookingStatus.completed) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -114,7 +124,8 @@ class MyBookingsTab extends StatelessWidget {
                           ),
                         );
                       } else {
-                        // TODO: Navigate to booking details
+                        // Navigate to details screen for other statuses
+                        // TODO: Implement details screen navigation
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -128,15 +139,13 @@ class MyBookingsTab extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                     ),
-                    child: FittedBox(
-                      child: Text(
-                        booking.status == BookingStatus.completed
-                            ? l10n.rate
-                            : l10n.details,
-                        style: AppTextStyles.buttonMedium,
-                      ),
+                    child: Text(
+                      booking.status == BookingStatus.completed
+                          ? AppLocalizations.of(context)!.actionRate
+                          : AppLocalizations.of(context)!.actionDetails,
+                      style: AppTextStyles.buttonMedium,
                     ),
                   ),
                 ),
@@ -148,7 +157,7 @@ class MyBookingsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(BookingStatus status, AppLocalizations l10n) {
+  Widget _buildStatusBadge(BuildContext context, BookingStatus status) {
     Color backgroundColor;
     Color textColor;
     String label;
@@ -157,17 +166,17 @@ class MyBookingsTab extends StatelessWidget {
       case BookingStatus.upcoming:
         backgroundColor = AppColors.statusUpcomingBg;
         textColor = AppColors.statusUpcoming;
-        label = l10n.upcoming;
+        label = AppLocalizations.of(context)!.statusUpcoming;
         break;
       case BookingStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = l10n.completed;
+        label = AppLocalizations.of(context)!.statusCompleted;
         break;
       case BookingStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = l10n.cancelled;
+        label = AppLocalizations.of(context)!.statusCancelled;
         break;
     }
 
@@ -179,39 +188,8 @@ class MyBookingsTab extends StatelessWidget {
       ),
       child: Text(
         label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
         style: AppTextStyles.caption.copyWith(color: textColor),
       ),
     );
-  }
-
-  List<Booking> _getBookings() {
-    return [
-      Booking(
-        providerName: 'Karim Benzema',
-        providerImage: 'https://i.pravatar.cc/150?img=12',
-        serviceName: 'Plumbing Repair',
-        dateTime: '25 Oct, 10:00 AM',
-        price: '5,000 DZD',
-        status: BookingStatus.upcoming,
-      ),
-      Booking(
-        providerName: 'Nadia Belkacem',
-        providerImage: 'https://i.pravatar.cc/150?img=47',
-        serviceName: 'House Cleaning',
-        dateTime: '22 Oct, 02:00 PM',
-        price: '3,500 DZD',
-        status: BookingStatus.completed,
-      ),
-      Booking(
-        providerName: 'Ahmed Djebbour',
-        providerImage: 'https://i.pravatar.cc/150?img=33',
-        serviceName: 'AC Maintenance',
-        dateTime: '15 Oct, 09:30 AM',
-        price: '6,000 DZD',
-        status: BookingStatus.cancelled,
-      ),
-    ];
   }
 }

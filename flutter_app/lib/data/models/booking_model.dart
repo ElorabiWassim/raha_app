@@ -1,10 +1,7 @@
-enum BookingStatus {
-  upcoming,
-  completed,
-  cancelled,
-}
+enum BookingStatus { upcoming, completed, cancelled }
 
 class Booking {
+  final String id;
   final String providerName;
   final String providerImage;
   final String serviceName;
@@ -13,6 +10,7 @@ class Booking {
   final BookingStatus status;
 
   Booking({
+    required this.id,
     required this.providerName,
     required this.providerImage,
     required this.serviceName,

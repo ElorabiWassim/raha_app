@@ -1,15 +1,32 @@
+<<<<<<< HEAD
 const supabase = require('../config/supabase.js');
+=======
+const supabase = require('../config/supabase');
+>>>>>>> origin/develop
 
 const authenticate = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
+<<<<<<< HEAD
 
+=======
+    // console.log('Token received:', token ? 'Yes' : 'No');
+    
+>>>>>>> origin/develop
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });
     }
 
     const { data: { user }, error } = await supabase.auth.getUser(token);
+<<<<<<< HEAD
 
+=======
+    
+    if (error) {
+        console.error('Supabase getUser error:', error.message);
+    }
+    
+>>>>>>> origin/develop
     if (error || !user) {
       return res.status(401).json({ error: 'Invalid token' });
     }
