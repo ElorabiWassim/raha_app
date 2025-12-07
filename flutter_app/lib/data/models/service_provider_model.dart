@@ -1,4 +1,5 @@
 class ServiceProvider {
+  final String id;
   String name;
   String profession;
   String location;
@@ -14,6 +15,7 @@ class ServiceProvider {
   List<Service> services;
 
   ServiceProvider({
+    required this.id,
     required this.name,
     required this.profession,
     required this.location,

@@ -5,7 +5,6 @@ class ProfessionalCard extends StatelessWidget {
   final String name;
   final String profession;
   final double rating;
-  final int reviews;
   final String imagePath;
 
   const ProfessionalCard({
@@ -13,7 +12,6 @@ class ProfessionalCard extends StatelessWidget {
     required this.name,
     required this.profession,
     required this.rating,
-    required this.reviews,
     required this.imagePath,
   });
 
@@ -37,7 +35,12 @@ class ProfessionalCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(radius: 28, backgroundImage: AssetImage(imagePath)),
+          CircleAvatar(
+            radius: 28,
+            backgroundImage: (imagePath != null && imagePath.isNotEmpty)
+                ? NetworkImage(imagePath)
+                : AssetImage(imagePath),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -75,10 +78,6 @@ class ProfessionalCard extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      "($reviews ${l10n.reviews})",
-                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                    ),
                   ],
                 ),
               ],

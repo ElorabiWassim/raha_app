@@ -84,6 +84,8 @@ const register = async (req, res) => {
         await supabase.from('users').delete().eq('user_id', newUser.user_id);
         return res.status(500).json({ error: 'Failed to create homeowner profile' });
       }
+    } else if(role === 'admin'){
+      
     }
 
     // Generate JWT token
