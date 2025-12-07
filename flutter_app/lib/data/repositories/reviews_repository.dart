@@ -11,18 +11,17 @@ class ReviewsRepository {
     String? spId,
     String? homeownerId,
   }) async {
-    String endpoint = '/api/reviews';
-    List<String> queryParams = [];
+    String endpoint;
 
+    // Use SP-specific endpoint if spId is provided
     if (spId != null && spId.isNotEmpty) {
-      queryParams.add('sp_id=$spId');
-    }
-    if (homeownerId != null && homeownerId.isNotEmpty) {
-      queryParams.add('homeowner_id=$homeownerId');
-    }
-
-    if (queryParams.isNotEmpty) {
-      endpoint += '?${queryParams.join('&')}';
+      endpoint = '/api/sp/reviews/$spId';
+    } else {
+      // Fall back to general reviews endpoint with query params
+      endpoint = '/api/reviews';
+      if (homeownerId != null && homeownerId.isNotEmpty) {
+        endpoint += '?homeowner_id=$homeownerId';
+      }
     }
 
     final response = await apiService.get(endpoint);
@@ -53,7 +52,7 @@ class ReviewsRepository {
   }
 
   Future<ApiResponse<double>> getAverageRating(String spId) async {
-    final response = await apiService.get('/api/reviews/average/$spId');
+    final response = await apiService.get('/api/sp/rating/$spId');
 
     if (response['success'] == true) {
       final rating = (response['data']['average_rating'] ?? 0).toDouble();

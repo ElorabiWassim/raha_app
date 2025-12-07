@@ -4,8 +4,6 @@ const authenticate = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
 
-    // console.log('Token received:', token ? 'Yes' : 'No');
-
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });
     }
@@ -74,4 +72,11 @@ const isHomeowner = (req, res, next) => {
   next();
 };
 
-module.exports = { authenticate, isServiceProvider, isHomeowner };
+const isAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Access denied. Admin role required.' });
+  }
+  next();
+};
+
+module.exports = { authenticate, isServiceProvider, isHomeowner, isAdmin };

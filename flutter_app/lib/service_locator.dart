@@ -13,6 +13,7 @@ import 'data/repositories/requests_repository.dart';
 import 'data/repositories/demands_repository.dart';
 import 'data/repositories/verification_repository.dart';
 import 'data/repositories/reviews_repository.dart';
+import 'data/repositories/conversations_repository.dart';
 
 // Cubits
 import 'cubits/dashboard_cubit.dart';
@@ -23,6 +24,7 @@ import 'cubits/requests_cubit.dart';
 import 'cubits/demands_cubit.dart';
 import 'cubits/verification_cubit.dart';
 import 'cubits/reviews_cubit.dart';
+import 'cubits/conversations_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -73,6 +75,10 @@ Future<void> setupDependencies({String? baseUrl}) async {
     () => ReviewsRepository(apiService: getIt<ApiService>()),
   );
 
+  getIt.registerLazySingleton<ConversationsRepository>(
+    () => ConversationsRepository(apiService: getIt<ApiService>()),
+  );
+
   // Register Cubits (Factory - new instance each time)
   getIt.registerFactory<DashboardCubit>(
     () => DashboardCubit(repository: getIt<DashboardRepository>()),
@@ -104,6 +110,10 @@ Future<void> setupDependencies({String? baseUrl}) async {
 
   getIt.registerFactory<ReviewsCubit>(
     () => ReviewsCubit(repository: getIt<ReviewsRepository>()),
+  );
+
+  getIt.registerFactory<ConversationsCubit>(
+    () => ConversationsCubit(repository: getIt<ConversationsRepository>()),
   );
 }
 
