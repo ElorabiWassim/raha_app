@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:ra7a/cubits/demands_cubits.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import 'package:ra7a/modules/authentication/screens/splash.dart';
@@ -9,35 +11,69 @@ import 'package:ra7a/cubits/profile_cubit.dart';
 import 'package:ra7a/service_locator.dart';
 import 'package:ra7a/cubits/booking_cubit.dart';
 import 'package:ra7a/presentation/screens/add_demand.dart';
+import 'package:ra7a/data/local/preferences_service.dart';
+import 'package:ra7a/data/local/local_cache_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize PreferencesService
+  final preferencesService = await PreferencesService.create();
+
+  // Initialize LocalCacheRepository (only on mobile, not on web)
+  LocalCacheRepository? localCacheRepository;
+  if (!kIsWeb) {
+    localCacheRepository = LocalCacheRepository();
+    await localCacheRepository.init();
+  }
 
   // Setup dependency injection for Cubit architecture
   // Update the baseUrl to match your backend URL
   await setupDependencies(baseUrl: 'http://localhost:5000');
 
-  runApp(const MyApp());
+  runApp(
+    MyApp(
+      preferencesService: preferencesService,
+      localCacheRepository: localCacheRepository,
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final PreferencesService preferencesService;
+  final LocalCacheRepository? localCacheRepository;
+
+  const MyApp({
+    super.key,
+    required this.preferencesService,
+    required this.localCacheRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
-        // App-level Cubits that persist across the entire app
-        BlocProvider(create: (context) => LanguageCubit()),
-        BlocProvider(create: (context) => ProfileCubit()),
-
-        // Feature Cubits from GetIt (use getIt to get instances)
-        // These are provided globally for easy access throughout the app
-        // Note: For specific pages, you can also provide them locally
-        BlocProvider(create: (context) => AddDemandCubit(), child: AddDemand()),
-        BlocProvider(create: (context) => BookServiceCubit()),
+        Provider<PreferencesService>.value(value: preferencesService),
+        if (localCacheRepository != null)
+          Provider<LocalCacheRepository>.value(value: localCacheRepository!),
       ],
-      child: const MyAppView(),
+      child: MultiBlocProvider(
+        providers: [
+          // App-level Cubits that persist across the entire app
+          BlocProvider(create: (context) => LanguageCubit()),
+          BlocProvider(create: (context) => ProfileCubit()),
+
+          // Feature Cubits from GetIt (use getIt to get instances)
+          // These are provided globally for easy access throughout the app
+          // Note: For specific pages, you can also provide them locally
+          BlocProvider(
+            create: (context) => AddDemandCubit(),
+            child: AddDemand(),
+          ),
+          BlocProvider(create: (context) => BookServiceCubit()),
+        ],
+        child: const MyAppView(),
+      ),
     );
   }
 }

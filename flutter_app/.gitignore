@@ -11,16 +11,6 @@
 # Flutter coverage
 coverage/
 
-<<<<<<< HEAD
-# Flutter drive files
-.drive/
-
-# Flutter test outputs
-.flutter-test/
-
-# Local configuration
-.flutter/
-=======
 # VS Code (optional: keep if you want workspace settings in repo)
 .vscode/
 
@@ -72,4 +62,3 @@ app.*.map.json
 
 # Generated files
 flutter_export_environment.sh
->>>>>>> origin/develop

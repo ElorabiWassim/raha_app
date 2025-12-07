@@ -82,6 +82,7 @@ class DemandsCubit extends Cubit<DemandsState> {
       // Mock Data
       _allDemands = [
         Demand(
+          id: '1',
           title: 'Fix AC Unit',
           category:
               'Electrical', // Note: In real app, use IDs or consistent keys
@@ -96,6 +97,7 @@ class DemandsCubit extends Cubit<DemandsState> {
           applicantsCount: 3,
         ),
         Demand(
+          id: '2',
           title: 'Fix Leaky Kitchen Sink',
           category: 'Plumbing',
           description:
@@ -109,6 +111,7 @@ class DemandsCubit extends Cubit<DemandsState> {
           applicantsCount: 0,
         ),
         Demand(
+          id: '3',
           title: 'Paint Living Room Walls',
           category: 'Painting',
           description:
