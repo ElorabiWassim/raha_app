@@ -35,7 +35,7 @@ class AddDemandCubit extends Cubit<AddDemandState> {
     emit(AddDemandLoading());
 
     final url = Uri.parse(
-      "http://10.28.22.27:5000/homeowner/addDemand",
+      "http://10.0.2.2:5000/homeowner/addDemand",
     ); // Use emulator IP
     final body = {
       "homeowner_id": homeownerId,

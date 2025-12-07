@@ -32,7 +32,7 @@ class ServiceProviderCubit extends Cubit<ServiceProviderState> {
 
     try {
       final url = Uri.parse(
-        'http://10.28.22.27:5000/homeowner/getServiceProviders?category_id=$categoryId&location=$location',
+        'http://10.0.2.2:5000/homeowner/getServiceProviders?category_id=$categoryId&location=$location',
       );
 
       final response = await http.get(url);
