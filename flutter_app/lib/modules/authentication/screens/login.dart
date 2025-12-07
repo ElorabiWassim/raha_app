@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import 'package:ra7a/presentation/screens/bottomNavbar.dart';
 import 'role_selection_screen.dart';
 import 'package:ra7a/presentation/screens/dashboard.dart';
 import 'package:ra7a/presentation/screens/homesp.dart';
 import 'package:ra7a/modules/authentication/screens/splash.dart';
+import 'package:ra7a/cubits/dashboard_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,7 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (username == 'serviceprovider') {
       destinationPage = const MainNavigationScreen();
     } else if (username == 'admin') {
-      destinationPage = const DashboardPage();
+      destinationPage = BlocProvider(
+        create: (_) => GetIt.instance<DashboardCubit>()..loadDashboardStats(),
+        child: const DashboardPage(),
+      );
     } else {
       // Show error for invalid username
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,7 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         MaterialPageRoute(
                           builder: (context) {
                             // Get the MaterialApp's home widget
-                            final materialApp = context.findAncestorWidgetOfExactType<MaterialApp>();
+                            final materialApp = context
+                                .findAncestorWidgetOfExactType<MaterialApp>();
                             if (materialApp?.home != null) {
                               return materialApp!.home!;
                             }

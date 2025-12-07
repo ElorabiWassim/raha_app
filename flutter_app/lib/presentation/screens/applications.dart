@@ -1,39 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../cubits/applications_cubit.dart';
+import '../../cubits/applications_state.dart';
+import '../../data/models/provider_application.dart';
 import '../widgets/bottom_nav_admin.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 
-class ApplicationsPage extends StatefulWidget {
+class ApplicationsPage extends StatelessWidget {
   const ApplicationsPage({super.key});
 
   @override
-  State<ApplicationsPage> createState() => _ApplicationsPageState();
+  Widget build(BuildContext context) {
+    return BlocBuilder<ApplicationsCubit, ApplicationsState>(
+      builder: (context, state) {
+        if (state is ApplicationsLoading) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F8F8),
+            body: const Center(child: CircularProgressIndicator()),
+            bottomNavigationBar: const Ra7aBottomNav(currentIndex: 1),
+          );
+        }
+
+        if (state is ApplicationsError) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F8F8),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<ApplicationsCubit>().loadApplications(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+            bottomNavigationBar: const Ra7aBottomNav(currentIndex: 1),
+          );
+        }
+
+        if (state is ApplicationsLoaded) {
+          return _ApplicationsContent(applications: state.applications);
+        }
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F8F8),
+          body: const Center(child: Text('No data available')),
+          bottomNavigationBar: const Ra7aBottomNav(currentIndex: 1),
+        );
+      },
+    );
+  }
 }
 
-class _ApplicationsPageState extends State<ApplicationsPage> {
-  String searchQuery = '';
+class _ApplicationsContent extends StatefulWidget {
+  final List<ProviderApplication> applications;
 
-  // Mock data
-  final List<Map<String, dynamic>> applications = [
-    {
-      'name': 'Fatima Al-Jamil',
-      'services': ['Plumbing', 'Electrical'],
-      'time': '2 days ago',
-    },
-    {
-      'name': 'Youssef Khan',
-      'services': ['Gardening', 'Landscaping'],
-      'time': '5 days ago',
-    },
-    {
-      'name': 'Aisha Ahmed',
-      'services': ['Deep Cleaning'],
-      'time': '1 week ago',
-    },
-  ];
+  const _ApplicationsContent({required this.applications});
+
+  @override
+  State<_ApplicationsContent> createState() => _ApplicationsContentState();
+}
+
+class _ApplicationsContentState extends State<_ApplicationsContent> {
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+
+    // Filter applications based on search query
+    final filteredApplications = widget.applications.where((app) {
+      if (searchQuery.isEmpty) return true;
+      final name = app.fullName.toLowerCase();
+      return name.contains(searchQuery.toLowerCase());
+    }).toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
@@ -96,36 +146,87 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
             // Applications List
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: applications.length,
-                itemBuilder: (context, index) {
-                  final app = applications[index];
-                  return ApplicationCard(
-                    name: app['name'],
-                    services: List<String>.from(app['services']),
-                    time: app['time'],
-                    onAccept: () {
-                      _showSnackBar(
-                        localizations.applicationsAccepted(app['name']),
-                        true,
-                      );
-                    },
-                    onDecline: () {
-                      _showSnackBar(
-                        localizations.applicationsDeclined(app['name']),
-                        false,
-                      );
-                    },
-                  );
-                },
-              ),
+              child: filteredApplications.isEmpty
+                  ? Center(
+                      child: Text(
+                        searchQuery.isEmpty
+                            ? 'No applications available'
+                            : 'No applications found',
+                        style: const TextStyle(color: Color(0xFF6B7280)),
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        await context
+                            .read<ApplicationsCubit>()
+                            .loadApplications();
+                      },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: filteredApplications.length,
+                        itemBuilder: (context, index) {
+                          final app = filteredApplications[index];
+                          return ApplicationCard(
+                            applicationId: app.applicationId,
+                            name: app.fullName,
+                            email: app.email,
+                            services: app.services.isNotEmpty
+                                ? app.services
+                                : ['Service Provider'],
+                            time: _formatTime(app.submittedAt),
+                            status: app.status,
+                            onAccept: () async {
+                              await context
+                                  .read<ApplicationsCubit>()
+                                  .approveApplication(app.applicationId);
+                              _showSnackBar(
+                                localizations.applicationsAccepted(
+                                  app.fullName,
+                                ),
+                                true,
+                              );
+                            },
+                            onDecline: () async {
+                              await context
+                                  .read<ApplicationsCubit>()
+                                  .rejectApplication(app.applicationId);
+                              _showSnackBar(
+                                localizations.applicationsDeclined(
+                                  app.fullName,
+                                ),
+                                false,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: const Ra7aBottomNav(currentIndex: 1),
     );
+  }
+
+  String _formatTime(DateTime? timestamp) {
+    if (timestamp == null) return 'Recently';
+    try {
+      final now = DateTime.now();
+      final difference = now.difference(timestamp);
+
+      if (difference.inDays > 7) {
+        return '${(difference.inDays / 7).floor()} week${difference.inDays > 14 ? 's' : ''} ago';
+      } else if (difference.inDays > 0) {
+        return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+      } else if (difference.inHours > 0) {
+        return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+      } else {
+        return 'Recently';
+      }
+    } catch (e) {
+      return 'Recently';
+    }
   }
 
   void _showSnackBar(String message, bool isSuccess) {
@@ -141,17 +242,23 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 }
 
 class ApplicationCard extends StatelessWidget {
+  final String applicationId;
   final String name;
+  final String email;
   final List<String> services;
   final String time;
+  final String status;
   final VoidCallback onAccept;
   final VoidCallback onDecline;
 
   const ApplicationCard({
     super.key,
+    required this.applicationId,
     required this.name,
+    required this.email,
     required this.services,
     required this.time,
+    required this.status,
     required this.onAccept,
     required this.onDecline,
   });
