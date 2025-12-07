@@ -1,15 +1,15 @@
-const supabase = require('../config/database');
+const supabase = require('../config/supabase.js');
 
 const authenticate = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
-    
+
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });
     }
 
     const { data: { user }, error } = await supabase.auth.getUser(token);
-    
+
     if (error || !user) {
       return res.status(401).json({ error: 'Invalid token' });
     }
@@ -45,11 +45,11 @@ const isServiceProvider = async (req, res, next) => {
       return res.status(404).json({ error: 'Service provider profile not found' });
     }
 
-    
+
     if (spData.verification_status !== 'verified') {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: 'Service provider not verified',
-        status: spData.verification_status 
+        status: spData.verification_status
       });
     }
 

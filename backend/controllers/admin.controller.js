@@ -1,18 +1,66 @@
 const supabase = require('../config/supabase.js');
 
-// 1. Get all applications (with filters)
+// Get all applications (with filters)
 exports.getApplications = async (req, res) => {
     try {
-        const { status = 'pending' } = req.query;
+        const { status, search } = req.query;
 
-        const { data, error } = await supabase
-            .from('provider_application')
+        let query = supabase
+            .from('provider_applications')
             .select(`
         *,
-        user:users(full_name, email, phone_number)
+        user:users!provider_applications_user_id_fkey(
+          full_name, 
+          email, 
+          phone_number,
+          role,
+          created_at
+        )
       `)
-            .eq('status', status)
             .order('submitted_at', { ascending: false });
+
+        if (status) {
+            query = query.eq('status', status);
+        }
+
+        if (search) {
+            query = query.or(`review_notes.ilike.%${search}%`);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        res.json({
+            success: true,
+            data
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+};
+
+// Get single application by ID
+exports.getApplicationById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('provider_applications')
+            .select(`
+        *,
+        user:users!provider_applications_user_id_fkey(
+          full_name, 
+          email, 
+          phone_number,
+          role,
+          created_at
+        )
+      `)
+            .eq('application_id', id)
+            .single();
 
         if (error) throw error;
         res.json({ success: true, data });
@@ -21,41 +69,92 @@ exports.getApplications = async (req, res) => {
     }
 };
 
-// 2. Approve an application
+// Approve an application
 exports.approveApplication = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Update application status
-        const { error: appError } = await supabase
-            .from('provider_application')
-            .update({ status: 'approved' })
-            .eq('application_id', id);
-
-        if (appError) throw appError;
-
-        // Get user_id from application
-        const { data: application } = await supabase
-            .from('provider_application')
-            .select('user_id')
+        // Get application with user info
+        const { data: application, error: appFetchError } = await supabase
+            .from('provider_applications')
+            .select(`
+        application_id,
+        user_id,
+        user:users!provider_applications_user_id_fkey(role)
+      `)
             .eq('application_id', id)
             .single();
 
-        // Update service_provider verification status
-        const { error: spError } = await supabase
+        if (appFetchError) throw appFetchError;
+
+        // Update application status
+        const { error: appUpdateError } = await supabase
+            .from('provider_applications')
+            .update({
+                status: 'verified'
+            })
+            .eq('application_id', id);
+
+        if (appUpdateError) throw appUpdateError;
+
+        // Check if user is already a service provider
+        const { data: existingSP } = await supabase
             .from('service_providers')
-            .update({ verification_status: 'verified' })
-            .eq('sp_id', application.user_id);
+            .select('sp_id')
+            .eq('sp_id', application.user_id)
+            .single();
 
-        if (spError) throw spError;
+        if (existingSP) {
+            // Update existing service provider
+            const { error: spUpdateError } = await supabase
+                .from('service_providers')
+                .update({ verification_status: 'verified' })
+                .eq('sp_id', application.user_id);
 
-        res.json({ success: true, message: 'Application approved successfully' });
+            if (spUpdateError) throw spUpdateError;
+        } else if (application.user.role === 'service_provider') {
+            // Create service_provider entry if user has service_provider role
+            const { error: spCreateError } = await supabase
+                .from('service_providers')
+                .insert({
+                    sp_id: application.user_id,
+                    verification_status: 'verified',
+                    created_at: new Date().toISOString()
+                });
+
+            if (spCreateError) throw spCreateError;
+        }
+
+        res.json({
+            success: true,
+            message: 'Application approved successfully'
+        });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 };
 
-// 3. Get reports
+// Reject an application
+exports.rejectApplication = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Update application status to rejected
+        const { error } = await supabase
+            .from('provider_applications')
+            .update({
+                status: 'rejected'
+            })
+            .eq('application_id', id);
+
+        if (error) throw error;
+        res.json({ success: true, message: 'Application rejected successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// Get reports
 exports.getReports = async (req, res) => {
     try {
         const { status, search } = req.query;
@@ -64,13 +163,27 @@ exports.getReports = async (req, res) => {
             .from('reports')
             .select(`
         *,
-        homeowner:homeowners(user:users(full_name, email)),
-        service_provider:service_providers(user:users(full_name, email))
+        homeowner:homeowners!reports_homeowner_id_fkey(
+          homeowner_id,
+          user:users!homeowners_homeowner_id_fkey(
+            full_name, 
+            email
+          )
+        ),
+        service_provider:service_providers!reports_sp_id_fkey(
+          sp_id,
+          user:users!service_providers_sp_id_fkey(
+            full_name, 
+            email
+          )
+        )
       `)
             .order('created_at', { ascending: false });
 
         if (status) query = query.eq('status', status);
-        if (search) query = query.ilike('description', `%${search}%`);
+        if (search) {
+            query = query.or(`description.ilike.%${search}%`);
+        }
 
         const { data, error } = await query;
         if (error) throw error;
@@ -80,7 +193,61 @@ exports.getReports = async (req, res) => {
     }
 };
 
-// 4. Get dashboard statistics
+// Get single report by ID
+exports.getReportById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('reports')
+            .select(`
+        *,
+        homeowner:homeowners!reports_homeowner_id_fkey(
+          homeowner_id,
+          user:users!homeowners_homeowner_id_fkey(full_name, email)
+        ),
+        service_provider:service_providers!reports_sp_id_fkey(
+          sp_id,
+          user:users!service_providers_sp_id_fkey(full_name, email)
+        )
+      `)
+            .eq('report_id', id)
+            .single();
+
+        if (error) throw error;
+        res.json({ success: true, data });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// Update report status
+exports.updateReportStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        // Check if status enum exists in schema
+        if (!['new', 'in_progress', 'resolved'].includes(status)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid status. Must be: new, in_progress, resolved, or dismissed'
+            });
+        }
+
+        const { error } = await supabase
+            .from('reports')
+            .update({ status })
+            .eq('report_id', id);
+
+        if (error) throw error;
+        res.json({ success: true, message: `Report status updated to ${status}` });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// Get dashboard statistics
 exports.getDashboardStats = async (req, res) => {
     try {
         // Run all stats queries in parallel
@@ -92,13 +259,31 @@ exports.getDashboardStats = async (req, res) => {
             { data: recentReports }
         ] = await Promise.all([
             supabase.from('users').select('*', { count: 'exact', head: true }),
-            supabase.from('service_providers').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
-            supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('status', 'accepted'),
-            supabase.from('provider_application').select('*').eq('status', 'pending').limit(5),
-            supabase.from('reports').select('*').eq('status', 'new').limit(5)
+            supabase.from('service_providers')
+                .select('*', { count: 'exact', head: true })
+                .eq('verification_status', 'verified'),
+            supabase.from('bookings')
+                .select('*', { count: 'exact', head: true })
+                .eq('status', 'accepted'),
+            supabase.from('provider_applications')  // FIXED: plural table name
+                .select(`
+                    *,
+                    user:users!provider_applications_user_id_fkey(full_name, email)
+                `)
+                .eq('status', 'pending')
+                .limit(5),
+            supabase.from('reports')
+                .select(`
+                    *,
+                    homeowner:homeowners!reports_homeowner_id_fkey(
+                        user:users!homeowners_homeowner_id_fkey(full_name)
+                    )
+                `)
+                .eq('status', 'new')
+                .limit(5)
         ]);
 
-        // Calculate revenue (example: from subscriptions)
+        // Calculate revenue from active subscriptions
         const { data: subscriptions } = await supabase
             .from('subscriptions')
             .select('price')
@@ -119,42 +304,6 @@ exports.getDashboardStats = async (req, res) => {
                 recentReports
             }
         });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-};
-
-// 5. Get all reviews
-exports.getReviews = async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('reviews')
-            .select(`
-        *,
-        homeowner:homeowners(user:users(full_name)),
-        service_provider:service_providers(user:users(full_name))
-      `)
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-};
-
-
-exports.deleteReview = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const { error } = await supabase
-            .from('reviews')
-            .delete()
-            .eq('review_id', id);
-
-        if (error) throw error;
-        res.json({ success: true, message: 'Review deleted successfully' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
