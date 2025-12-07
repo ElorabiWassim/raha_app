@@ -3,13 +3,10 @@ const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-const hoController = require('../controllers/ho.controller');
-const { authenticate, isHomeowner } = require('../middlewares/auth.middleware');
 
 
 // Controllers
 const {
-  
   bookService ,getBookingOfUser
 } = require("../controllers/booking");
 
@@ -46,7 +43,7 @@ router.get("/getUserDemands" , getUserDemands);
 router.get("/getDemandOffers" , getDemandOffers);
 router.post("/acceptDemand" , acceptDemand);
 
-router.post('/demands', authenticate, isHomeowner, hoController.createDemand);
+
 
 
  

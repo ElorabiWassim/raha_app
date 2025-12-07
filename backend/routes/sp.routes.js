@@ -12,6 +12,8 @@ const {
   searchQueryValidator
 } = require('../validators/sp.validator');
 
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 router.use(authenticate);
 router.use(isServiceProvider);
 // Service management
@@ -21,6 +23,10 @@ router.delete('/services/:serviceId', spController.deleteService);
 router.get('/services/my', spController.getMyServices);
 router.post('/categories', spController.createCategory);
 router.get('/services/:serviceId', spController.getServiceById);
+router.post('/services/:service_id/images',upload.array('images', 10), spController.uploadServiceImages);
+router.get('/services/:service_id/images', spController.getServiceImages);
+router.delete('/images/:image_id',  spController.deleteServiceImage);
+router.put('/images/:image_id',  upload.single('image'),spController.updateServiceImage);
 
 // Demands
 router.get('/demands', validateQuery(demandQueryValidator), spController.getDemands);
