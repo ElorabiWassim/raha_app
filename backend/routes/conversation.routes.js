@@ -1,26 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const conversationController = require('../controllers/conversation.controller');
-//const { authenticate } = require('../middlewares/auth.middleware');
+const { authenticate } = require('../middlewares/auth.middleware');
+const { validate } = require('../middlewares/validation.middleware');
+const {
+  startConversationValidator,
+  sendMessageValidator,
+  conversationIdValidator,
+} = require('../validators/conversation.validator');
 
-// All routes require authentication
-//router.use(authenticate);
+router.use(authenticate);
 
-
-
-// Get conversations for the authenticated user (homeowner OR service provider)
 router.get('/conversations', conversationController.getUserConversations);
-
-// Start a new conversation (any user can start with any other user)
-router.post('/conversations', conversationController.startConversation);
-
-// Get conversation participants
-router.get('/conversations/:conversationId/participants', conversationController.getConversationParticipants);
-
-// Get messages in a conversation
-router.get('/conversations/:conversationId/messages', conversationController.getConversationMessages);
-
-// Send a new message
-router.post('/conversations/:conversationId/messages', conversationController.sendMessage);
+router.post('/conversations', validate(startConversationValidator), conversationController.startConversation);
+router.get('/conversations/:conversationId/participants', validate(conversationIdValidator), conversationController.getConversationParticipants);
+router.get('/conversations/:conversationId/messages', validate(conversationIdValidator), conversationController.getConversationMessages);
+router.post('/conversations/:conversationId/messages', validate(sendMessageValidator), conversationController.sendMessage);
 
 module.exports = router;

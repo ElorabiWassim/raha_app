@@ -1,0 +1,79 @@
+const { body } = require('express-validator');
+
+// Login validator
+const loginValidator = [
+  body('email')
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Email must be valid')
+    .normalizeEmail(),
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters'),
+];
+
+// Registration validator
+const registerValidator = [
+  body('email')
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Email must be valid')
+    .normalizeEmail(),
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+  body('full_name')
+    .notEmpty()
+    .withMessage('Full name is required')
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Full name must be between 2 and 100 characters'),
+  body('role')
+    .notEmpty()
+    .withMessage('Role is required')
+    .isIn(['homeowner', 'service_provider'])
+    .withMessage('Role must be either homeowner or service_provider'),
+  body('phone')
+    .optional()
+    .isMobilePhone()
+    .withMessage('Phone must be a valid mobile number'),
+];
+
+// Password reset request validator
+const requestPasswordResetValidator = [
+  body('email')
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Email must be valid')
+    .normalizeEmail(),
+];
+
+// Password reset validator
+const resetPasswordValidator = [
+  body('token')
+    .notEmpty()
+    .withMessage('Reset token is required'),
+  body('new_password')
+    .notEmpty()
+    .withMessage('New password is required')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+];
+
+module.exports = {
+  loginValidator,
+  registerValidator,
+  requestPasswordResetValidator,
+  resetPasswordValidator,
+};

@@ -1,6 +1,5 @@
 const supabase = require('../config/supabase.js');
 
-// Get all applications (with filters)
 exports.getApplications = async (req, res) => {
     try {
         const { status, search } = req.query;
@@ -42,7 +41,6 @@ exports.getApplications = async (req, res) => {
     }
 };
 
-// Get single application by ID
 exports.getApplicationById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -69,7 +67,6 @@ exports.getApplicationById = async (req, res) => {
     }
 };
 
-// Approve an application
 exports.approveApplication = async (req, res) => {
     try {
         const { id } = req.params;
@@ -134,12 +131,10 @@ exports.approveApplication = async (req, res) => {
     }
 };
 
-// Reject an application
 exports.rejectApplication = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Update application status to rejected
         const { error } = await supabase
             .from('provider_applications')
             .update({
@@ -154,7 +149,6 @@ exports.rejectApplication = async (req, res) => {
     }
 };
 
-// Get reports
 exports.getReports = async (req, res) => {
     try {
         const { status, search } = req.query;
@@ -193,7 +187,6 @@ exports.getReports = async (req, res) => {
     }
 };
 
-// Get single report by ID
 exports.getReportById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -221,13 +214,11 @@ exports.getReportById = async (req, res) => {
     }
 };
 
-// Update report status
 exports.updateReportStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
 
-        // Check if status enum exists in schema
         if (!['new', 'in_progress', 'resolved'].includes(status)) {
             return res.status(400).json({
                 success: false,
@@ -247,10 +238,8 @@ exports.updateReportStatus = async (req, res) => {
     }
 };
 
-// Get dashboard statistics
 exports.getDashboardStats = async (req, res) => {
     try {
-        // Run all stats queries in parallel
         const [
             { count: totalUsers },
             { count: verifiedSPs },
@@ -265,7 +254,7 @@ exports.getDashboardStats = async (req, res) => {
             supabase.from('bookings')
                 .select('*', { count: 'exact', head: true })
                 .eq('status', 'accepted'),
-            supabase.from('provider_applications')  // FIXED: plural table name
+            supabase.from('provider_applications')
                 .select(`
                     *,
                     user:users!provider_applications_user_id_fkey(full_name, email)
@@ -283,7 +272,6 @@ exports.getDashboardStats = async (req, res) => {
                 .limit(5)
         ]);
 
-        // Calculate revenue from active subscriptions
         const { data: subscriptions } = await supabase
             .from('subscriptions')
             .select('price')

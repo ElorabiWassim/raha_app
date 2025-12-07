@@ -1,21 +1,11 @@
 const supabase = require('../config/supabase.js');
 
-// 1. Get conversations for ANY user (homeowner OR service provider)
 exports.getUserConversations = async (req, res) => {
     try {
-
-        req.user = {
-            user_id: '5e7910fe-9b5e-4d0a-adeb-327e8781c0e7', // Mock UUID
-            role: 'homeowner',
-            email: 'test@example.com'
-        };
-
-        const userId = req.user.user_id; // Changed from homeownerId
-        const userRole = req.user.role; // 'homeowner' or 'service_provider'
+        const userId = req.user.user_id;
+        const userRole = req.user.role;
 
         console.log(`Getting conversations for ${userRole}: ${userId}`);
-
-        // SAME LOGIC - works for both
         const { data, error } = await supabase
             .from('conversations')
             .select(`
@@ -47,7 +37,6 @@ exports.getUserConversations = async (req, res) => {
 
         if (error) throw error;
 
-        // Format response
         const formattedConversations = data.map(conv => {
             const isUser1 = conv.user1_id === userId;
             const otherUser = isUser1 ? conv.user2 : conv.user1;
@@ -75,7 +64,7 @@ exports.getUserConversations = async (req, res) => {
 
         res.json({
             success: true,
-            user_role: userRole, // Include role in response
+            user_role: userRole,
             data: formattedConversations
         });
 
@@ -88,19 +77,10 @@ exports.getUserConversations = async (req, res) => {
     }
 };
 
-// 2. Get messages for a specific conversation
 exports.getConversationMessages = async (req, res) => {
     try {
-
-        req.user = {
-            user_id: '5e7910fe-9b5e-4d0a-adeb-327e8781c0e7', // Mock UUID
-            role: 'homeowner',
-            email: 'test@example.com'
-        };
         const { conversationId } = req.params;
         const userId = req.user.user_id;
-
-        // Verify user has access to this conversation
         const { data: conversation, error: convError } = await supabase
             .from('conversations')
             .select('conversation_id')
@@ -115,7 +95,6 @@ exports.getConversationMessages = async (req, res) => {
             });
         }
 
-        // Get messages with sender info - FIXED FOREIGN KEY
         const { data: messages, error } = await supabase
             .from('messages')
             .select(`
@@ -136,7 +115,6 @@ exports.getConversationMessages = async (req, res) => {
 
         if (error) throw error;
 
-        // Format messages
         const formattedMessages = messages.map(msg => ({
             message_id: msg.message_id,
             conversation_id: msg.conversation_id,
@@ -169,22 +147,11 @@ exports.getConversationMessages = async (req, res) => {
     }
 };
 
-// 3. Send a new message
 exports.sendMessage = async (req, res) => {
     try {
-
-
-
-        req.user = {
-            user_id: '5e7910fe-9b5e-4d0a-adeb-327e8781c0e7', // Mock UUID
-            role: 'homeowner',
-            email: 'test@example.com'
-        };
         const { conversationId } = req.params;
         const { message_text, attachment_url } = req.body;
         const senderId = req.user.user_id;
-
-        // Validation
         if (!message_text?.trim() && !attachment_url) {
             return res.status(400).json({
                 success: false,
@@ -192,7 +159,6 @@ exports.sendMessage = async (req, res) => {
             });
         }
 
-        // Verify user can send to this conversation
         const { data: conversation, error: convError } = await supabase
             .from('conversations')
             .select('conversation_id, user1_id, user2_id')
@@ -207,7 +173,6 @@ exports.sendMessage = async (req, res) => {
             });
         }
 
-        // Insert message - FIXED FOREIGN KEY
         const { data: message, error } = await supabase
             .from('messages')
             .insert({
@@ -232,7 +197,6 @@ exports.sendMessage = async (req, res) => {
 
         if (error) throw error;
 
-        // Update conversation's last_message_at
         await supabase
             .from('conversations')
             .update({ last_message_at: new Date().toISOString() })
@@ -259,20 +223,10 @@ exports.sendMessage = async (req, res) => {
     }
 };
 
-// 4. Start a new conversation
 exports.startConversation = async (req, res) => {
     try {
-
-
-        req.user = {
-            user_id: '5e7910fe-9b5e-4d0a-adeb-327e8781c0e7', // Mock UUID
-            role: 'homeowner',
-            email: 'test@example.com'
-        };
         const { other_user_id } = req.body;
         const userId = req.user.user_id;
-
-        // Validation
         if (!other_user_id) {
             return res.status(400).json({
                 success: false,
@@ -287,7 +241,6 @@ exports.startConversation = async (req, res) => {
             });
         }
 
-        // Check if other user exists
         const { data: otherUser, error: userError } = await supabase
             .from('users')
             .select('user_id, role, status')
@@ -308,7 +261,6 @@ exports.startConversation = async (req, res) => {
             });
         }
 
-        // Check if conversation already exists
         const { data: conv1 } = await supabase
             .from('conversations')
             .select('conversation_id')
@@ -326,7 +278,6 @@ exports.startConversation = async (req, res) => {
         if (conv2) existingConversations = existingConversations.concat(conv2);
 
         if (existingConversations.length > 0) {
-            // Get full conversation details
             const { data: existingConv } = await supabase
                 .from('conversations')
                 .select(`
@@ -354,8 +305,6 @@ exports.startConversation = async (req, res) => {
             });
         }
 
-
-        // Create new conversation
         const { data: conversation, error } = await supabase
             .from('conversations')
             .insert({
@@ -397,18 +346,10 @@ exports.startConversation = async (req, res) => {
     }
 };
 
-// 5. Get conversation participants
 exports.getConversationParticipants = async (req, res) => {
     try {
-        req.user = {
-            user_id: '5e7910fe-9b5e-4d0a-adeb-327e8781c0e7', // Mock UUID
-            role: 'homeowner',
-            email: 'test@example.com'
-        };
         const { conversationId } = req.params;
         const userId = req.user.user_id;
-
-        // Get conversation with both users
         const { data: conversation, error } = await supabase
             .from('conversations')
             .select(`
@@ -435,7 +376,6 @@ exports.getConversationParticipants = async (req, res) => {
             });
         }
 
-        // Determine which user is "me" and which is "other"
         const isUser1 = conversation.user1.user_id === userId;
         const me = isUser1 ? conversation.user1 : conversation.user2;
         const other = isUser1 ? conversation.user2 : conversation.user1;

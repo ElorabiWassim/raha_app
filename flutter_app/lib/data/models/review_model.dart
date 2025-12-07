@@ -28,9 +28,15 @@ class Review {
       reviewId: json['review_id'] ?? '',
       bookingId: json['booking_id'] ?? '',
       homeownerId: json['homeowner_id'] ?? '',
-      homeownerName: json['homeowner']?['user']?['full_name'] ?? '',
+      homeownerName:
+          json['homeowner_name'] ??
+          json['homeowner']?['full_name'] ??
+          'Anonymous',
       spId: json['sp_id'] ?? '',
-      spName: json['service_provider']?['user']?['full_name'] ?? '',
+      spName:
+          json['sp_name'] ??
+          json['service_provider']?['user']?['full_name'] ??
+          '',
       rating: (json['rating'] ?? 0).toDouble(),
       reviewText: json['review_text'],
       createdAt: DateTime.parse(

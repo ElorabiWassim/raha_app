@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const { authenticate } = require('../middlewares/auth.middleware');
+const { validate } = require('../middlewares/validation.middleware');
+const { loginValidator, registerValidator } = require('../validators/auth.validator');
 
 // Public routes
-router.post('/signup/homeowner', authController.signupHomeowner);
-router.post('/signup/provider', authController.signupProvider);
-router.post('/login', authController.login);
+router.post('/signup/homeowner', validate(registerValidator), authController.signupHomeowner);
+router.post('/signup/provider', validate(registerValidator), authController.signupProvider);
+router.post('/login', validate(loginValidator), authController.login);
 router.post('/refresh-token', authController.refreshToken);
 
 // Protected routes
