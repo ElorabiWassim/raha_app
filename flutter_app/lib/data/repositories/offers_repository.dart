@@ -1,4 +1,4 @@
-import '../services/api_service.dart';
+import '../../services/api_service.dart';
 import '../models/api_response.dart';
 
 class OffersRepository {
