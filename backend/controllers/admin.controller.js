@@ -34,6 +34,7 @@ exports.getApplications = async (req, res) => {
             data
         });
     } catch (error) {
+        console.error('Error in getApplications:', error);
         res.status(500).json({
             success: false,
             error: error.message
@@ -153,6 +154,8 @@ exports.getReports = async (req, res) => {
     try {
         const { status, search } = req.query;
 
+        console.log(`Getting reports with filter - status: ${status}, search: ${search}`);
+
         let query = supabase
             .from('reports')
             .select(`
@@ -181,8 +184,10 @@ exports.getReports = async (req, res) => {
 
         const { data, error } = await query;
         if (error) throw error;
+        console.log(`Found ${data.length} reports with status: ${status || 'all'}`);
         res.json({ success: true, data });
     } catch (error) {
+        console.error('Error in getReports:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 };
@@ -219,6 +224,8 @@ exports.updateReportStatus = async (req, res) => {
         const { id } = req.params;
         const { status } = req.body;
 
+        console.log(`Updating report ${id} to status: ${status}`);
+
         if (!['new', 'in_progress', 'resolved'].includes(status)) {
             return res.status(400).json({
                 success: false,
@@ -232,8 +239,10 @@ exports.updateReportStatus = async (req, res) => {
             .eq('report_id', id);
 
         if (error) throw error;
+        console.log(`Report ${id} status updated successfully to ${status}`);
         res.json({ success: true, message: `Report status updated to ${status}` });
     } catch (error) {
+        console.error('Error updating report status:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 };

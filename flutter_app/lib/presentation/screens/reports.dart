@@ -11,9 +11,18 @@ class ReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReportsCubit, ReportsState>(
+    return BlocConsumer<ReportsCubit, ReportsState>(
+      listener: (context, state) {
+        // Handle status update states
+        if (state is ReportStatusUpdating) {
+          // Show loading indicator or keep current UI
+        } else if (state is ReportStatusUpdated) {
+          // Success message is already shown in the button's onPressed
+        }
+      },
       builder: (context, state) {
-        if (state is ReportsLoading) {
+        // Show loading during initial load or status update
+        if (state is ReportsLoading || state is ReportStatusUpdating) {
           return Scaffold(
             backgroundColor: const Color(0xFFF5F8F8),
             body: const Center(child: CircularProgressIndicator()),
@@ -48,7 +57,10 @@ class ReportsPage extends StatelessWidget {
         }
 
         if (state is ReportsLoaded) {
-          return _ReportsContent(reports: state.reports);
+          return _ReportsContent(
+            reports: state.reports,
+            activeFilter: state.activeFilter,
+          );
         }
 
         return Scaffold(
@@ -63,33 +75,38 @@ class ReportsPage extends StatelessWidget {
 
 class _ReportsContent extends StatefulWidget {
   final List<Report> reports;
+  final String? activeFilter;
 
-  const _ReportsContent({required this.reports});
+  const _ReportsContent({required this.reports, this.activeFilter});
 
   @override
   State<_ReportsContent> createState() => _ReportsContentState();
 }
 
 class _ReportsContentState extends State<_ReportsContent> {
-  int selectedFilter = 0;
   String searchQuery = '';
 
-  @override
-  void initState() {
-    super.initState();
-    // Load pending reports by default
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ReportsCubit>().filterReports('pending');
-    });
+  // Get selected filter index from active filter status
+  int get selectedFilter {
+    switch (widget.activeFilter) {
+      case 'new':
+        return 0;
+      case 'in_progress':
+        return 1;
+      case 'resolved':
+        return 2;
+      default:
+        return 0; // Default to 'new'
+    }
   }
 
   // Map filter index to status values
-  String? _getStatusFilter() {
-    switch (selectedFilter) {
+  String? _getStatusFilter(int index) {
+    switch (index) {
       case 0:
-        return 'pending'; // New reports
+        return 'new'; // New reports
       case 1:
-        return 'investigating'; // In progress
+        return 'in_progress'; // In progress
       case 2:
         return 'resolved'; // Resolved
       default:
@@ -232,17 +249,18 @@ class _ReportsContentState extends State<_ReportsContent> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            selectedFilter = index;
-          });
           // Apply filter to cubit
-          final status = _getStatusFilter();
+          final status = _getStatusFilter(index);
           context.read<ReportsCubit>().filterReports(status);
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.white : Colors.transparent,
+            color: isSelected
+                ? const Color(
+                    0xFFE8F5E9,
+                  ) // Light green background when selected
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isSelected
@@ -256,9 +274,9 @@ class _ReportsContentState extends State<_ReportsContent> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               color: isSelected
-                  ? const Color(0xFF4CAF50)
+                  ? const Color(0xFF2E7D32) // Darker green for better contrast
                   : const Color(0xFF6B7280),
             ),
           ),
@@ -361,6 +379,67 @@ class ReportCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
+
+          // Status Dropdown
+          Row(
+            children: [
+              const Text(
+                'Status: ',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF6B7280),
+                ),
+              ),
+              Expanded(
+                child: DropdownButton<String>(
+                  value: status,
+                  isExpanded: true,
+                  underline: Container(),
+                  icon: const Icon(
+                    Icons.arrow_drop_down,
+                    color: Color(0xFF4CAF50),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF4CAF50),
+                  ),
+                  items: const [
+                    DropdownMenuItem(value: 'new', child: Text('New')),
+                    DropdownMenuItem(
+                      value: 'in_progress',
+                      child: Text('In Progress'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'resolved',
+                      child: Text('Resolved'),
+                    ),
+                  ],
+                  onChanged: (newStatus) async {
+                    if (newStatus != null && newStatus != status) {
+                      await context.read<ReportsCubit>().updateReportStatus(
+                        reportId,
+                        newStatus,
+                      );
+
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Status updated to ${newStatus.replaceAll('_', ' ')}',
+                            ),
+                            backgroundColor: const Color(0xFF4CAF50),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
           const Divider(height: 1),
           const SizedBox(height: 12),
 
@@ -391,7 +470,9 @@ class ReportCard extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO: Navigate to report details page
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4CAF50),
                     foregroundColor: Colors.white,
@@ -410,17 +491,43 @@ class ReportCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: status == 'resolved'
+                      ? null
+                      : () async {
+                          // Update status to resolved
+                          await context.read<ReportsCubit>().updateReportStatus(
+                            reportId,
+                            'resolved',
+                          );
+
+                          // Show success message
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Report marked as resolved'),
+                                backgroundColor: const Color(0xFF4CAF50),
+                              ),
+                            );
+                          }
+                        },
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF4CAF50),
-                    side: const BorderSide(color: Color(0xFF4CAF50)),
+                    foregroundColor: status == 'resolved'
+                        ? const Color(0xFF9E9E9E)
+                        : const Color(0xFF4CAF50),
+                    side: BorderSide(
+                      color: status == 'resolved'
+                          ? const Color(0xFF9E9E9E)
+                          : const Color(0xFF4CAF50),
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: Text(
-                    localizations.reportsResolve,
+                    status == 'resolved'
+                        ? 'Resolved'
+                        : localizations.reportsResolve,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
