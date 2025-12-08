@@ -179,6 +179,14 @@ class _ApplicationsContentState extends State<_ApplicationsContent> {
                               await context
                                   .read<ApplicationsCubit>()
                                   .approveApplication(app.applicationId);
+
+                              // Refresh the applications list
+                              if (mounted) {
+                                context
+                                    .read<ApplicationsCubit>()
+                                    .loadApplications();
+                              }
+
                               _showSnackBar(
                                 localizations.applicationsAccepted(
                                   app.fullName,
@@ -190,6 +198,14 @@ class _ApplicationsContentState extends State<_ApplicationsContent> {
                               await context
                                   .read<ApplicationsCubit>()
                                   .rejectApplication(app.applicationId);
+
+                              // Refresh the applications list
+                              if (mounted) {
+                                context
+                                    .read<ApplicationsCubit>()
+                                    .loadApplications();
+                              }
+
                               _showSnackBar(
                                 localizations.applicationsDeclined(
                                   app.fullName,
@@ -230,6 +246,7 @@ class _ApplicationsContentState extends State<_ApplicationsContent> {
   }
 
   void _showSnackBar(String message, bool isSuccess) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -366,7 +383,7 @@ class ApplicationCard extends StatelessWidget {
             ),
           ),
 
-          // Action Buttons
+          // Action Buttons or Status
           Container(
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
@@ -376,47 +393,85 @@ class ApplicationCard extends StatelessWidget {
                 bottomRight: Radius.circular(12),
               ),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onDecline,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFEBEE),
-                      foregroundColor: const Color(0xFFF44336),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+            child: status == 'pending'
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: onDecline,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFFEBEE),
+                            foregroundColor: const Color(0xFFF44336),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: Text(
+                            localizations.applicationsDecline,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: onAccept,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF4CAF50),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: Text(
+                            localizations.applicationsAccept,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: status == 'verified'
+                          ? const Color(0xFFE8F5E9)
+                          : const Color(0xFFFFEBEE),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(
-                      localizations.applicationsDecline,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          status == 'verified'
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: status == 'verified'
+                              ? const Color(0xFF4CAF50)
+                              : const Color(0xFFF44336),
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          status == 'verified'
+                              ? localizations.applicationsAccepted(name)
+                              : localizations.applicationsDeclined(name),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: status == 'verified'
+                                ? const Color(0xFF4CAF50)
+                                : const Color(0xFFF44336),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onAccept,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4CAF50),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: Text(
-                      localizations.applicationsAccept,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
