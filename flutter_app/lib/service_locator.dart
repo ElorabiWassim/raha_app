@@ -1,8 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 
 // Services
-import 'data/services/api_service.dart';
+import 'services/api_service.dart';
 
 // Repositories
 import 'data/repositories/dashboard_repository.dart';
@@ -34,16 +33,8 @@ final getIt = GetIt.instance;
 /// Initialize all dependencies for dependency injection
 /// Call this method in main.dart before runApp()
 Future<void> setupDependencies({String? baseUrl}) async {
-  // Get base URL from environment or use default
-  final apiBaseUrl = baseUrl ?? 'http://localhost:5000';
-
-  // Register HTTP client
-  getIt.registerLazySingleton<http.Client>(() => http.Client());
-
   // Register API Service
-  getIt.registerLazySingleton<ApiService>(
-    () => ApiService(baseUrl: apiBaseUrl, client: getIt<http.Client>()),
-  );
+  getIt.registerLazySingleton<ApiService>(() => ApiService());
 
   // Register Repositories
   getIt.registerLazySingleton<DashboardRepository>(
