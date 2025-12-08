@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ra7a/data/local/local_cache_repository.dart';
 import 'package:ra7a/data/local/local_models.dart';
@@ -21,14 +22,28 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       final response = await _authApi.login(email: email, password: password);
 
-      final session = response['session'] as Map<String, dynamic>;
-      final user = response['user'] as Map<String, dynamic>;
+      print('Login response: $response');
 
-      final accessToken = session['access_token'] as String? ?? '';
-      final refreshToken = session['refresh_token'] as String? ?? '';
-      final userId = user['id'] as String? ?? '';
-      final role = (user['role'] as String? ?? 'homeowner');
-      final fullName = user['full_name'] as String? ?? email;
+      final session = response['session'] as Map<String, dynamic>?;
+      final user = response['user'] as Map<String, dynamic>?;
+
+      print('Session: $session');
+      print('User: $user');
+
+      if (session == null || user == null) {
+        throw Exception('Invalid login response: missing session or user data');
+      }
+
+      final accessToken = (session['access_token'] as String?) ?? '';
+      final refreshToken = (session['refresh_token'] as String?) ?? '';
+      final userId = (user['id'] as String?) ?? '';
+      final role = (user['role'] as String?) ?? 'homeowner';
+      final fullName =
+          (user['full_name'] as String?) ?? (user['email'] as String?) ?? email;
+
+      print(
+        'Extracted values - userId: $userId, role: $role, fullName: $fullName, accessToken length: ${accessToken.length}',
+      );
 
       final now = DateTime.now().millisecondsSinceEpoch;
       final tokens = AuthTokens(
@@ -48,6 +63,10 @@ class LoginCubit extends Cubit<LoginState> {
         updatedAt: now,
       );
       await _cacheRepository.saveUserProfile(profile);
+
+      // Also save token to SharedPreferences for ApiService
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('jwt_token', accessToken);
 
       emit(LoginSuccess(username: fullName, role: role));
     } catch (e) {

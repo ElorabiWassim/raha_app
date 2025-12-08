@@ -11,7 +11,7 @@ const {
 } = require('../validators/admin.validator');
 
 router.use(authenticate);
-router.use(isAdmin); 
+router.use(isAdmin);
 router.get('/applications', validate(queryFiltersValidator), adminController.getApplications);
 router.get('/applications/:id', validate(applicationIdValidator), adminController.getApplicationById);
 router.put('/applications/:id/approve', validate(applicationIdValidator), adminController.approveApplication);

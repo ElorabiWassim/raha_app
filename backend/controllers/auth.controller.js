@@ -4,6 +4,8 @@ const signupHomeowner = async (req, res) => {
   try {
     const { email, password, fullName, phoneNumber, homeAddress, dateOfBirth } = req.body;
 
+    console.log('Signup request received:', { email, fullName, phoneNumber });
+
     // 1. Create Auth User
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
@@ -16,13 +18,16 @@ const signupHomeowner = async (req, res) => {
       },
     });
 
-    if (authError) return res.status(400).json({ error: authError.message });
+    if (authError) {
+      console.error('Supabase Auth Error:', authError);
+      return res.status(400).json({ error: authError.message });
+    }
 
     // user is created in Auth. If email confirmation is enabled, we might not get a session immediately unless "Auto Confirm" is on.
     // However, if we get a session, we proceed.
     // If no session (email confirmation required), we can't do the rest easily without logic handling.
     // Assuming for dev/test that auto-confirm is on or we handle "user without session".
-    
+
     const user = authData.user;
     if (!user) return res.status(400).json({ error: 'User creation failed' });
 
@@ -42,11 +47,11 @@ const signupHomeowner = async (req, res) => {
 
     if (userError) {
       console.error('User insert error:', userError);
-      return res.status(400).json({ 
-        error: 'User Insert Failed', 
-        details: userError.message, 
+      return res.status(400).json({
+        error: 'User Insert Failed',
+        details: userError.message,
         code: userError.code,
-        hint: userError.hint 
+        hint: userError.hint
       });
     }
 
@@ -79,17 +84,17 @@ const signupHomeowner = async (req, res) => {
 
 const signupProvider = async (req, res) => {
   try {
-    const { 
-      email, 
-      password, 
-      fullName, 
-      phoneNumber, 
-      workingAddress, 
-      dateOfBirth, 
-      serviceType, 
-      experienceYears, 
+    const {
+      email,
+      password,
+      fullName,
+      phoneNumber,
+      workingAddress,
+      dateOfBirth,
+      serviceType,
+      experienceYears,
       description,
-      documentsUrls 
+      documentsUrls
     } = req.body;
 
     // 1. Create Auth User
@@ -139,9 +144,9 @@ const signupProvider = async (req, res) => {
       jobs_done: 0,
       rating_avg: 0,
     };
-            
+
     if (serviceType) {
-        spData.service_type = serviceType;
+      spData.service_type = serviceType;
     }
 
     const { error: spError } = await supabase
@@ -150,8 +155,8 @@ const signupProvider = async (req, res) => {
 
     if (spError) {
       console.error('Service provider insert error:', spError);
-      return res.status(400).json({ 
-        error: 'SP Insert Failed', 
+      return res.status(400).json({
+        error: 'SP Insert Failed',
         details: spError.message,
         code: spError.code
       });
@@ -188,6 +193,46 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Hardcoded admin bypass
+    if (email === 'admin@gmail.com' && password === '123456') {
+      console.log('Admin hardcoded login successful');
+
+      // Check if admin exists in users table
+      const { data: adminData } = await supabase
+        .from('users')
+        .select('user_id, role, status, full_name, email')
+        .eq('email', 'admin@gmail.com')
+        .single();
+
+      const adminUser = adminData || {
+        user_id: '3fe68579-15f3-4460-a9a9-1ec6aea97c5d', // From your screenshot
+        email: 'admin@gmail.com',
+        role: 'admin',
+        status: 'active',
+        full_name: 'admin'
+      };
+
+      // Generate a fake session token for admin
+      const fakeToken = 'admin-hardcoded-token-' + Date.now();
+
+      return res.json({
+        message: 'Admin login successful',
+        user: {
+          id: adminUser.user_id,
+          email: adminUser.email,
+          role: adminUser.role,
+          status: adminUser.status,
+          full_name: adminUser.full_name
+        },
+        session: {
+          access_token: fakeToken,
+          refresh_token: fakeToken,
+          expires_in: 3600,
+          token_type: 'bearer'
+        }
+      });
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -207,20 +252,20 @@ const login = async (req, res) => {
     }
 
     if (userData) {
-        if (userData.status === 'banned' || userData.status === 'disabled') {
-            return res.status(403).json({ 
-                error: `Account is ${userData.status}. Please contact support.` 
-            });
-        }
+      if (userData.status === 'banned' || userData.status === 'disabled') {
+        return res.status(403).json({
+          error: `Account is ${userData.status}. Please contact support.`
+        });
+      }
     }
 
     res.json({
       message: 'Login successful',
-      user: { 
-        ...data.user, 
+      user: {
+        ...data.user,
         role: userData?.role,
-        status: userData?.status, 
-        full_name: userData?.full_name 
+        status: userData?.status,
+        full_name: userData?.full_name
       },
       session: data.session,
     });
@@ -233,8 +278,8 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
-    const { error } = await supabase.auth.signOut(token); 
-    
+    const { error } = await supabase.auth.signOut(token);
+
     if (error) return res.status(400).json({ error: error.message });
 
     res.json({ message: 'Logged out successfully' });

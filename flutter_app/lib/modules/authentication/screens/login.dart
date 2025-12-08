@@ -10,6 +10,7 @@ import 'package:ra7a/presentation/screens/dashboard.dart';
 import 'package:ra7a/presentation/screens/homesp.dart';
 import 'package:ra7a/modules/authentication/screens/splash.dart';
 import 'package:ra7a/cubits/dashboard_cubit.dart';
+import 'package:ra7a/services/api_service.dart'; // ADD THIS IMPORT
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,38 +21,31 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
-  final TextEditingController _usernameController = TextEditingController();
+  bool _isLoading = false; // ADD THIS
+  final TextEditingController _emailController =
+      TextEditingController(); // CHANGED FROM username
   final TextEditingController _passwordController = TextEditingController();
+  final ApiService _apiService = ApiService(); // ADD THIS
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _handleLogin() {
+  // REPLACE _handleLogin with this:
+  Future<void> _handleLogin() async {
     final localizations = AppLocalizations.of(context)!;
-    String username = _usernameController.text.trim().toLowerCase();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
 
-    // Route based on username
-    Widget destinationPage;
-
-    if (username == 'homeowner') {
-      destinationPage = const HomeBottomNav();
-    } else if (username == 'serviceprovider') {
-      destinationPage = const MainNavigationScreen();
-    } else if (username == 'admin') {
-      destinationPage = BlocProvider(
-        create: (_) => GetIt.instance<DashboardCubit>()..loadDashboardStats(),
-        child: const DashboardPage(),
-      );
-    } else {
-      // Show error for invalid username
+    // Validation
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            localizations.loginInvalidUsername,
+            'Please fill in all fields',
             style: GoogleFonts.poppins(),
           ),
           backgroundColor: Colors.red,
@@ -64,10 +58,91 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => destinationPage),
-    );
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Call backend login API
+      final response = await _apiService.login(
+        email: email,
+        password: password,
+      );
+
+      // Get user role from response
+      final user = response['user'] as Map<String, dynamic>?;
+      final role = user?['role'] as String? ?? 'homeowner';
+      final fullName =
+          user?['full_name'] as String? ?? user?['email'] as String? ?? email;
+
+      // Show success message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${localizations.loginWelcomeBack}, $fullName!',
+              style: GoogleFonts.poppins(),
+            ),
+            backgroundColor: const Color(0xFF33AD04),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+
+        // Navigate based on role
+        if (role == 'homeowner') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeBottomNav()),
+          );
+        } else if (role == 'service_provider') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainNavigationScreen(),
+            ),
+          );
+        } else if (role == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) =>
+                    GetIt.instance<DashboardCubit>()..refreshStats(),
+                child: const DashboardPage(),
+              ),
+            ),
+          );
+        } else {
+          throw Exception('Unknown role');
+        }
+      }
+    } catch (e) {
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString().replaceAll('Exception: ', ''),
+              style: GoogleFonts.poppins(),
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -105,18 +180,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Logo
                   GestureDetector(
                     onTap: () {
-                      // Navigate back to splash screen (home widget) which has the locale callback
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            // Get the MaterialApp's home widget
                             final materialApp = context
                                 .findAncestorWidgetOfExactType<MaterialApp>();
                             if (materialApp?.home != null) {
                               return materialApp!.home!;
                             }
-                            // Fallback: create splash without callback (shouldn't happen)
                             return const SplashScreen();
                           },
                         ),
@@ -152,19 +224,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Username Field (changed from Email)
+                  // Email Field (CHANGED FROM USERNAME)
                   TextField(
-                    controller: _usernameController,
+                    controller: _emailController, // CHANGED
                     cursorColor: primaryColor,
+                    keyboardType: TextInputType.emailAddress, // ADD THIS
                     decoration: InputDecoration(
-                      labelText: localizations.loginUsername,
+                      labelText: 'Email', // CHANGED
                       labelStyle: GoogleFonts.poppins(color: textDark),
                       floatingLabelStyle: GoogleFonts.poppins(
                         color: primaryColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
-                      hintText: localizations.loginUsernameHint,
+                      hintText: 'Enter your email', // CHANGED
                       hintStyle: GoogleFonts.poppins(color: Colors.grey[500]),
                       filled: true,
                       fillColor: Colors.white,
@@ -254,28 +327,41 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 36),
 
-                  // Login Button
+                  // Login Button (WITH LOADING STATE)
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: _handleLogin,
+                      onPressed: _isLoading ? null : _handleLogin, // CHANGED
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
+                        disabledBackgroundColor: primaryColor.withValues(
+                          alpha: .6,
+                        ), // ADD THIS
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 4,
                         shadowColor: primaryColor.withValues(alpha: .3),
                       ),
-                      child: Text(
-                        localizations.loginButton,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child:
+                          _isLoading // ADD THIS
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.5,
+                              ),
+                            )
+                          : Text(
+                              localizations.loginButton,
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 20),
