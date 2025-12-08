@@ -14,6 +14,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Protected routes - authentication required
 router.use(authenticate);
 router.use(isServiceProvider);
+
 // Service management
 router.post('/services', validate(addServiceValidator), spController.addService);
 router.put('/services/:serviceId', validate(editServiceValidator), spController.editService);
@@ -25,5 +26,13 @@ router.post('/services/:service_id/images', upload.array('images', 10), spContro
 router.get('/services/:service_id/images', spController.getServiceImages);
 router.delete('/images/:image_id', spController.deleteServiceImage);
 router.put('/images/:image_id', upload.single('image'), spController.updateServiceImage);
+
+// Demands management
+router.get('/demands', spController.getDemands);
+router.get('/demands/:demandId', spController.getDemandDetails);
+
+// Offers management
+router.post('/offers/send', spController.sendOffer);
+router.get('/offers/my', spController.getMyOffers);
 
 module.exports = router;

@@ -11,6 +11,7 @@ import 'data/repositories/reports_repository.dart';
 import 'data/repositories/plans_repository.dart';
 import 'data/repositories/requests_repository.dart';
 import 'data/repositories/demands_repository.dart';
+import 'data/repositories/offers_repository.dart';
 import 'data/repositories/verification_repository.dart';
 import 'data/repositories/reviews_repository.dart';
 import 'data/repositories/conversations_repository.dart';
@@ -22,6 +23,8 @@ import 'cubits/reports_cubit.dart';
 import 'cubits/plans_cubit.dart';
 import 'cubits/requests_cubit.dart';
 import 'cubits/demands_cubit.dart';
+import 'cubits/demand_details_cubit.dart';
+import 'cubits/send_offer_cubit.dart';
 import 'cubits/verification_cubit.dart';
 import 'cubits/reviews_cubit.dart';
 import 'cubits/conversations_cubit.dart';
@@ -67,6 +70,10 @@ Future<void> setupDependencies({String? baseUrl}) async {
     () => DemandsRepository(apiService: getIt<ApiService>()),
   );
 
+  getIt.registerLazySingleton<OffersRepository>(
+    () => OffersRepository(apiService: getIt<ApiService>()),
+  );
+
   getIt.registerLazySingleton<VerificationRepository>(
     () => VerificationRepository(apiService: getIt<ApiService>()),
   );
@@ -102,6 +109,14 @@ Future<void> setupDependencies({String? baseUrl}) async {
 
   getIt.registerFactory<DemandsCubit>(
     () => DemandsCubit(repository: getIt<DemandsRepository>()),
+  );
+
+  getIt.registerFactory<DemandDetailsCubit>(
+    () => DemandDetailsCubit(repository: getIt<DemandsRepository>()),
+  );
+
+  getIt.registerFactory<SendOfferCubit>(
+    () => SendOfferCubit(repository: getIt<OffersRepository>()),
   );
 
   getIt.registerFactory<VerificationCubit>(

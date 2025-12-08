@@ -210,7 +210,34 @@ class ApiService {
     }
   }
 
-  // ============ AUTHENTICATION ENDPOINTS ============
+  // Send offer for a demand
+  Future<Map<String, dynamic>> sendOffer({
+    required String demandId,
+    required String message,
+    required double proposedPrice,
+    required String proposedDate,
+  }) async {
+    final headers = await _getHeaders();
+    final response = await http.post(
+      Uri.parse('$baseUrl/offers/send'),
+      headers: headers,
+      body: json.encode({
+        'demand_id': demandId,
+        'message': message,
+        'proposed_price': proposedPrice,
+        'proposed_date': proposedDate,
+      }),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      final error = json.decode(response.body);
+      throw Exception(error['error'] ?? 'Failed to send offer');
+    }
+  }
+
+  // ============ BOOKING ENDPOINTS ============
 
   Future<Map<String, dynamic>> register({
     required String fullName,
