@@ -26,17 +26,72 @@ class ApiService {
 
   // Generic GET method for any endpoint
   Future<Map<String, dynamic>> get(String endpoint) async {
-    final headers = await _getHeaders();
-    final response = await http.get(
-      Uri.parse('http://localhost:5000$endpoint'),
-      headers: headers,
-    );
+    try {
+      final headers = await _getHeaders();
+      final response = await http.get(
+        Uri.parse('http://localhost:5000$endpoint'),
+        headers: headers,
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      return {'success': false, 'error': e.toString()};
+    }
+  }
 
-    if (response.statusCode == 200 || response.statusCode == 304) {
-      return json.decode(response.body);
-    } else {
-      final error = json.decode(response.body);
-      throw Exception(error['error'] ?? 'Request failed');
+  // Generic POST method for any endpoint
+  Future<Map<String, dynamic>> post(
+    String endpoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.post(
+        Uri.parse('http://localhost:5000$endpoint'),
+        headers: headers,
+        body: json.encode(body),
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      return {'success': false, 'error': e.toString()};
+    }
+  }
+
+  // Generic PUT method for any endpoint
+  Future<Map<String, dynamic>> put(
+    String endpoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.put(
+        Uri.parse('http://localhost:5000$endpoint'),
+        headers: headers,
+        body: json.encode(body),
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      return {'success': false, 'error': e.toString()};
+    }
+  }
+
+  // Response handler
+  Map<String, dynamic> _handleResponse(http.Response response) {
+    try {
+      final jsonResponse = json.decode(response.body);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonResponse;
+      } else {
+        return {
+          'success': false,
+          'error': jsonResponse['error'] ?? 'Unknown error',
+        };
+      }
+    } catch (e) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return {'success': true};
+      }
+      throw Exception('Request failed');
     }
   }
 
