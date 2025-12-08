@@ -5,17 +5,39 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   static const String baseUrl = 'http://localhost:5000/api/sp';
   static const String authBaseUrl = 'http://localhost:5000/api/auth';
+
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('jwt_token');
+    final token = prefs.getString('jwt_token');
+    print('=== _getToken called ===');
+    print('Token retrieved: $token');
+    return token;
   }
 
   Future<Map<String, String>> _getHeaders() async {
     final token = await _getToken();
+    print('=== _getHeaders called ===');
+    print('Token in headers: $token');
     return {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+  }
+
+  // Generic GET method for any endpoint
+  Future<Map<String, dynamic>> get(String endpoint) async {
+    final headers = await _getHeaders();
+    final response = await http.get(
+      Uri.parse('http://localhost:5000$endpoint'),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 304) {
+      return json.decode(response.body);
+    } else {
+      final error = json.decode(response.body);
+      throw Exception(error['error'] ?? 'Request failed');
+    }
   }
 
   // ============ PROFILE ENDPOINTS ============
@@ -226,16 +248,27 @@ class ApiService {
     required String email,
     required String password,
   }) async {
+    print('=== Login called ===');
+    print('Email: $email');
+
     final response = await http.post(
       Uri.parse('$authBaseUrl/login'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'email': email, 'password': password}),
     );
 
+    print('Login response status: ${response.statusCode}');
+    print('Login response body: ${response.body}');
+
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
+      print('=== Login successful ===');
+      print('Response data: $data');
+
       // Save token and user data
       final token = data['session']?['access_token'] ?? '';
+      print('Token to save: $token');
+
       await _saveToken(token);
       await _saveUserData(data['user']);
       return data;
@@ -247,8 +280,15 @@ class ApiService {
 
   // Save token to SharedPreferences
   Future<void> _saveToken(String token) async {
+    print('=== _saveToken called ===');
+    print('Saving token: $token');
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', token);
+
+    // Verify it was saved
+    final savedToken = prefs.getString('jwt_token');
+    print('Token saved and verified: $savedToken');
   }
 
   // Save user data to SharedPreferences

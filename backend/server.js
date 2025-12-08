@@ -8,9 +8,9 @@ const spRoutes = require('./routes/sp.routes');
 const adminRoutes = require('./routes/admin.routes');
 const conversationRoutes = require('./routes/conversation.routes');
 const reviewRoutes = require('./routes/review.routes');
-const authRoutes = require('./routes/auth.routes');
 const profileRoutes = require('./routes/profile.routes');
 const homeownerRoutes = require('./routes/homeownerRoutes');
+const loginRoutes = require('./routes/login.routes');
 
 const app = express();
 app.use(helmet());
@@ -19,14 +19,13 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', loginRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', conversationRoutes);
 app.use('/api', reviewRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/sp', spRoutes);
-app.use('/api/ho', homeownerRoutes);
-
+app.use('/homeowner', homeownerRoutes);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
