@@ -75,6 +75,29 @@ class _ReportsContentState extends State<_ReportsContent> {
   String searchQuery = '';
 
   @override
+  void initState() {
+    super.initState();
+    // Load pending reports by default
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ReportsCubit>().filterReports('pending');
+    });
+  }
+
+  // Map filter index to status values
+  String? _getStatusFilter() {
+    switch (selectedFilter) {
+      case 0:
+        return 'pending'; // New reports
+      case 1:
+        return 'investigating'; // In progress
+      case 2:
+        return 'resolved'; // Resolved
+      default:
+        return null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
@@ -212,6 +235,9 @@ class _ReportsContentState extends State<_ReportsContent> {
           setState(() {
             selectedFilter = index;
           });
+          // Apply filter to cubit
+          final status = _getStatusFilter();
+          context.read<ReportsCubit>().filterReports(status);
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
