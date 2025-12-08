@@ -33,17 +33,9 @@ class DatabaseHelper {
 
     // List of wilayas with French and Arabic names
     List<Map<String, String>> wilayas = [
-      {'name_fr': 'Adrar', 'name_ar': 'أدرار'},
-      {'name_fr': 'Chlef', 'name_ar': 'الشلف'},
-      {'name_fr': 'Laghouat', 'name_ar': 'الأغواط'},
-      {'name_fr': 'Oum El Bouaghi', 'name_ar': 'أم البواقي'},
-      {'name_fr': 'Batna', 'name_ar': 'باتنة'},
-      {'name_fr': 'Béjaïa', 'name_ar': 'بجاية'},
-      {'name_fr': 'Biskra', 'name_ar': 'بسكرة'},
-      {'name_fr': 'Béchar', 'name_ar': 'بشار'},
       {'name_fr': 'Blida', 'name_ar': 'البليدة'},
-      {'name_fr': 'Bouira', 'name_ar': 'البويرة'},
-      // Add the rest of the 58 wilayas here...
+      {'name_fr': 'Algiers', 'name_ar': 'الجزائر'},
+      {'name_fr': 'Oran', 'name_ar': 'وهران'},
     ];
 
     // Insert each wilaya into the database

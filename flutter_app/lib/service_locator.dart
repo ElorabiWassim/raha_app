@@ -32,7 +32,7 @@ final getIt = GetIt.instance;
 /// Call this method in main.dart before runApp()
 Future<void> setupDependencies({String? baseUrl}) async {
   // Get base URL from environment or use default
-  final apiBaseUrl = baseUrl ?? 'http://localhost:3000';
+  final apiBaseUrl = baseUrl ?? 'http://localhost:5000';
 
   // Register HTTP client
   getIt.registerLazySingleton<http.Client>(() => http.Client());

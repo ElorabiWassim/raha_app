@@ -13,6 +13,7 @@ import 'package:ra7a/cubits/booking_cubit.dart';
 import 'package:ra7a/presentation/screens/add_demand.dart';
 import 'package:ra7a/data/local/preferences_service.dart';
 import 'package:ra7a/data/local/local_cache_repository.dart';
+import 'package:ra7a/cubits/serviceprovider_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +57,11 @@ class MyApp extends StatelessWidget {
         Provider<PreferencesService>.value(value: preferencesService),
         if (localCacheRepository != null)
           Provider<LocalCacheRepository>.value(value: localCacheRepository!),
+        BlocProvider(create: (context) => LanguageCubit()),
+        BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(create: (context) => AddDemandCubit(), child: AddDemand()),
+        BlocProvider(create: (context) => BookServiceCubit()),
+        BlocProvider(create: (context) => ServiceProviderCubit()),
       ],
       child: MultiBlocProvider(
         providers: [

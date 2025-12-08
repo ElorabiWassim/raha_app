@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ra7a/data/local/local_cache_repository.dart';
 import 'package:ra7a/data/local/local_models.dart';
@@ -90,6 +91,10 @@ class AuthCubit extends Cubit<AuthState> {
       );
       await _cacheRepository.saveUserProfile(profile);
 
+      // Also save token to SharedPreferences for ApiService
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('jwt_token', accessToken);
+
       emit(AuthAuthenticated(username, role));
     } catch (error) {
       emit(AuthError(error.toString()));
@@ -98,6 +103,11 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     await _cacheRepository.clearAuthData();
+
+    // Also clear token from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt_token');
+
     emit(AuthUnauthenticated());
   }
 }
