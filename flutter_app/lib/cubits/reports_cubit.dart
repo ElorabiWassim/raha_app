@@ -10,9 +10,11 @@ class ReportsCubit extends Cubit<ReportsState> {
   Future<void> loadReports({String? status}) async {
     emit(ReportsLoading());
 
+    print('Loading reports with filter: $status');
     final response = await repository.getReports(status: status);
 
     if (response.success && response.data != null) {
+      print('Loaded ${response.data!.length} reports with filter: $status');
       emit(ReportsLoaded(response.data!, activeFilter: status));
     } else {
       emit(ReportsError(response.error ?? 'Failed to load reports'));
@@ -32,14 +34,25 @@ class ReportsCubit extends Cubit<ReportsState> {
   }
 
   Future<void> updateReportStatus(String reportId, String status) async {
+    // Get current active filter before updating
+    final currentState = state;
+    String? activeFilter;
+
+    if (currentState is ReportsLoaded) {
+      activeFilter = currentState.activeFilter;
+      print('Current active filter before update: $activeFilter');
+      print('Current reports count: ${currentState.reports.length}');
+    }
+
     emit(ReportStatusUpdating());
 
     final response = await repository.updateReportStatus(reportId, status);
 
     if (response.success) {
+      print('Status update successful. Reloading with filter: $activeFilter');
       emit(ReportStatusUpdated('Report status updated successfully'));
-      // Reload reports after update
-      await loadReports();
+      // Reload reports with the same filter to remove the updated report from current view
+      await loadReports(status: activeFilter);
     } else {
       emit(ReportsError(response.error ?? 'Failed to update report status'));
     }
