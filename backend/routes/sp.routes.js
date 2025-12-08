@@ -1,11 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const spController = require('../controllers/sp.controller');
+const { authenticate, isServiceProvider } = require('../middlewares/auth.middleware');
 const { validate } = require('../middlewares/validation.middleware');
-const { spIdValidator } = require('../validators/review.validator');
+const { addServiceValidator, editServiceValidator } = require('../validators/sp.validator');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Public routes - no authentication required
-router.get('/reviews/:spId', validate(spIdValidator), spController.getReviewsForSP);
-router.get('/rating/:spId', validate(spIdValidator), spController.getAverageRating);
+// Public routes would go here if needed
+// router.get('/reviews/:spId', validate(spIdValidator), spController.getReviewsForSP);
+// router.get('/rating/:spId', validate(spIdValidator), spController.getAverageRating);
+
+// Protected routes - authentication required
+router.use(authenticate);
+router.use(isServiceProvider);
+// Service management
+router.post('/services', validate(addServiceValidator), spController.addService);
+router.put('/services/:serviceId', validate(editServiceValidator), spController.editService);
+router.delete('/services/:serviceId', spController.deleteService);
+router.get('/services/my', spController.getMyServices);
+router.post('/categories', spController.createCategory);
+router.get('/services/:serviceId', spController.getServiceById);
+router.post('/services/:service_id/images', upload.array('images', 10), spController.uploadServiceImages);
+router.get('/services/:service_id/images', spController.getServiceImages);
+router.delete('/images/:image_id', spController.deleteServiceImage);
+router.put('/images/:image_id', upload.single('image'), spController.updateServiceImage);
 
 module.exports = router;

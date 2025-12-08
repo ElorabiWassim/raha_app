@@ -9,7 +9,6 @@ const { authenticate, isHomeowner } = require('../middlewares/auth.middleware');
 
 // Controllers
 const {
-
   bookService, getBookingOfUser
 } = require("../controllers/booking");
 
@@ -45,6 +44,12 @@ router.post("/cancelDemand", cancelDemand);
 router.get("/getUserDemands", getUserDemands);
 router.get("/getDemandOffers", getDemandOffers);
 router.post("/acceptDemand", acceptDemand);
+
+
+
+
+
+
 
 // router.post('/demands', authenticate, isHomeowner, hoController.createDemand);
 

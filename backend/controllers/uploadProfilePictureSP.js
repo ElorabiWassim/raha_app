@@ -4,7 +4,6 @@ async function uploadProfilePicture(req, res) {
   try {
     const { sp_id } = req.body; 
     const file = req.file; 
-
     if (!sp_id) {
       return res.status(400).json({ error: "Missing service provider ID (sp_id)" });
     }
