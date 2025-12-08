@@ -38,7 +38,8 @@ class Ra7aBottomNav extends StatelessWidget {
             break;
           case 2:
             nextPage = BlocProvider(
-              create: (_) => GetIt.instance<ReportsCubit>()..loadReports(),
+              create: (_) =>
+                  GetIt.instance<ReportsCubit>()..loadReports(status: 'new'),
               child: const ReportsPage(),
             );
             break;

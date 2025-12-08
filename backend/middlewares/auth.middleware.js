@@ -12,19 +12,15 @@ const authenticate = async (req, res, next) => {
     if (token.startsWith('admin-hardcoded-token-')) {
       console.log('Admin hardcoded token detected');
 
-      // Fetch admin user from database
-      const { data: adminData, error: adminError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', 'admin@gmail.com')
-        .single();
-
-      if (adminError || !adminData) {
-        console.error('Admin user not found in database');
-        return res.status(404).json({ error: 'Admin user not found' });
-      }
-
-      req.user = adminData;
+      // Set hardcoded admin user without database lookup
+      req.user = {
+        user_id: '3fe68579-15f3-4460-a9a9-1ec6aea97c5d',
+        email: 'admin@gmail.com',
+        full_name: 'Admin',
+        role: 'admin',
+        phone_number: null,
+        created_at: new Date().toISOString()
+      };
       return next();
     }
 
