@@ -35,4 +35,11 @@ router.get('/demands/:demandId', spController.getDemandDetails);
 router.post('/offers/send', spController.sendOffer);
 router.get('/offers/my', spController.getMyOffers);
 
+// Bookings management
+router.get('/bookings', spController.getMyBookings);
+router.get('/bookings/history', spController.getBookingHistory);
+router.post('/bookings/:bookingId/accept', spController.acceptBooking);
+router.post('/bookings/:bookingId/decline', spController.declineBooking);
+router.post('/bookings/:bookingId/complete', spController.completeBooking);
+
 module.exports = router;

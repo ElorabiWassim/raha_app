@@ -5,6 +5,7 @@ import '../../cubits/reports_state.dart';
 import '../../data/models/report.dart';
 import '../widgets/bottom_nav_admin.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import './report_details.dart';
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
@@ -226,6 +227,7 @@ class _ReportsContentState extends State<_ReportsContent> {
                         itemBuilder: (context, index) {
                           final report = filteredReports[index];
                           return ReportCard(
+                            report: report,
                             reportId: report.reportId,
                             homeowner: report.homeownerName,
                             provider: report.providerName,
@@ -256,16 +258,12 @@ class _ReportsContentState extends State<_ReportsContent> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected
-                ? const Color(
-                    0xFFE8F5E9,
-                  ) // Light green background when selected
-                : Colors.transparent,
+            color: isSelected ? Colors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isSelected
                   ? const Color(0xFF4CAF50)
-                  : const Color(0xFFE5E7EB),
+                  : const Color(0xFF9E9E9E),
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -287,6 +285,7 @@ class _ReportsContentState extends State<_ReportsContent> {
 }
 
 class ReportCard extends StatelessWidget {
+  final Report report;
   final String reportId;
   final String homeowner;
   final String provider;
@@ -296,6 +295,7 @@ class ReportCard extends StatelessWidget {
 
   const ReportCard({
     super.key,
+    required this.report,
     required this.reportId,
     required this.homeowner,
     required this.provider,
@@ -380,7 +380,7 @@ class ReportCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Status Dropdown
+          // Status Display
           Row(
             children: [
               const Text(
@@ -391,50 +391,16 @@ class ReportCard extends StatelessWidget {
                   color: Color(0xFF6B7280),
                 ),
               ),
-              Expanded(
-                child: DropdownButton<String>(
-                  value: status,
-                  isExpanded: true,
-                  underline: Container(),
-                  icon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Color(0xFF4CAF50),
-                  ),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF4CAF50),
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: 'new', child: Text('New')),
-                    DropdownMenuItem(
-                      value: 'in_progress',
-                      child: Text('In Progress'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'resolved',
-                      child: Text('Resolved'),
-                    ),
-                  ],
-                  onChanged: (newStatus) async {
-                    if (newStatus != null && newStatus != status) {
-                      await context.read<ReportsCubit>().updateReportStatus(
-                        reportId,
-                        newStatus,
-                      );
-
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Status updated to ${newStatus.replaceAll('_', ' ')}',
-                            ),
-                            backgroundColor: const Color(0xFF4CAF50),
-                          ),
-                        );
-                      }
-                    }
-                  },
+              Text(
+                status == 'new'
+                    ? 'New'
+                    : status == 'in_progress'
+                    ? 'In Progress'
+                    : 'Resolved',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF4CAF50),
                 ),
               ),
             ],
@@ -466,73 +432,110 @@ class ReportCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Action Buttons
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: Navigate to report details page
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4CAF50),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child: Text(
-                    localizations.reportsDetails,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: status == 'resolved'
-                      ? null
-                      : () async {
-                          // Update status to resolved
-                          await context.read<ReportsCubit>().updateReportStatus(
-                            reportId,
-                            'resolved',
-                          );
+          if (status != 'resolved') ...[
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: status == 'in_progress'
+                        ? null
+                        : () async {
+                            // Update status to in_progress
+                            await context
+                                .read<ReportsCubit>()
+                                .updateReportStatus(reportId, 'in_progress');
 
-                          // Show success message
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Report marked as resolved'),
-                                backgroundColor: const Color(0xFF4CAF50),
-                              ),
-                            );
-                          }
-                        },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: status == 'resolved'
-                        ? const Color(0xFF9E9E9E)
-                        : const Color(0xFF4CAF50),
-                    side: BorderSide(
-                      color: status == 'resolved'
+                            // Show success message
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Report marked as in progress'),
+                                  backgroundColor: const Color(0xFF2196F3),
+                                ),
+                              );
+                            }
+                          },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: status == 'in_progress'
                           ? const Color(0xFF9E9E9E)
                           : const Color(0xFF4CAF50),
+                      side: BorderSide(
+                        color: status == 'in_progress'
+                            ? const Color(0xFF9E9E9E)
+                            : const Color(0xFF4CAF50),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    child: Text(
+                      status == 'in_progress'
+                          ? 'In Progress'
+                          : 'Mark In Progress',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child: Text(
-                    status == 'resolved'
-                        ? 'Resolved'
-                        : localizations.reportsResolve,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      // Update status to resolved
+                      await context.read<ReportsCubit>().updateReportStatus(
+                        reportId,
+                        'resolved',
+                      );
+
+                      // Show success message
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Report marked as resolved'),
+                            backgroundColor: const Color(0xFF4CAF50),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4CAF50),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(
+                      localizations.reportsResolve,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+
+          // View Details Button
+          const SizedBox(height: 8),
+          Center(
+            child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportDetailsPage(report: report),
+                  ),
+                );
+              },
+              child: Text(
+                localizations.viewDetails,
+                style: const TextStyle(
+                  color: Color(0xFF4CAF50),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ],
+            ),
           ),
         ],
       ),

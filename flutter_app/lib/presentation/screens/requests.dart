@@ -12,7 +12,7 @@ class RequestsPage extends StatefulWidget {
 class _RequestsPageState extends State<RequestsPage> {
   int selectedTab = 0;
   final ApiService _apiService = ApiService();
-  
+
   List<Map<String, dynamic>> activeRequests = [];
   List<Map<String, dynamic>> historyRequests = [];
   bool isLoading = true;
@@ -25,47 +25,61 @@ class _RequestsPageState extends State<RequestsPage> {
   }
 
   Future<void> _loadBookings() async {
-  setState(() {
-    isLoading = true;
-    errorMessage = null;
-  });
+    if (!mounted) return;
 
-  try {
-    if (selectedTab == 0) {
-      // Load active bookings (pending)
-      final response = await _apiService.getMyBookings();
-      final bookingsList = response['bookings'] as List? ?? [];
-      
-      setState(() {
-        activeRequests = bookingsList
-            .where((b) => b['status'] == 'pending')
-            .map((b) => b as Map<String, dynamic>) // 👈 Cast each item
-            .toList(); // 👈 Now it's List<Map<String, dynamic>>
-        isLoading = false;
-      });
-    } else {
-      // Load booking history
-      final response = await _apiService.getBookingHistory();
-      final bookingsList = response['bookings'] as List? ?? [];
-      
-      setState(() {
-        historyRequests = bookingsList
-            .map((b) => b as Map<String, dynamic>) // 👈 Cast each item
-            .toList(); // 👈 Now it's List<Map<String, dynamic>>
-        isLoading = false;
-      });
-    }
-  } catch (e) {
     setState(() {
-      errorMessage = 'Failed to load bookings: $e';
-      isLoading = false;
+      isLoading = true;
+      errorMessage = null;
     });
-    print('Error loading bookings: $e');
+
+    try {
+      if (selectedTab == 0) {
+        // Load active bookings (pending)
+        final response = await _apiService.getMyBookings();
+        final bookingsList = response['bookings'] as List? ?? [];
+
+        if (!mounted) return;
+
+        setState(() {
+          activeRequests = bookingsList
+              .where(
+                (b) => b['status'] == 'pending' || b['status'] == 'accepted',
+              )
+              .map((b) => b as Map<String, dynamic>)
+              .toList();
+          isLoading = false;
+        });
+      } else {
+        // Load booking history
+        final response = await _apiService.getBookingHistory();
+        final bookingsList = response['bookings'] as List? ?? [];
+
+        if (!mounted) return;
+
+        setState(() {
+          historyRequests = bookingsList
+              .map((b) => b as Map<String, dynamic>)
+              .toList();
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        errorMessage = 'Failed to load bookings: $e';
+        isLoading = false;
+      });
+      print('Error loading bookings: $e');
+    }
   }
-}
+
   Future<void> _acceptBooking(String bookingId) async {
     try {
       await _apiService.acceptBooking(bookingId);
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Booking accepted successfully'),
@@ -74,6 +88,8 @@ class _RequestsPageState extends State<RequestsPage> {
       );
       _loadBookings(); // Reload data
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to accept booking: $e'),
@@ -86,6 +102,9 @@ class _RequestsPageState extends State<RequestsPage> {
   Future<void> _declineBooking(String bookingId) async {
     try {
       await _apiService.declineBooking(bookingId);
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Booking declined'),
@@ -94,6 +113,8 @@ class _RequestsPageState extends State<RequestsPage> {
       );
       _loadBookings(); // Reload data
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to decline booking: $e'),
@@ -106,6 +127,9 @@ class _RequestsPageState extends State<RequestsPage> {
   Future<void> _completeBooking(String bookingId) async {
     try {
       await _apiService.completeBooking(bookingId);
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Booking marked as completed'),
@@ -114,6 +138,8 @@ class _RequestsPageState extends State<RequestsPage> {
       );
       _loadBookings(); // Reload data
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to complete booking: $e'),
@@ -180,31 +206,34 @@ class _RequestsPageState extends State<RequestsPage> {
                         ),
                       )
                     : errorMessage != null
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.error_outline,
-                                    size: 64, color: Colors.red[300]),
-                                SizedBox(height: 16),
-                                Text(
-                                  errorMessage!,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.red[700]),
-                                ),
-                                SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: _loadBookings,
-                                  child: Text('Retry'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF4CAF50),
-                                    foregroundColor: Colors.white,
-                                  ),
-                                ),
-                              ],
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: Colors.red[300],
                             ),
-                          )
-                        : _buildRequestsList(),
+                            SizedBox(height: 16),
+                            Text(
+                              errorMessage!,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.red[700]),
+                            ),
+                            SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: _loadBookings,
+                              child: Text('Retry'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF4CAF50),
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : _buildRequestsList(),
               ),
             ),
           ],
@@ -228,13 +257,8 @@ class _RequestsPageState extends State<RequestsPage> {
             ),
             SizedBox(height: 16),
             Text(
-              selectedTab == 0
-                  ? 'No pending requests'
-                  : 'No booking history',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              selectedTab == 0 ? 'No pending requests' : 'No booking history',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
           ],
         ),
@@ -344,14 +368,15 @@ class RequestCard extends StatelessWidget {
   }
 
   IconData get serviceIcon {
-    final categoryName = booking['service']?['service_categories']?['name'] ?? '';
-    
+    final categoryName =
+        booking['service']?['service_categories']?['name'] ?? '';
+
     if (categoryName.toLowerCase().contains('plumb')) {
       return Icons.plumbing;
     } else if (categoryName.toLowerCase().contains('electric')) {
       return Icons.electrical_services;
-    } else if (categoryName.toLowerCase().contains('hvac') || 
-               categoryName.toLowerCase().contains('air')) {
+    } else if (categoryName.toLowerCase().contains('hvac') ||
+        categoryName.toLowerCase().contains('air')) {
       return Icons.ac_unit;
     } else if (categoryName.toLowerCase().contains('clean')) {
       return Icons.cleaning_services;
@@ -364,12 +389,69 @@ class RequestCard extends StatelessWidget {
     }
   }
 
+  void _showBookingDetails(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final homeownerData = booking['homeowners'];
+    final userData = homeownerData?['users'];
+    final homeownerName = userData?['full_name'] ?? 'Unknown';
+    final homeownerEmail = userData?['email'] ?? '';
+    final homeownerPhone = userData?['phone_number'] ?? '';
+    final serviceData = booking['services'];
+    final serviceName = serviceData?['name'] ?? 'Service';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Booking Details'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Service: $serviceName',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text('Customer: $homeownerName'),
+              if (homeownerEmail.isNotEmpty) Text('Email: $homeownerEmail'),
+              if (homeownerPhone.isNotEmpty) Text('Phone: $homeownerPhone'),
+              SizedBox(height: 8),
+              Text('Location: ${booking['location'] ?? 'Not specified'}'),
+              Text('Date: ${booking['date'] ?? ''}'),
+              Text('Time: ${booking['time'] ?? ''}'),
+              SizedBox(height: 8),
+              Text(
+                'Description:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(booking['description'] ?? 'No description'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    
-    final homeownerName = booking['homeowner']?['full_name'] ?? 'Unknown';
-    final serviceName = booking['service']?['name'] ?? 'Service';
+
+    // Access nested homeowner data correctly
+    final homeownerData = booking['homeowners'];
+    final userData = homeownerData?['users'];
+    final homeownerName = userData?['full_name'] ?? 'Unknown';
+
+    // Access service data
+    final serviceData = booking['services'];
+    final serviceName = serviceData?['name'] ?? 'Service';
+
     final location = booking['location'] ?? 'Location not specified';
     final date = booking['date'] ?? '';
     final time = booking['time'] ?? '';
@@ -403,7 +485,11 @@ class RequestCard extends StatelessWidget {
                   color: const Color(0xFFE8F5E9),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(serviceIcon, color: const Color(0xFF4CAF50), size: 24),
+                child: Icon(
+                  serviceIcon,
+                  color: const Color(0xFF4CAF50),
+                  size: 24,
+                ),
               ),
               const SizedBox(width: 12),
 
@@ -623,7 +709,7 @@ class RequestCard extends StatelessWidget {
           const SizedBox(height: 8),
           TextButton(
             onPressed: () {
-              // TODO: Navigate to booking details
+              _showBookingDetails(context);
             },
             child: Text(
               localizations.requestsViewDetails,

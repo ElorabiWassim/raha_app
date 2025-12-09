@@ -1015,11 +1015,11 @@ abstract class AppLocalizations {
   /// **'PROVIDER'**
   String get reportsProvider;
 
-  /// No description provided for @reportsDetails.
+  /// No description provided for @details.
   ///
   /// In en, this message translates to:
   /// **'Details'**
-  String get reportsDetails;
+  String get details;
 
   /// No description provided for @reportsResolve.
   ///
@@ -2076,12 +2076,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rate'**
   String get rate;
-
-  /// No description provided for @details.
-  ///
-  /// In en, this message translates to:
-  /// **'Details'**
-  String get details;
 
   /// No description provided for @profileInformation.
   ///

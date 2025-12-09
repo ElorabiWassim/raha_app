@@ -5,6 +5,7 @@ import '../../cubits/applications_state.dart';
 import '../../data/models/provider_application.dart';
 import '../widgets/bottom_nav_admin.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import './application_details.dart';
 
 class ApplicationsPage extends StatelessWidget {
   const ApplicationsPage({super.key});
@@ -166,53 +167,64 @@ class _ApplicationsContentState extends State<_ApplicationsContent> {
                         itemCount: filteredApplications.length,
                         itemBuilder: (context, index) {
                           final app = filteredApplications[index];
-                          return ApplicationCard(
-                            applicationId: app.applicationId,
-                            name: app.fullName,
-                            email: app.email,
-                            services: app.services.isNotEmpty
-                                ? app.services
-                                : ['Service Provider'],
-                            time: _formatTime(app.submittedAt),
-                            status: app.status,
-                            onAccept: () async {
-                              await context
-                                  .read<ApplicationsCubit>()
-                                  .approveApplication(app.applicationId);
-
-                              // Refresh the applications list
-                              if (mounted) {
-                                context
-                                    .read<ApplicationsCubit>()
-                                    .loadApplications();
-                              }
-
-                              _showSnackBar(
-                                localizations.applicationsAccepted(
-                                  app.fullName,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ApplicationDetailsPage(application: app),
                                 ),
-                                true,
                               );
                             },
-                            onDecline: () async {
-                              await context
-                                  .read<ApplicationsCubit>()
-                                  .rejectApplication(app.applicationId);
-
-                              // Refresh the applications list
-                              if (mounted) {
-                                context
+                            child: ApplicationCard(
+                              applicationId: app.applicationId,
+                              name: app.fullName,
+                              email: app.email,
+                              services: app.services.isNotEmpty
+                                  ? app.services
+                                  : ['Service Provider'],
+                              time: _formatTime(app.submittedAt),
+                              status: app.status,
+                              onAccept: () async {
+                                await context
                                     .read<ApplicationsCubit>()
-                                    .loadApplications();
-                              }
+                                    .approveApplication(app.applicationId);
 
-                              _showSnackBar(
-                                localizations.applicationsDeclined(
-                                  app.fullName,
-                                ),
-                                false,
-                              );
-                            },
+                                // Refresh the applications list
+                                if (mounted) {
+                                  context
+                                      .read<ApplicationsCubit>()
+                                      .loadApplications();
+                                }
+
+                                _showSnackBar(
+                                  localizations.applicationsAccepted(
+                                    app.fullName,
+                                  ),
+                                  true,
+                                );
+                              },
+                              onDecline: () async {
+                                await context
+                                    .read<ApplicationsCubit>()
+                                    .rejectApplication(app.applicationId);
+
+                                // Refresh the applications list
+                                if (mounted) {
+                                  context
+                                      .read<ApplicationsCubit>()
+                                      .loadApplications();
+                                }
+
+                                _showSnackBar(
+                                  localizations.applicationsDeclined(
+                                    app.fullName,
+                                  ),
+                                  false,
+                                );
+                              },
+                            ),
                           );
                         },
                       ),
@@ -472,6 +484,21 @@ class ApplicationCard extends StatelessWidget {
                       ],
                     ),
                   ),
+          ),
+
+          // View Details Button
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: () {
+              // Navigation is handled by GestureDetector wrapper in parent
+            },
+            child: Text(
+              localizations.viewDetails,
+              style: const TextStyle(
+                color: Color(0xFF4CAF50),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),

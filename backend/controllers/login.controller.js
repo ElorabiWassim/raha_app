@@ -90,7 +90,7 @@ const register = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { user_id: newUser.user_id, role: newUser.role },
+      { user_id: newUser.user_id, role: newUser.role, email: newUser.email },
       process.env.JWT_SECRET,
       { expiresIn: '24h' } // Increased to 24 hours
     );
@@ -98,12 +98,18 @@ const register = async (req, res) => {
     res.status(201).json({
       message: 'User registered successfully',
       user: {
+        id: newUser.user_id,
         user_id: newUser.user_id,
         full_name: newUser.full_name,
         email: newUser.email,
         role: newUser.role,
       },
-      token,
+      session: {
+        access_token: token,
+        refresh_token: token,
+        expires_in: 86400,
+        token_type: 'bearer'
+      }
     });
   } catch (error) {
     console.error('Register error:', error);
@@ -119,20 +125,29 @@ const login = async (req, res) => {
     if (email === 'admin@gmail.com' && password === '123456') {
       console.log('Admin hardcoded login successful');
 
-      // Generate a fake session token for admin
-      const fakeToken = 'admin-hardcoded-token-' + Date.now();
+      // Generate a proper JWT token for admin
+      const adminToken = jwt.sign(
+        {
+          user_id: '3fe68579-15f3-4460-a9a9-1ec6aea97c5d',
+          role: 'admin',
+          email: 'admin@gmail.com'
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+      );
 
       return res.json({
         message: 'Admin login successful',
         user: {
           id: '3fe68579-15f3-4460-a9a9-1ec6aea97c5d',
+          user_id: '3fe68579-15f3-4460-a9a9-1ec6aea97c5d',
           email: 'admin@gmail.com',
           role: 'admin',
           full_name: 'Admin'
         },
         session: {
-          access_token: fakeToken,
-          refresh_token: fakeToken,
+          access_token: adminToken,
+          refresh_token: adminToken,
           expires_in: 86400
         }
       });
@@ -168,22 +183,24 @@ const login = async (req, res) => {
       const { data: spProfile, error: spError } = await supabase
         .from('service_providers')
         .select('sp_id')
-        .eq('user_id', user.user_id)
+        .eq('sp_id', user.user_id)
         .single();
 
       // If profile doesn't exist, create it
       if (spError || !spProfile) {
+        console.log('Creating service provider profile for user:', user.user_id);
         const { error: createSpError } = await supabase
           .from('service_providers')
           .insert({
-            user_id: user.user_id,
+            sp_id: user.user_id,
             verification_status: 'pending',
             created_at: new Date().toISOString(),
-
           });
 
         if (createSpError) {
           console.error('Failed to create service provider profile:', createSpError);
+        } else {
+          console.log('Service provider profile created successfully');
         }
       }
     } else if (user.role === 'homeowner') {
@@ -195,23 +212,25 @@ const login = async (req, res) => {
 
       // If profile doesn't exist, create it
       if (hoError || !hoProfile) {
+        console.log('Creating homeowner profile for user:', user.user_id);
         const { error: createHoError } = await supabase
           .from('homeowners')
           .insert({
-            user_id: user.user_id,
+            homeowner_id: user.user_id,
             created_at: new Date().toISOString(),
-
           });
 
         if (createHoError) {
           console.error('Failed to create homeowner profile:', createHoError);
+        } else {
+          console.log('Homeowner profile created successfully');
         }
       }
     }
 
     // Generate JWT token
     const token = jwt.sign(
-      { user_id: user.user_id, role: user.role },
+      { user_id: user.user_id, role: user.role, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -219,12 +238,18 @@ const login = async (req, res) => {
     res.json({
       message: 'Login successful',
       user: {
+        id: user.user_id,
         user_id: user.user_id,
         full_name: user.full_name,
         email: user.email,
         role: user.role,
       },
-      token,
+      session: {
+        access_token: token,
+        refresh_token: token,
+        expires_in: 86400,
+        token_type: 'bearer'
+      }
     });
   } catch (error) {
     console.error('Login error:', error);

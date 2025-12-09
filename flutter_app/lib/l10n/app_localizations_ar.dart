@@ -476,7 +476,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportsProvider => 'مقدم الخدمة';
 
   @override
-  String get reportsDetails => 'التفاصيل';
+  String get details => 'التفاصيل';
 
   @override
   String get reportsResolve => 'حل';
@@ -1019,155 +1019,152 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rate => 'تقييم';
 
   @override
-  String get details => 'التفاصيل';
+  String get profileInformation => 'معلومات الملف الشخصي';
 
   @override
-  String get profileInformation => 'Profile Information';
+  String get name => 'الاسم';
 
   @override
-  String get name => 'Name';
+  String get profession => 'المهنة';
 
   @override
-  String get profession => 'Profession';
+  String get location => 'الموقع';
 
   @override
-  String get location => 'Location';
+  String get statsInformation => 'معلومات الإحصائيات';
 
   @override
-  String get statsInformation => 'Statistics Information';
+  String get rating => 'التقييم';
 
   @override
-  String get rating => 'Rating';
-
-  @override
-  String get responseTime => 'Response Time';
+  String get responseTime => 'سرعة الاستجابة';
 
   @override
   String get editService => 'Edit Service';
 
   @override
-  String get deleteServiceTitle => 'Delete Service';
+  String get deleteServiceTitle => 'حذف الخدمة';
 
   @override
-  String get deleteServiceMessage => 'Are you sure you want to delete this service? This action cannot be undone.';
+  String get deleteServiceMessage => 'هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.';
 
   @override
-  String get serviceDetails => 'Service Details';
+  String get serviceDetails => 'تفاصيل الخدمة';
 
   @override
-  String get serviceTitle => 'Service Title';
+  String get serviceTitle => 'عنوان الخدمة';
 
   @override
-  String get enterServiceTitle => 'Please enter service title';
+  String get enterServiceTitle => 'يرجى إدخال عنوان الخدمة';
 
   @override
-  String get price => 'Price';
+  String get price => 'السعر';
 
   @override
-  String get enterServicePrice => 'Please enter service price';
+  String get enterServicePrice => 'يرجى إدخال سعر الخدمة';
 
   @override
-  String get priceExample => 'e.g., \"Starts at 1500 DA\" or \"2500 DA per hour\"';
+  String get priceExample => 'مثال: \"تبدأ من 1500 دج\" أو \"2500 دج للساعة\"';
 
   @override
-  String get serviceStatus => 'Service Status';
+  String get serviceStatus => 'حالة الخدمة';
 
   @override
-  String get visibleToCustomers => 'Service is visible to customers';
+  String get visibleToCustomers => 'الخدمة ظاهرة للزبائن';
 
   @override
-  String get hiddenFromCustomers => 'Service is hidden from customers';
+  String get hiddenFromCustomers => 'الخدمة مخفية عن الزبائن';
 
   @override
-  String get pricingTips => 'Pricing Tips';
+  String get pricingTips => 'نصائح التسعير';
 
   @override
-  String get tip1 => 'Use clear pricing formats like \"1500 DA\" or \"per hour\"';
+  String get tip1 => 'استخدم صيغ أسعار واضحة مثل \"1500 دج\" أو \"للساعة\"';
 
   @override
-  String get tip2 => 'Consider offering starting prices for complex jobs';
+  String get tip2 => 'فكّر في وضع سعر ابتدائي للمهام المعقدة';
 
   @override
-  String get tip3 => 'Be transparent about additional charges';
+  String get tip3 => 'كن شفافًا بخصوص الرسوم الإضافية';
 
   @override
-  String get tip4 => 'Review competitor pricing in your area';
+  String get tip4 => 'راجع أسعار المنافسين في منطقتك';
 
   @override
-  String get deleteService => 'Delete Service';
+  String get deleteService => 'حذف الخدمة';
 
   @override
-  String get confirmDeleteService => 'Are you sure you want to delete this service? This action cannot be undone.';
+  String get confirmDeleteService => 'هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.';
 
   @override
-  String get serviceVisible => 'Service is visible to customers';
+  String get serviceVisible => 'الخدمة مرئية للعملاء';
 
   @override
-  String get serviceHidden => 'Service is hidden from customers';
+  String get serviceHidden => 'الخدمة مخفية عن العملاء';
 
   @override
-  String get tipClearPricing => 'Use clear pricing formats like \"1500 DA\" or \"per hour\"';
+  String get tipClearPricing => 'استخدم تنسيقات تسعير واضحة مثل \"1500 دج\" أو \"للساعة\"';
 
   @override
-  String get tipStartingPrices => 'Consider offering starting prices for complex jobs';
+  String get tipStartingPrices => 'فكر في عرض أسعار بداية للخدمات المعقدة';
 
   @override
-  String get tipTransparency => 'Be transparent about additional charges';
+  String get tipTransparency => 'كن شفافًا بشأن الرسوم الإضافية';
 
   @override
-  String get tipCompetitorPricing => 'Review competitor pricing in your area';
+  String get tipCompetitorPricing => 'راجع أسعار المنافسين في منطقتك';
 
   @override
-  String get serviceImages => 'Service Images';
+  String get serviceImages => 'صور الخدمة';
 
   @override
-  String get addPhotosToAttractCustomers => 'Add photos of your work to attract more customers.';
+  String get addPhotosToAttractCustomers => 'أضف صورًا لأعمالك لجذب المزيد من العملاء.';
 
   @override
-  String get uploadImages => 'Upload Images';
+  String get uploadImages => 'رفع الصور';
 
   @override
-  String get tapToSelectFromGallery => 'Tap here to select photos from your gallery';
+  String get tapToSelectFromGallery => 'اضغط هنا لاختيار صور من معرضك';
 
   @override
-  String get imageUploadComingSoon => 'Image upload - Coming Soon';
+  String get imageUploadComingSoon => 'رفع الصور – قادم قريبًا';
 
   @override
-  String get serviceName => 'Service Name';
+  String get serviceName => 'اسم الخدمة';
 
   @override
-  String get enterServiceName => 'Enter service name';
+  String get enterServiceName => 'أدخل اسم الخدمة';
 
   @override
-  String get description => 'Description';
+  String get description => 'الوصف';
 
   @override
-  String get describeYourService => 'Describe your service in detail';
+  String get describeYourService => 'صف خدمتك بالتفصيل';
 
   @override
-  String get pricing => 'Pricing';
+  String get pricing => 'التسعير';
 
   @override
-  String get pricingModel => 'Pricing Model';
+  String get pricingModel => 'نموذج التسعير';
 
   @override
-  String get hourlyRate => 'Hourly Rate';
+  String get hourlyRate => 'سعر الساعة';
 
   @override
-  String get fixedPrice => 'Fixed Price';
+  String get fixedPrice => 'سعر ثابت';
 
   @override
-  String get enterPrice => '0.00';
+  String get enterPrice => '٠٫٠٠';
 
   @override
-  String get pleaseEnterServiceName => 'Please enter a service name';
+  String get pleaseEnterServiceName => 'الرجاء إدخال اسم الخدمة';
 
   @override
-  String get pleaseEnterDescription => 'Please enter a description';
+  String get pleaseEnterDescription => 'الرجاء إدخال وصف';
 
   @override
-  String get pleaseEnterPrice => 'Please enter a price';
+  String get pleaseEnterPrice => 'الرجاء إدخال سعر';
 
   @override
-  String get serviceAddedSuccessfully => 'Service added successfully!';
+  String get serviceAddedSuccessfully => 'تمت إضافة الخدمة بنجاح!';
 }

@@ -546,15 +546,19 @@ class _JobCardState extends State<JobCard> {
       });
 
       try {
-        // TODO: Implement send offer API call when backend endpoint is ready
-        // await _apiService.sendOffer(
-        //   demandId: widget.demandId,
-        //   price: double.parse(priceController.text),
-        //   message: messageController.text,
-        // );
+        // Call the send offer API
+        // Use current date + 1 day as default proposed date
+        final proposedDate = DateTime.now()
+            .add(Duration(days: 1))
+            .toIso8601String()
+            .split('T')[0];
 
-        // Simulate API call
-        await Future.delayed(const Duration(seconds: 1));
+        await _apiService.sendOffer(
+          demandId: widget.demandId,
+          message: messageController.text,
+          proposedPrice: double.parse(priceController.text),
+          proposedDate: proposedDate,
+        );
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

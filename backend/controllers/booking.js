@@ -2,18 +2,59 @@ const supabase = require('../config/supabase.js');
 
 async function bookService(req, res) {
   try {
-    const { 
-      description, 
-      service_id, 
-      homeowner_id, 
-      sp_id, 
-      date, 
-      time, 
-      location 
+    const {
+      description,
+      service_id,
+      homeowner_id,
+      sp_id,
+      date,
+      time,
+      location
     } = req.body;
 
     if (!description || !service_id || !homeowner_id || !sp_id || !date || !time || !location) {
       return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Check for existing pending or accepted bookings from this homeowner to this SP
+    const { data: existingBookings, error: checkError } = await supabase
+      .from("bookings")
+      .select("booking_id, status, created_at")
+      .eq("homeowner_id", homeowner_id)
+      .eq("sp_id", sp_id)
+      .in("status", ["pending", "accepted"])
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (checkError) {
+      console.error("Error checking existing bookings:", checkError);
+      return res.status(500).json({ error: "Error checking existing bookings" });
+    }
+
+    if (existingBookings && existingBookings.length > 0) {
+      const existingBooking = existingBookings[0];
+      return res.status(409).json({
+        error: "You already have a pending or ongoing booking with this service provider. Please wait for it to be completed or cancelled before booking again.",
+        existingBookingId: existingBooking.booking_id,
+        existingStatus: existingBooking.status
+      });
+    }
+
+    // Additional rate limiting: Check for recent bookings in last 5 minutes
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { data: recentBookings, error: recentCheckError } = await supabase
+      .from("bookings")
+      .select("booking_id")
+      .eq("homeowner_id", homeowner_id)
+      .gte("created_at", fiveMinutesAgo)
+      .limit(1);
+
+    if (recentCheckError) {
+      console.error("Error checking recent bookings:", recentCheckError);
+    } else if (recentBookings && recentBookings.length > 0) {
+      return res.status(429).json({
+        error: "Please wait a few minutes before creating another booking. This helps prevent accidental duplicate bookings."
+      });
     }
 
     // Insert booking
@@ -35,7 +76,7 @@ async function bookService(req, res) {
       return res.status(500).json({ error: "Error creating booking" });
     }
 
-    const booking = data[0]; 
+    const booking = data[0];
 
     // Upload photos
     if (req.files && req.files.length > 0) {
@@ -60,7 +101,7 @@ async function bookService(req, res) {
 
         const photoUrl = urlData.publicUrl;
 
-        
+
         await supabase
           .from("booking_images")
           .insert({
@@ -82,8 +123,8 @@ async function bookService(req, res) {
 }
 
 async function getBookingOfUser(req, res) {
-  
-    try {
+
+  try {
     const user_id = req.params.user_id;
 
     if (!user_id) {
@@ -91,8 +132,8 @@ async function getBookingOfUser(req, res) {
     }
 
     const { data: bookings, error } = await supabase
-  .from("bookings")
-  .select(`
+      .from("bookings")
+      .select(`
     booking_id,
     date,
     time,
@@ -111,7 +152,7 @@ async function getBookingOfUser(req, res) {
       price_amount
     )
   `)
-  .eq("homeowner_id", user_id);
+      .eq("homeowner_id", user_id);
 
     if (error) {
       console.error(error);
@@ -126,4 +167,4 @@ async function getBookingOfUser(req, res) {
   }
 }
 
-module.exports = { bookService , getBookingOfUser };
+module.exports = { bookService, getBookingOfUser };

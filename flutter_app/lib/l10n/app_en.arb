@@ -390,7 +390,7 @@
   "reportsFilterResolved": "Resolved",
   "reportsHomeowner": "HOMEOWNER",
   "reportsProvider": "PROVIDER",
-  "reportsDetails": "Details",
+  "details": "View Details",
   "reportsResolve": "Resolve",
   "requestsTitle": "Service Requests",
   "requestsTabRequests": "Requests",

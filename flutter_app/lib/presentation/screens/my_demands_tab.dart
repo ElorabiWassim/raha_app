@@ -63,6 +63,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,12 +71,12 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
           Icon(Icons.search_off, size: 64, color: AppColors.textLight),
           const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.noDemandsFound,
+            l10n?.noDemandsFound ?? 'No demands found',
             style: AppTextStyles.heading5.copyWith(color: AppColors.textMedium),
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context)!.noDemandsSubtitle,
+            l10n?.noDemandsSubtitle ?? 'Try adjusting your filters',
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textLight,
             ),
@@ -114,7 +115,8 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               const Icon(Icons.add, size: 18),
               const SizedBox(width: 6),
               Text(
-                AppLocalizations.of(context)!.postNewDemand,
+                AppLocalizations.of(context)?.postNewDemand ??
+                    'Post New Demand',
                 style: AppTextStyles.buttonSmall,
               ),
             ],
@@ -162,9 +164,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       ),
                       cursorColor: AppColors.primary,
                       decoration: InputDecoration(
-                        hintText: AppLocalizations.of(
-                          context,
-                        )!.searchPlaceholder,
+                        hintText:
+                            AppLocalizations.of(context)?.searchPlaceholder ??
+                            'Search...',
                         hintStyle: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textHint,
                         ),
@@ -265,7 +267,8 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.filterAndSort,
+                        AppLocalizations.of(context)?.filterAndSort ??
+                            'Filter & Sort',
                         style: AppTextStyles.heading4,
                       ),
                       TextButton(
@@ -277,7 +280,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           });
                         },
                         child: Text(
-                          AppLocalizations.of(context)!.reset,
+                          AppLocalizations.of(context)?.reset ?? 'Reset',
                           style: AppTextStyles.buttonMedium.copyWith(
                             color: AppColors.primary,
                           ),
@@ -295,7 +298,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       children: [
                         // Sort By
                         Text(
-                          AppLocalizations.of(context)!.sortBy,
+                          AppLocalizations.of(context)?.sortBy ?? 'Sort By',
                           style: AppTextStyles.heading5,
                         ),
                         const SizedBox(height: 12),
@@ -304,19 +307,21 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           runSpacing: 8,
                           children: [
                             _buildSortChip(
-                              AppLocalizations.of(context)!.sortDate,
+                              AppLocalizations.of(context)?.sortDate ?? 'Date',
                               'date',
                               tempSortBy,
                               (val) => setModalState(() => tempSortBy = val),
                             ),
                             _buildSortChip(
-                              AppLocalizations.of(context)!.sortBudget,
+                              AppLocalizations.of(context)?.sortBudget ??
+                                  'Budget',
                               'budget',
                               tempSortBy,
                               (val) => setModalState(() => tempSortBy = val),
                             ),
                             _buildSortChip(
-                              AppLocalizations.of(context)!.sortStatus,
+                              AppLocalizations.of(context)?.sortStatus ??
+                                  'Status',
                               'status',
                               tempSortBy,
                               (val) => setModalState(() => tempSortBy = val),
@@ -327,7 +332,8 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
 
                         // Category Filter
                         Text(
-                          AppLocalizations.of(context)!.categories,
+                          AppLocalizations.of(context)?.categories ??
+                              'Categories',
                           style: AppTextStyles.heading5,
                         ),
                         const SizedBox(height: 12),
@@ -336,27 +342,34 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           runSpacing: 8,
                           children: [
                             _buildCategoryChip(
-                              AppLocalizations.of(context)!.categoryElectrical,
+                              AppLocalizations.of(
+                                    context,
+                                  )?.categoryElectrical ??
+                                  'Electrical',
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)!.categoryPlumbing,
+                              AppLocalizations.of(context)?.categoryPlumbing ??
+                                  'Plumbing',
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)!.categoryPainting,
+                              AppLocalizations.of(context)?.categoryPainting ??
+                                  'Painting',
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)!.categoryCarpentry,
+                              AppLocalizations.of(context)?.categoryCarpentry ??
+                                  'Carpentry',
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)!.categoryCleaning,
+                              AppLocalizations.of(context)?.categoryCleaning ??
+                                  'Cleaning',
                               tempSelectedCategories,
                               setModalState,
                             ),
@@ -366,7 +379,8 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
 
                         // Budget Range
                         Text(
-                          AppLocalizations.of(context)!.budgetRange,
+                          AppLocalizations.of(context)?.budgetRange ??
+                              'Budget Range',
                           style: AppTextStyles.heading5,
                         ),
                         const SizedBox(height: 12),
@@ -436,7 +450,8 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                         ),
                       ),
                       child: Text(
-                        AppLocalizations.of(context)!.applyFilters,
+                        AppLocalizations.of(context)?.applyFilters ??
+                            'Apply Filters',
                         style: AppTextStyles.buttonMedium,
                       ),
                     ),
@@ -548,23 +563,24 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
         itemBuilder: (context, index) {
           final status = filters[index];
           final isSelected = state.statusFilter == status;
+          final l10n = AppLocalizations.of(context);
 
           String label;
           if (status == null) {
-            label = AppLocalizations.of(context)!.filterAll;
+            label = l10n?.filterAll ?? 'All';
           } else {
             switch (status) {
               case DemandStatus.pending:
-                label = AppLocalizations.of(context)!.statusPending;
+                label = l10n?.statusPending ?? 'Pending';
                 break;
               case DemandStatus.inProgress:
-                label = AppLocalizations.of(context)!.statusInProgress;
+                label = l10n?.statusInProgress ?? 'In Progress';
                 break;
               case DemandStatus.completed:
-                label = AppLocalizations.of(context)!.statusCompleted;
+                label = l10n?.statusCompleted ?? 'Completed';
                 break;
               case DemandStatus.cancelled:
-                label = AppLocalizations.of(context)!.statusCancelled;
+                label = l10n?.statusCancelled ?? 'Cancelled';
                 break;
             }
           }
@@ -774,12 +790,12 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
   }
 
   Widget _buildPendingActions(Demand demand) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         Text(
-          AppLocalizations.of(
-            context,
-          )!.providersApplied(demand.applicantsCount),
+          l10n?.providersApplied(demand.applicantsCount) ??
+              '${demand.applicantsCount} providers applied',
           style: AppTextStyles.buttonMedium.copyWith(color: AppColors.primary),
           textAlign: TextAlign.center,
         ),
@@ -812,7 +828,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               ),
             ),
             child: Text(
-              AppLocalizations.of(context)!.viewRequests,
+              AppLocalizations.of(context)?.viewRequests ?? 'View Requests',
               style: AppTextStyles.buttonMedium,
             ),
           ),
@@ -834,7 +850,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                AppLocalizations.of(context)!.editDemand,
+                AppLocalizations.of(context)?.editDemand ?? 'Edit Demand',
                 style: AppTextStyles.buttonMedium.copyWith(
                   color: AppColors.textLight,
                 ),
@@ -851,7 +867,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                AppLocalizations.of(context)!.cancelDemand,
+                AppLocalizations.of(context)?.cancelDemand ?? 'Cancel Demand',
                 style: AppTextStyles.buttonMedium.copyWith(
                   color: AppColors.error,
                 ),
@@ -867,7 +883,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          AppLocalizations.of(context)!.providerHired,
+          AppLocalizations.of(context)?.providerHired ?? 'Provider Hired',
           style: AppTextStyles.buttonMedium.copyWith(
             color: AppColors.textMedium,
           ),
@@ -888,7 +904,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               ),
             ),
             child: Text(
-              AppLocalizations.of(context)!.viewDetails,
+              AppLocalizations.of(context)?.viewDetails ?? 'View Details',
               style: AppTextStyles.buttonMedium,
             ),
           ),
@@ -901,7 +917,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          AppLocalizations.of(context)!.jobFinished,
+          AppLocalizations.of(context)?.jobFinished ?? 'Job Finished',
           style: AppTextStyles.buttonMedium.copyWith(
             color: AppColors.textMedium,
           ),
@@ -922,7 +938,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               ),
             ),
             child: Text(
-              AppLocalizations.of(context)!.viewInvoice,
+              AppLocalizations.of(context)?.viewInvoice ?? 'View Invoice',
               style: AppTextStyles.buttonMedium,
             ),
           ),
@@ -932,6 +948,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
   }
 
   Widget _buildStatusBadge(BuildContext context, DemandStatus status) {
+    final l10n = AppLocalizations.of(context);
     Color backgroundColor;
     Color textColor;
     String label;
@@ -940,22 +957,22 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
       case DemandStatus.pending:
         backgroundColor = AppColors.statusPendingBg;
         textColor = AppColors.statusPending;
-        label = AppLocalizations.of(context)!.statusPending;
+        label = l10n?.statusPending ?? 'Pending';
         break;
       case DemandStatus.inProgress:
         backgroundColor = AppColors.statusInProgressBg;
         textColor = AppColors.statusInProgress;
-        label = AppLocalizations.of(context)!.statusInProgress;
+        label = l10n?.statusInProgress ?? 'In Progress';
         break;
       case DemandStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = AppLocalizations.of(context)!.statusCompleted;
+        label = l10n?.statusCompleted ?? 'Completed';
         break;
       case DemandStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = AppLocalizations.of(context)!.statusCancelled;
+        label = l10n?.statusCancelled ?? 'Cancelled';
         break;
     }
 
