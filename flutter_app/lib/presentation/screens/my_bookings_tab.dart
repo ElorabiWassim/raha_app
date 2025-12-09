@@ -143,8 +143,9 @@ class MyBookingsTab extends StatelessWidget {
                     ),
                     child: Text(
                       booking.status == BookingStatus.completed
-                          ? AppLocalizations.of(context)!.actionRate
-                          : AppLocalizations.of(context)!.actionDetails,
+                          ? AppLocalizations.of(context)?.actionRate ?? 'Rate'
+                          : AppLocalizations.of(context)?.actionDetails ??
+                                'Details',
                       style: AppTextStyles.buttonMedium,
                     ),
                   ),
@@ -158,6 +159,7 @@ class MyBookingsTab extends StatelessWidget {
   }
 
   Widget _buildStatusBadge(BuildContext context, BookingStatus status) {
+    final l10n = AppLocalizations.of(context);
     Color backgroundColor;
     Color textColor;
     String label;
@@ -166,17 +168,17 @@ class MyBookingsTab extends StatelessWidget {
       case BookingStatus.upcoming:
         backgroundColor = AppColors.statusUpcomingBg;
         textColor = AppColors.statusUpcoming;
-        label = AppLocalizations.of(context)!.statusUpcoming;
+        label = l10n?.statusUpcoming ?? 'Upcoming';
         break;
       case BookingStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = AppLocalizations.of(context)!.statusCompleted;
+        label = l10n?.statusCompleted ?? 'Completed';
         break;
       case BookingStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = AppLocalizations.of(context)!.statusCancelled;
+        label = l10n?.statusCancelled ?? 'Cancelled';
         break;
     }
 

@@ -660,12 +660,11 @@ const getMyBookings = async (req, res) => {
             name
           )
         ),
-        homeowners (
+        homeowners!inner (
           homeowner_id,
           home_address,
           date_of_birth,
-    
-          users (
+          users!inner (
             user_id,
             full_name,
             phone_number,
@@ -694,6 +693,9 @@ const getMyBookings = async (req, res) => {
 
 const getBookingHistory = async (req, res) => {
     try {
+        console.log('📋 Getting booking history...');
+        console.log('Service Provider:', req.serviceProvider);
+
         const sp_id = req.serviceProvider.sp_id;
         const { page = 1, limit = 20 } = req.query;
         const offset = (page - 1) * limit;
@@ -701,16 +703,17 @@ const getBookingHistory = async (req, res) => {
         const tenDaysAgo = new Date();
         tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
 
+        console.log('Query params:', { sp_id, page, limit, offset, tenDaysAgo: tenDaysAgo.toISOString() });
+
         const { data: bookings, error, count } = await supabase
             .from("bookings")
             .select(`
         *,
-        homeowners (
+        homeowners!inner (
           homeowner_id,
           home_address,
-          date_of_birth
-          
-          users (
+          date_of_birth,
+          users!inner (
             user_id,
             full_name,
             phone_number,
@@ -729,22 +732,20 @@ const getBookingHistory = async (req, res) => {
         booking_images (
           booking_image_id,
           image_url
-        ),
-        reports (
-          report_id,
-          status
         )
       `, { count: "exact" })
             .eq("sp_id", sp_id)
-            .in("status", ["completed", "cancelled", "rejected", "accepted"])
+            .in("status", ["completed", "cancelled", "rejected"])
             .gte("updated_at", tenDaysAgo.toISOString())
             .order("updated_at", { ascending: false })
             .range(offset, offset + limit - 1);
 
         if (error) {
-            console.error('Supabase error:', error);
+            console.error('❌ Supabase error details:', JSON.stringify(error, null, 2));
             throw error;
         }
+
+        console.log('✅ Bookings fetched:', bookings?.length || 0);
 
         res.json({
             bookings,
@@ -756,8 +757,10 @@ const getBookingHistory = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Get booking history error:", error);
-        res.status(500).json({ error: "Failed to fetch booking history" });
+        console.error("❌ Get booking history error:", error);
+        console.error("Error message:", error.message);
+        console.error("Error details:", JSON.stringify(error, null, 2));
+        res.status(500).json({ error: "Failed to fetch booking history", details: error.message });
     }
 };
 

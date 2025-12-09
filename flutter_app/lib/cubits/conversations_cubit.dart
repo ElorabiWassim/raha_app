@@ -5,6 +5,7 @@ import 'conversations_state.dart';
 
 class ConversationsCubit extends Cubit<ConversationsState> {
   final ConversationsRepository repository;
+  List<ConversationModel> _cachedConversations = [];
 
   ConversationsCubit({required this.repository})
     : super(ConversationsInitial());
@@ -16,7 +17,8 @@ class ConversationsCubit extends Cubit<ConversationsState> {
     final response = await repository.getUserConversations();
 
     if (response.success && response.data != null) {
-      emit(ConversationsLoaded(response.data!));
+      _cachedConversations = response.data!;
+      emit(ConversationsLoaded(_cachedConversations));
     } else {
       emit(
         ConversationsError(response.error ?? 'Failed to load conversations'),
@@ -26,12 +28,18 @@ class ConversationsCubit extends Cubit<ConversationsState> {
 
   // Load messages for a specific conversation
   Future<void> loadMessages(String conversationId) async {
-    emit(ConversationMessagesLoading());
+    emit(ConversationMessagesLoading(_cachedConversations));
 
     final response = await repository.getConversationMessages(conversationId);
 
     if (response.success && response.data != null) {
-      emit(ConversationMessagesLoaded(conversationId, response.data!));
+      emit(
+        ConversationMessagesLoaded(
+          _cachedConversations,
+          conversationId,
+          response.data!,
+        ),
+      );
     } else {
       emit(ConversationsError(response.error ?? 'Failed to load messages'));
     }
@@ -43,7 +51,7 @@ class ConversationsCubit extends Cubit<ConversationsState> {
     String messageText, {
     String? attachmentUrl,
   }) async {
-    emit(SendingMessage());
+    emit(SendingMessage(_cachedConversations));
 
     final response = await repository.sendMessage(
       conversationId,
@@ -52,7 +60,7 @@ class ConversationsCubit extends Cubit<ConversationsState> {
     );
 
     if (response.success && response.data != null) {
-      emit(MessageSent(response.data!));
+      emit(MessageSent(_cachedConversations, response.data!));
       // Reload messages after sending
       await loadMessages(conversationId);
     } else {

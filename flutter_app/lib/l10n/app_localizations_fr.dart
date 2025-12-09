@@ -476,7 +476,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reportsProvider => 'PRESTATAIRE';
 
   @override
-  String get reportsDetails => 'Détails';
+  String get details => 'Détails';
 
   @override
   String get reportsResolve => 'Résoudre';
@@ -1017,9 +1017,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rate => 'Évaluer';
-
-  @override
-  String get details => 'Détails';
 
   @override
   String get profileInformation => 'Informations du profil';

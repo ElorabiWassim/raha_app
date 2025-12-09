@@ -1,12 +1,23 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:path/path.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() => _instance;
-  DatabaseHelper._internal();
+  DatabaseHelper._internal() {
+    _initializeDatabaseFactory();
+  }
 
   static Database? _database;
+
+  void _initializeDatabaseFactory() {
+    if (kIsWeb) {
+      // Initialize database factory for web
+      databaseFactory = databaseFactoryFfiWeb;
+    }
+  }
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -15,8 +26,12 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String dbPath = await getDatabasesPath();
-    String path = join(dbPath, 'wilayas.db');
+    String path = 'wilayas.db';
+
+    if (!kIsWeb) {
+      String dbPath = await getDatabasesPath();
+      path = join(dbPath, 'wilayas.db');
+    }
 
     return await openDatabase(path, version: 1, onCreate: _onCreate);
   }

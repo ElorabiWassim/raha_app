@@ -21,27 +21,47 @@ class ConversationsLoaded extends ConversationsState {
   List<Object?> get props => [conversations];
 }
 
-class ConversationMessagesLoading extends ConversationsState {}
+class ConversationMessagesLoading extends ConversationsState {
+  final List<ConversationModel> conversations;
+
+  const ConversationMessagesLoading(this.conversations);
+
+  @override
+  List<Object?> get props => [conversations];
+}
 
 class ConversationMessagesLoaded extends ConversationsState {
+  final List<ConversationModel> conversations;
   final String conversationId;
   final List<ChatMessageModel> messages;
 
-  const ConversationMessagesLoaded(this.conversationId, this.messages);
+  const ConversationMessagesLoaded(
+    this.conversations,
+    this.conversationId,
+    this.messages,
+  );
 
   @override
-  List<Object?> get props => [conversationId, messages];
+  List<Object?> get props => [conversations, conversationId, messages];
 }
 
-class SendingMessage extends ConversationsState {}
+class SendingMessage extends ConversationsState {
+  final List<ConversationModel> conversations;
 
-class MessageSent extends ConversationsState {
-  final ChatMessageModel message;
-
-  const MessageSent(this.message);
+  const SendingMessage(this.conversations);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [conversations];
+}
+
+class MessageSent extends ConversationsState {
+  final List<ConversationModel> conversations;
+  final ChatMessageModel message;
+
+  const MessageSent(this.conversations, this.message);
+
+  @override
+  List<Object?> get props => [conversations, message];
 }
 
 class StartingConversation extends ConversationsState {}

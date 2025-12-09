@@ -100,14 +100,16 @@ class ApiService {
   Future<Map<String, dynamic>> getProfile() async {
     final headers = await _getHeaders();
     final response = await http.get(
-      Uri.parse('$baseUrl/profile'),
+      Uri.parse('http://localhost:5000/api/profile'),
       headers: headers,
     );
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Failed to load profile');
+      throw Exception(
+        'Failed to load profile: ${response.statusCode} - ${response.body}',
+      );
     }
   }
 
@@ -130,16 +132,22 @@ class ApiService {
 
   Future<List<dynamic>> getMyServices() async {
     final headers = await _getHeaders();
+    print('📡 Fetching services from: $baseUrl/services/my');
     final response = await http.get(
       Uri.parse('$baseUrl/services/my'),
       headers: headers,
     );
 
+    print('📊 Services response status: ${response.statusCode}');
+    print('📊 Services response body: ${response.body}');
+
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return data['services'];
+      return data['services'] ?? [];
     } else {
-      throw Exception('Failed to load services');
+      throw Exception(
+        'Failed to load services: ${response.statusCode} - ${response.body}',
+      );
     }
   }
 

@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/models/chat_message.dart';
 import '../../data/models/message.dart';
-import '../../logic/cubits/messages/messages_cubit.dart';
-import '../../logic/cubits/messages/messages_state.dart';
+import '../../data/models/conversation_model.dart';
+import '../../cubits/conversations_cubit.dart';
+import '../../cubits/conversations_state.dart';
+import '../../data/repositories/conversations_repository.dart';
+import '../../services/api_service.dart';
 import '../themes/app_text_style.dart';
 
 class MessagesScreen extends StatelessWidget {
@@ -13,7 +16,9 @@ class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MessagesCubit()..loadMessages(),
+      create: (context) => ConversationsCubit(
+        repository: ConversationsRepository(apiService: ApiService()),
+      )..loadConversations(),
       child: const _MessagesScreenContent(),
     );
   }
@@ -34,28 +39,79 @@ class _MessagesScreenContent extends StatelessWidget {
             children: [
               _buildAppBar(context),
               Expanded(
-                child: BlocBuilder<MessagesCubit, MessagesState>(
+                child: BlocBuilder<ConversationsCubit, ConversationsState>(
                   builder: (context, state) {
-                    if (state is MessagesLoading) {
+                    // Show loading for initial state
+                    if (state is ConversationsInitial ||
+                        state is ConversationsLoading) {
                       return const Center(child: CircularProgressIndicator());
-                    } else if (state is MessagesLoaded) {
-                      if (state.messages.isEmpty) {
-                        return _buildEmptyState();
-                      }
+                    }
+
+                    // Show error state
+                    if (state is ConversationsError) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: Colors.red[300],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              state.message,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.red,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                context
+                                    .read<ConversationsCubit>()
+                                    .loadConversations();
+                              },
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    // Extract conversations list from various states
+                    List<ConversationModel> conversations = [];
+
+                    if (state is ConversationsLoaded) {
+                      conversations = state.conversations;
+                    } else if (state is ConversationMessagesLoading) {
+                      conversations = state.conversations;
+                    } else if (state is ConversationMessagesLoaded) {
+                      conversations = state.conversations;
+                    } else if (state is SendingMessage) {
+                      conversations = state.conversations;
+                    } else if (state is MessageSent) {
+                      conversations = state.conversations;
+                    }
+
+                    // Show conversations list if available
+                    if (conversations.isNotEmpty) {
                       return ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                        itemCount: state.messages.length,
+                        itemCount: conversations.length,
                         itemBuilder: (context, index) {
-                          return _buildMessageCard(
+                          return _buildConversationCard(
                             context,
-                            state.messages[index],
+                            conversations[index],
                           );
                         },
                       );
-                    } else if (state is MessagesError) {
-                      return Center(child: Text(state.message));
                     }
-                    return const SizedBox.shrink();
+
+                    // Show empty state
+                    return _buildEmptyState();
                   },
                 ),
               ),
@@ -77,12 +133,7 @@ class _MessagesScreenContent extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                alignment: Alignment.centerLeft,
-                // You can add a back or menu icon here if needed
-              ),
+              Container(width: 48, height: 48, alignment: Alignment.centerLeft),
             ],
           ),
           Text(
@@ -94,14 +145,42 @@ class _MessagesScreenContent extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageCard(BuildContext context, Message message) {
+  Widget _buildConversationCard(
+    BuildContext context,
+    ConversationModel conversation,
+  ) {
+    final lastMessage = conversation.lastMessage;
+    final hasUnread = false; // TODO: Add unread count from backend
+
+    // Format time
+    String formatTime(DateTime dateTime) {
+      final now = DateTime.now();
+      final difference = now.difference(dateTime);
+
+      if (difference.inDays == 0) {
+        final hour = dateTime.hour > 12
+            ? dateTime.hour - 12
+            : (dateTime.hour == 0 ? 12 : dateTime.hour);
+        final minute = dateTime.minute.toString().padLeft(2, '0');
+        final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+        return '$hour:$minute $period';
+      } else if (difference.inDays == 1) {
+        return 'Yesterday';
+      } else if (difference.inDays < 7) {
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        return days[dateTime.weekday - 1];
+      } else {
+        return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: message.isUnread
+          color: hasUnread
               ? AppColors.primary.withValues(alpha: .2)
               : const Color(0xFFE4E4E7),
         ),
@@ -117,15 +196,17 @@ class _MessagesScreenContent extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // Navigate to conversation screen
+            // Navigate to conversation detail screen
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Conversation(
-                  providerName: message.name,
-                  providerImage: message.profileImage,
-                  service: message.service,
-                  isOnline: message.isOnline,
+                builder: (navContext) => BlocProvider.value(
+                  value: context.read<ConversationsCubit>()
+                    ..loadMessages(conversation.conversationId),
+                  child: ConversationDetailScreen(
+                    conversationId: conversation.conversationId,
+                    otherUser: conversation.otherUser,
+                  ),
                 ),
               ),
             );
@@ -135,28 +216,18 @@ class _MessagesScreenContent extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                // Profile Image with Online Status
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 28,
-                      backgroundImage: NetworkImage(message.profileImage),
+                // Profile Image
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: AppColors.primary.withValues(alpha: .1),
+                  child: Text(
+                    conversation.otherUser.fullName[0].toUpperCase(),
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
                     ),
-                    if (message.isOnline)
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                        ),
-                      ),
-                  ],
+                  ),
                 ),
                 const SizedBox(width: 16),
                 // Message Content
@@ -167,51 +238,61 @@ class _MessagesScreenContent extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            message.name,
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: message.isUnread
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
-                              color: AppColors.textDark,
+                          Expanded(
+                            child: Text(
+                              conversation.otherUser.fullName,
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: hasUnread
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: AppColors.textDark,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Text(
-                            message.time,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: message.isUnread
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              color: message.isUnread
-                                  ? AppColors.primary
-                                  : const Color(0xFF888888),
+                          if (lastMessage != null)
+                            Text(
+                              formatTime(lastMessage.sentAt),
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: hasUnread
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: hasUnread
+                                    ? AppColors.primary
+                                    : const Color(0xFF888888),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              lastMessage?.text ?? 'No messages yet',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: hasUnread
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: hasUnread
+                                    ? AppColors.textDark
+                                    : const Color(0xFF888888),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        message.lastMessage,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: message.isUnread
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          color: message.isUnread
-                              ? AppColors.textDark
-                              : const Color(0xFF888888),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
                     ],
                   ),
                 ),
                 // Unread Indicator
-                if (message.isUnread)
+                if (hasUnread)
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
                     child: Container(
@@ -277,90 +358,48 @@ class _MessagesScreenContent extends StatelessWidget {
   }
 }
 
-class Conversation extends StatefulWidget {
-  final String providerName;
-  final String providerImage;
-  final String service;
-  final bool isOnline;
+class ConversationDetailScreen extends StatefulWidget {
+  final String conversationId;
+  final OtherUser otherUser;
 
-  const Conversation({
+  const ConversationDetailScreen({
     super.key,
-    required this.providerName,
-    required this.providerImage,
-    required this.service,
-    required this.isOnline,
+    required this.conversationId,
+    required this.otherUser,
   });
 
   @override
-  State<Conversation> createState() => _ConversationState();
+  State<ConversationDetailScreen> createState() =>
+      _ConversationDetailScreenState();
 }
 
-class _ConversationState extends State<Conversation> {
+class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final List<ChatMessage> _messages = [];
-  bool _isSearching = false;
-  String _searchQuery = '';
-  final TextEditingController _searchController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    _loadInitialMessages();
-  }
-
-  void _loadInitialMessages() {
-    setState(() {
-      _messages.addAll([
-        ChatMessage(
-          id: '1',
-          text: 'Hello, I will be there in about 15 minutes.',
-          isMe: false,
-          time: '10:30 AM',
-        ),
-        ChatMessage(
-          id: '2',
-          text: 'Great, thank you for the update!',
-          isMe: true,
-          time: '10:31 AM',
-        ),
-        ChatMessage(
-          id: '3',
-          text: 'See you soon.',
-          isMe: false,
-          time: '10:31 AM',
-        ),
-        ChatMessage(
-          id: '4',
-          text:
-              'Perfect. Just to confirm, you have all the necessary tools for the faucet replacement, right?',
-          isMe: true,
-          time: '10:32 AM',
-        ),
-      ]);
-    });
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _sendMessage() {
     if (_messageController.text.trim().isEmpty) return;
 
-    setState(() {
-      _messages.add(
-        ChatMessage(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          text: _messageController.text.trim(),
-          isMe: true,
-          time: _getCurrentTime(),
-        ),
-      );
-    });
-
+    final messageText = _messageController.text.trim();
     _messageController.clear();
+
+    context.read<ConversationsCubit>().sendMessage(
+      widget.conversationId,
+      messageText,
+    );
+
     _scrollToBottom();
   }
 
   void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
@@ -369,55 +408,6 @@ class _ConversationState extends State<Conversation> {
         );
       }
     });
-  }
-
-  String _getCurrentTime() {
-    final now = DateTime.now();
-    final hour = now.hour > 12 ? now.hour - 12 : now.hour;
-    final minute = now.minute.toString().padLeft(2, '0');
-    final period = now.hour >= 12 ? 'PM' : 'AM';
-    return '$hour:$minute $period';
-  }
-
-  void _addReaction(String messageId, String emoji) {
-    setState(() {
-      final index = _messages.indexWhere((msg) => msg.id == messageId);
-      if (index != -1) {
-        final msg = _messages[index];
-        final reactions = List<String>.from(msg.reactions);
-
-        if (reactions.contains(emoji)) {
-          reactions.remove(emoji);
-        } else {
-          reactions.add(emoji);
-        }
-
-        _messages[index] = ChatMessage(
-          id: msg.id,
-          text: msg.text,
-          isMe: msg.isMe,
-          time: msg.time,
-          reactions: reactions,
-        );
-      }
-    });
-  }
-
-  List<ChatMessage> get _filteredMessages {
-    if (_searchQuery.isEmpty) return _messages;
-    return _messages
-        .where(
-          (msg) => msg.text.toLowerCase().contains(_searchQuery.toLowerCase()),
-        )
-        .toList();
-  }
-
-  @override
-  void dispose() {
-    _messageController.dispose();
-    _scrollController.dispose();
-    _searchController.dispose();
-    super.dispose();
   }
 
   @override
@@ -431,27 +421,91 @@ class _ConversationState extends State<Conversation> {
           child: Column(
             children: [
               _buildAppBar(),
-              if (_isSearching) _buildSearchBar(),
               Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _filteredMessages.length,
-                  itemBuilder: (context, index) {
-                    final msg = _filteredMessages[index];
-                    return MessageBubble(
-                      message: msg,
-                      onReact: (emoji) => _addReaction(msg.id, emoji),
-                      isHighlighted:
-                          _searchQuery.isNotEmpty &&
-                          msg.text.toLowerCase().contains(
-                            _searchQuery.toLowerCase(),
+                child: BlocConsumer<ConversationsCubit, ConversationsState>(
+                  listener: (context, state) {
+                    if (state is MessageSent) {
+                      _scrollToBottom();
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is ConversationMessagesLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is ConversationMessagesLoaded) {
+                      if (state.messages.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.chat_bubble_outline,
+                                size: 64,
+                                color: Colors.grey[300],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No messages yet',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Start the conversation!',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ],
                           ),
-                    );
+                        );
+                      }
+
+                      return ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.all(16),
+                        itemCount: state.messages.length,
+                        itemBuilder: (context, index) {
+                          final message = state.messages[index];
+                          return _MessageBubble(message: message);
+                        },
+                      );
+                    } else if (state is ConversationsError) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: Colors.red[300],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              state.message,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(color: Colors.red),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.read<ConversationsCubit>().loadMessages(
+                                  widget.conversationId,
+                                );
+                              },
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
                   },
                 ),
               ),
-              ChatInputField(
+              _ChatInputField(
                 controller: _messageController,
                 onSend: _sendMessage,
               ),
@@ -462,200 +516,117 @@ class _ConversationState extends State<Conversation> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(70),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: const Color(0xFFEAF7E6).withValues(alpha: .8),
-        ),
-        child: SafeArea(
-          child: Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: AppColors.textDark),
-                onPressed: () => Navigator.pop(context),
-              ),
-              Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 18,
-                    backgroundImage: NetworkImage(widget.providerImage),
-                  ),
-                  if (widget.isOnline)
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.providerName,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textDark,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: Icon(
-                  _isSearching ? Icons.close : Icons.search,
-                  color: AppColors.textDark,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isSearching = !_isSearching;
-                    if (!_isSearching) {
-                      _searchQuery = '';
-                      _searchController.clear();
-                    }
-                  });
-                },
-              ),
-              Icon(Icons.more_vert, color: AppColors.textDark),
-              const SizedBox(width: 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
+  Widget _buildAppBar() {
     return Container(
-      color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: TextField(
-        controller: _searchController,
-        autofocus: true,
-        decoration: InputDecoration(
-          hintText: 'Search in conversation...',
-          prefixIcon: const Icon(Icons.search, color: Colors.grey),
-          suffixIcon: _searchQuery.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear, color: Colors.grey),
-                  onPressed: () {
-                    setState(() {
-                      _searchQuery = '';
-                      _searchController.clear();
-                    });
-                  },
-                )
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: BorderSide.none,
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF7E6).withValues(alpha: .8),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back, color: AppColors.textDark),
+            onPressed: () => Navigator.pop(context),
           ),
-          filled: true,
-          fillColor: const Color(0xFFF4F4F4),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 10,
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: AppColors.primary.withValues(alpha: .1),
+            child: Text(
+              widget.otherUser.fullName[0].toUpperCase(),
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+              ),
+            ),
           ),
-        ),
-        onChanged: (value) {
-          setState(() {
-            _searchQuery = value;
-          });
-        },
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.otherUser.fullName,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textDark,
+                  ),
+                ),
+                Text(
+                  widget.otherUser.role == 'service_provider'
+                      ? 'Service Provider'
+                      : 'Homeowner',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: AppColors.textLight,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(Icons.more_vert, color: AppColors.textDark),
+        ],
       ),
     );
   }
 }
 
-class MessageBubble extends StatelessWidget {
-  final ChatMessage message;
-  final Function(String) onReact;
-  final bool isHighlighted;
+class _MessageBubble extends StatelessWidget {
+  final ChatMessageModel message;
 
-  const MessageBubble({
-    super.key,
-    required this.message,
-    required this.onReact,
-    this.isHighlighted = false,
-  });
+  const _MessageBubble({required this.message});
+
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour > 12
+        ? dateTime.hour - 12
+        : (dateTime.hour == 0 ? 12 : dateTime.hour);
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+    return '$hour:$minute $period';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: message.sender.isMe
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
       child: Column(
-        crossAxisAlignment: message.isMe
+        crossAxisAlignment: message.sender.isMe
             ? CrossAxisAlignment.end
             : CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onLongPress: () => _showReactionMenu(context),
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              constraints: const BoxConstraints(maxWidth: 280),
-              decoration: BoxDecoration(
-                color: isHighlighted
-                    ? Colors.yellow.shade200
-                    : (message.isMe ? AppColors.primary : Colors.grey[200]),
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(18),
-                  topRight: const Radius.circular(18),
-                  bottomLeft: message.isMe
-                      ? const Radius.circular(18)
-                      : const Radius.circular(4),
-                  bottomRight: message.isMe
-                      ? const Radius.circular(4)
-                      : const Radius.circular(18),
-                ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            constraints: const BoxConstraints(maxWidth: 280),
+            decoration: BoxDecoration(
+              color: message.sender.isMe ? AppColors.primary : Colors.grey[200],
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(18),
+                topRight: const Radius.circular(18),
+                bottomLeft: message.sender.isMe
+                    ? const Radius.circular(18)
+                    : const Radius.circular(4),
+                bottomRight: message.sender.isMe
+                    ? const Radius.circular(4)
+                    : const Radius.circular(18),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message.text,
-                    style: TextStyle(
-                      color: message.isMe ? Colors.white : Colors.black87,
-                      fontSize: 15,
-                    ),
-                  ),
-                  if (message.reactions.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Wrap(
-                      spacing: 4,
-                      children: message.reactions
-                          .map(
-                            (emoji) => Text(
-                              emoji,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ],
-                ],
+            ),
+            child: Text(
+              message.text,
+              style: TextStyle(
+                color: message.sender.isMe ? Colors.white : Colors.black87,
+                fontSize: 15,
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: Text(
-              message.time,
+              _formatTime(message.sentAt),
               style: const TextStyle(fontSize: 11, color: Colors.grey),
             ),
           ),
@@ -663,70 +634,13 @@ class MessageBubble extends StatelessWidget {
       ),
     );
   }
-
-  void _showReactionMenu(BuildContext context) {
-    final reactions = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'React to message',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: reactions.map((emoji) {
-                return GestureDetector(
-                  onTap: () {
-                    onReact(emoji);
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(emoji, style: const TextStyle(fontSize: 24)),
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
-class ChatInputField extends StatelessWidget {
+class _ChatInputField extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onSend;
 
-  const ChatInputField({
-    super.key,
-    required this.controller,
-    required this.onSend,
-  });
+  const _ChatInputField({required this.controller, required this.onSend});
 
   @override
   Widget build(BuildContext context) {
@@ -757,13 +671,29 @@ class ChatInputField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          GestureDetector(
-            onTap: onSend,
-            child: CircleAvatar(
-              radius: 22,
-              backgroundColor: AppColors.primary,
-              child: const Icon(Icons.send, color: Colors.white),
-            ),
+          BlocBuilder<ConversationsCubit, ConversationsState>(
+            builder: (context, state) {
+              final isSending = state is SendingMessage;
+              return GestureDetector(
+                onTap: isSending ? null : onSend,
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundColor: isSending ? Colors.grey : AppColors.primary,
+                  child: isSending
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : const Icon(Icons.send, color: Colors.white),
+                ),
+              );
+            },
           ),
         ],
       ),

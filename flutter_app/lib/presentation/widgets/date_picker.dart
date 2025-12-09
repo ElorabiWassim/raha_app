@@ -65,7 +65,7 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return SizedBox(
       width: 200,
@@ -74,7 +74,7 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
         readOnly: true,
         onTap: _selectDate,
         decoration: InputDecoration(
-          labelText: l10n.selectDate,
+          labelText: l10n?.selectDate ?? 'Select Date',
           labelStyle: const TextStyle(color: Colors.black),
           prefixIcon: const Icon(
             Icons.calendar_today,

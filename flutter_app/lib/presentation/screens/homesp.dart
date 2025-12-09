@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/serviceprovider_data.dart';
 import '../../cubits/serviceprovider_cubit.dart';
 import './addservicescreen.dart';
@@ -10,10 +11,9 @@ import './edit_profile_screen.dart';
 import './edit_service_screen.dart';
 import '../../modules/upgrades/screens/plans.dart';
 import './messages_screen.dart';
+import '../../modules/authentication/screens/login.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../services/api_service.dart';
-
-
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -23,82 +23,135 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
-  final ApiService _apiService = ApiService(); 
-  bool _isLoading = true; 
+  final ApiService _apiService = ApiService();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadProviderData(); 
+    _loadProviderData();
   }
 
   Future<void> _loadProviderData() async {
-  try {
-    final profileData = await _apiService.getProfile();
-    final servicesData = await _apiService.getMyServices();
+    try {
+      print('🔄 Loading provider data...');
 
-    // Fetch images for each service
-    final List<Service> servicesWithImages = [];
-    for (var s in servicesData) {
-      List<dynamic> imageList = [];
-      try {
-        imageList = await _apiService.getImagesByServiceId(s['service_id']);
-      } catch (e) {
-        print('Failed to load images for service ${s['service_id']}: $e');
-        // Continue even if images fail
+      final profileData = await _apiService.getProfile();
+      print('✅ Profile loaded: ${profileData}');
+
+      final servicesData = await _apiService.getMyServices();
+      print('✅ Services loaded: ${servicesData.length} services');
+
+      // Fetch images for each service
+      final List<Service> servicesWithImages = [];
+      for (var s in servicesData) {
+        print('📦 Processing service: ${s}');
+
+        List<dynamic> imageList = [];
+        try {
+          imageList = await _apiService.getImagesByServiceId(s['service_id']);
+        } catch (e) {
+          print('⚠️ Failed to load images for service ${s['service_id']}: $e');
+          // Continue even if images fail
+        }
+
+        // Extract image URLs
+        List<String> imageUrls = imageList
+            .map((img) => img['image_url'] as String)
+            .where((url) => url.isNotEmpty)
+            .toList();
+
+        // Safely access category name
+        String categoryName = 'General';
+        try {
+          if (s['service_categories'] != null) {
+            categoryName = s['service_categories']['name'] ?? 'General';
+          }
+        } catch (e) {
+          print('⚠️ Failed to get category name: $e');
+        }
+
+        servicesWithImages.add(
+          Service(
+            title: s['name'] ?? 'Unnamed Service',
+            price: s['price_type'] == 'fixed'
+                ? 'Starts at ${s['price_amount'] ?? 0} DA'
+                : '${s['price_amount'] ?? 0} DA per hour',
+            isActive: true,
+            category: categoryName,
+            description: s['description'] ?? '',
+            images: imageUrls,
+          ),
+        );
       }
 
-      // Extract image URLs
-      List<String> imageUrls = imageList
-          .map((img) => img['image_url'] as String)
-          .where((url) => url.isNotEmpty)
-          .toList();
+      final provider = ServiceProvider(
+        name: profileData['profile']['full_name'] ?? 'Service Provider',
+        profession:
+            profileData['profile']['service_type'] ?? 'Service Provider',
+        location: profileData['profile']['working_address'] ?? 'Not specified',
+        rating: 4.9,
+        reviewCount: 125,
+        jobsDone: profileData['profile']['jobs_done']?.toString() ?? '0',
+        experience: '${profileData['profile']['experience_years'] ?? 0} yrs',
+        responseTime: '< 1hr',
+        pendingRequests: 5,
+        confirmedJobs: 3,
+        totalEarnings: 45000,
+        services: servicesWithImages,
+      );
 
-      servicesWithImages.add(Service(
-        title: s['name'],
-        price: s['price_type'] == 'fixed'
-            ? 'Starts at ${s['price_amount']} DA'
-            : '${s['price_amount']} DA per hour',
-        isActive: true,
-        category: s['service_categories']['name'] ?? 'General',
-        description: s['description'] ?? '',
-        images: imageUrls, // 👈 Add images here
-      ));
+      context.read<ServiceProviderCubit>().initializeProvider(provider);
+      print('✅ Provider initialized successfully');
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e, stackTrace) {
+      print('❌ Error loading provider data: $e');
+      print('Stack trace: $stackTrace');
+
+      // Check if it's an authentication error
+      if (e.toString().contains('Invalid token') ||
+          e.toString().contains('401') ||
+          e.toString().contains('Unauthorized')) {
+        print(
+          '🔒 Authentication error detected - clearing token and redirecting to login',
+        );
+
+        // Clear the invalid token
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('jwt_token');
+        await prefs.remove('userRole');
+
+        if (mounted) {
+          // Navigate to login screen
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+          return;
+        }
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load profile: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 5),
+          ),
+        );
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    final provider = ServiceProvider(
-      name: profileData['profile']['users']['full_name'],
-      profession: profileData['profile']['service_type'] ?? 'Service Provider',
-      location: profileData['profile']['working_address'] ?? 'Not specified',
-      rating: 4.9,
-      reviewCount: 125,
-      jobsDone: profileData['profile']['jobs_done']?.toString() ?? '0',
-      experience: '${profileData['profile']['experience_years'] ?? 0} yrs',
-      responseTime: '< 1hr',
-      pendingRequests: 5,
-      confirmedJobs: 3,
-      totalEarnings: 45000,
-      services: servicesWithImages, // 👈 Updated list with images
-    );
-
-    context.read<ServiceProviderCubit>().initializeProvider(provider);
-
-    setState(() {
-      _isLoading = false;
-    });
-  } catch (e) {
-    print('Error loading provider data: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to load profile data')),
-    );
-    setState(() {
-      _isLoading = false;
-    });
   }
-}
+
   List<Widget> _getPages() {
     return [
-      ServiceProviderHome(onRefresh: _loadProviderData), 
+      ServiceProviderHome(onRefresh: _loadProviderData),
       DemandsPage(),
       RequestsPage(),
       MessagesScreen(),
@@ -112,9 +165,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     if (_isLoading) {
       return Scaffold(
         body: Center(
-          child: CircularProgressIndicator(
-            color: Color(0xFF68E36C),
-          ),
+          child: CircularProgressIndicator(color: Color(0xFF68E36C)),
         ),
       );
     }
@@ -186,11 +237,16 @@ class ServiceProviderHome extends StatelessWidget {
     required this.onRefresh, // ← Make it required
   });
 
-  void _navigateToPage(BuildContext context, String pageName, {Service? service, int? serviceIndex}) {
+  void _navigateToPage(
+    BuildContext context,
+    String pageName, {
+    Service? service,
+    int? serviceIndex,
+  }) {
     final l10n = AppLocalizations.of(context)!;
     final cubit = context.read<ServiceProviderCubit>();
     final provider = cubit.provider;
-    
+
     if (provider == null) return;
 
     Widget? page;
@@ -238,7 +294,9 @@ class ServiceProviderHome extends StatelessWidget {
             ),
             backgroundColor: Color(0xFF68E36C),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             duration: Duration(seconds: 2),
           ),
         );
@@ -247,10 +305,14 @@ class ServiceProviderHome extends StatelessWidget {
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l10n.navigationTo} $pageName - ${l10n.comingSoon}'),
+            content: Text(
+              '${l10n.navigationTo} $pageName - ${l10n.comingSoon}',
+            ),
             backgroundColor: Color(0xFF68E36C),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             duration: Duration(seconds: 1),
           ),
         );
@@ -258,25 +320,27 @@ class ServiceProviderHome extends StatelessWidget {
     }
 
     if (page != null) {
-     Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => page!), // Safe because of if (page != null)
-  );
-}
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => page!,
+        ), // Safe because of if (page != null)
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return BlocBuilder<ServiceProviderCubit, ServiceProviderState>(
       builder: (context, state) {
         final provider = context.read<ServiceProviderCubit>().provider;
-        
+
         if (provider == null) {
           return Center(child: CircularProgressIndicator());
         }
-        
+
         return Scaffold(
           backgroundColor: Colors.grey[50],
           appBar: AppBar(
@@ -374,7 +438,7 @@ class ServiceProviderHome extends StatelessWidget {
 
   Widget _buildProfileCard(BuildContext context, ServiceProvider provider) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -417,7 +481,11 @@ class ServiceProviderHome extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 38,
                     backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 42, color: Color(0xFF68E36C)),
+                    child: Icon(
+                      Icons.person,
+                      size: 42,
+                      color: Color(0xFF68E36C),
+                    ),
                   ),
                 ),
                 SizedBox(width: 16),
@@ -426,7 +494,7 @@ class ServiceProviderHome extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        provider.profession,
+                        provider.name,
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
@@ -459,7 +527,11 @@ class ServiceProviderHome extends StatelessWidget {
                       SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.location_on, color: Colors.white.withValues(alpha: 0.9), size: 14),
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.white.withValues(alpha: 0.9),
+                            size: 14,
+                          ),
                           SizedBox(width: 4),
                           Text(
                             provider.location,
@@ -479,7 +551,11 @@ class ServiceProviderHome extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
               ],
             ),
@@ -489,203 +565,204 @@ class ServiceProviderHome extends StatelessWidget {
     );
   }
 
- Widget _buildStatsRow(BuildContext context, ServiceProvider provider) {
-  final l10n = AppLocalizations.of(context)!;
-  
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Row(
-      children: [
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.payments_outlined,
-            value: '${provider.totalEarnings} DA',
-            label: l10n.totalEarnings,
-            color: Color(0xFF68E36C),
-          ),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.check_circle_outline,
-            value: provider.jobsDone,
-            label: l10n.jobsDone,
-            color: Color(0xFF68E36C),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+  Widget _buildStatsRow(BuildContext context, ServiceProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
 
-Widget _buildStatCard({
-  required IconData icon,
-  required String value,
-  required String label,
-  required Color color,
-}) {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-    decoration: BoxDecoration(
-      color: Color(0xFF68E36C),
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0xFF68E36C).withValues(alpha: 0.3),
-          blurRadius: 12,
-          spreadRadius: 0,
-          offset: Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: Colors.white, size: 24),
-        SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildStatCard(
+              icon: Icons.payments_outlined,
+              value: '${provider.totalEarnings} DA',
+              label: l10n.totalEarnings,
+              color: Color(0xFF68E36C),
+            ),
           ),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: 2),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.white.withValues(alpha: 0.9),
-            fontWeight: FontWeight.w500,
+          SizedBox(width: 12),
+          Expanded(
+            child: _buildStatCard(
+              icon: Icons.check_circle_outline,
+              value: provider.jobsDone,
+              label: l10n.jobsDone,
+              color: Color(0xFF68E36C),
+            ),
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildQuickActions(BuildContext context) {
-  final l10n = AppLocalizations.of(context)!;
-  
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(
-          l10n.quickActions,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
+        ],
       ),
-      SizedBox(height: 14),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildActionButton(
-                icon: Icons.add_circle_outline,
-                label: l10n.addService,
-                gradient: [Color(0xFF68E36C), Color(0xFF5CD660)],
-                shadowColor: Color(0xFF68E36C),
-                onTap: () => _navigateToPage(context, 'Add Service'),
-              ),
-            ),
-            SizedBox(width: 12),
-            Expanded(
-              child: _buildActionButton(
-                icon: Icons.edit_outlined,
-                label: l10n.editProfile,
-                gradient: [Color(0xFF5CD660), Color(0xFF4CAF50)],
-                shadowColor: Color(0xFF4CAF50),
-                onTap: () => _navigateToPage(context, 'Edit Profile'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
+    );
+  }
 
-Widget _buildActionButton({
-  required IconData icon,
-  required String label,
-  required List<Color> gradient,
-  required Color shadowColor,
-  required VoidCallback onTap,
-}) {
-  return Material(
-    color: Colors.transparent,
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 22, horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
-              spreadRadius: 0,
-              offset: Offset(0, 4),
+  Widget _buildStatCard({
+    required IconData icon,
+    required String value,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        color: Color(0xFF68E36C),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xFF68E36C).withValues(alpha: 0.3),
+            blurRadius: 12,
+            spreadRadius: 0,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 24),
+          SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-          ],
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.white.withValues(alpha: 0.9),
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            l10n.quickActions,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: gradient,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+        SizedBox(height: 14),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  icon: Icons.add_circle_outline,
+                  label: l10n.addService,
+                  gradient: [Color(0xFF68E36C), Color(0xFF5CD660)],
+                  shadowColor: Color(0xFF68E36C),
+                  onTap: () => _navigateToPage(context, 'Add Service'),
                 ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: shadowColor.withValues(alpha: 0.4),
-                    blurRadius: 12,
-                    spreadRadius: 0,
-                    offset: Offset(0, 6),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _buildActionButton(
+                  icon: Icons.edit_outlined,
+                  label: l10n.editProfile,
+                  gradient: [Color(0xFF5CD660), Color(0xFF4CAF50)],
+                  shadowColor: Color(0xFF4CAF50),
+                  onTap: () => _navigateToPage(context, 'Edit Profile'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required List<Color> gradient,
+    required Color shadowColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 22, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 20,
+                spreadRadius: 0,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: gradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                ],
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: shadowColor.withValues(alpha: 0.4),
+                      blurRadius: 12,
+                      spreadRadius: 0,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: Icon(icon, color: Colors.white, size: 32),
               ),
-              child: Icon(icon, color: Colors.white, size: 32),
-            ),
-            SizedBox(height: 12),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+              SizedBox(height: 12),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
+
   Widget _buildServicesSection(BuildContext context, ServiceProvider provider) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -739,131 +816,150 @@ Widget _buildActionButton({
   }
 
   Widget _buildServiceCard(BuildContext context, Service service, int index) {
-  final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
 
-  // Get first image or use placeholder
-  String imageUrl = service.images.isNotEmpty
-      ? service.images.first
-      : 'https://share.google/DlrdB62D0M8pDPkgl';
-      print('Service Image URL: $imageUrl');
+    // Get first image or use placeholder
+    String imageUrl = service.images.isNotEmpty
+        ? service.images.first
+        : 'https://share.google/DlrdB62D0M8pDPkgl';
+    print('Service Image URL: $imageUrl');
 
-  return Material(
-    color: Colors.transparent,
-    child: InkWell(
-      onTap: () => _navigateToPage(context, 'Edit Service', service: service, serviceIndex: index),
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: service.isActive
-                ? Color(0xFF68E36C).withValues(alpha: 0.3)
-                : Colors.grey[300]!,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 15,
-              spreadRadius: 0,
-              offset: Offset(0, 4),
-            ),
-          ],
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _navigateToPage(
+          context,
+          'Edit Service',
+          service: service,
+          serviceIndex: index,
         ),
-        child: Padding(
-          padding: EdgeInsets.all(12),
-          child: Row(
-            children: [
-              // Image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  imageUrl,
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      width: 60,
-                      height: 60,
-                      color: Colors.grey[200],
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 60,
-                      height: 60,
-                      color: Colors.grey[200],
-                      child: Icon(Icons.image, color: Colors.grey[600]),
-                    );
-                  },
-                ),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: service.isActive
+                  ? Color(0xFF68E36C).withValues(alpha: 0.3)
+                  : Colors.grey[300]!,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 15,
+                spreadRadius: 0,
+                offset: Offset(0, 4),
               ),
-              SizedBox(width: 12),
-              // Service info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      service.title,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      service.description,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Icon(Icons.attach_money, size: 14, color: Colors.grey[600]),
-                        SizedBox(width: 2),
-                        Text(
-                          service.price,
-                          style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                // Image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    imageUrl,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: 60,
+                        height: 60,
+                        color: Colors.grey[200],
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 60,
+                        height: 60,
+                        color: Colors.grey[200],
+                        child: Icon(Icons.image, color: Colors.grey[600]),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(width: 12),
+                // Service info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        service.title,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
                         ),
-                        SizedBox(width: 8),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: service.isActive
-                                ? Color(0xFF68E36C).withValues(alpha: 0.1)
-                                : Colors.grey[200],
-                            borderRadius: BorderRadius.circular(6),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        service.description,
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.attach_money,
+                            size: 14,
+                            color: Colors.grey[600],
                           ),
-                          child: Text(
-                            service.isActive ? l10n.active : l10n.inactive,
+                          SizedBox(width: 2),
+                          Text(
+                            service.price,
                             style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: service.isActive
-                                  ? Color(0xFF68E36C)
-                                  : Colors.grey[600],
+                              fontSize: 13,
+                              color: Colors.grey[600],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          SizedBox(width: 8),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: service.isActive
+                                  ? Color(0xFF68E36C).withValues(alpha: 0.1)
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              service.isActive ? l10n.active : l10n.inactive,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: service.isActive
+                                    ? Color(0xFF68E36C)
+                                    : Colors.grey[600],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Icon(Icons.arrow_forward_ios, color: Color(0xFF68E36C), size: 18),
-            ],
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Color(0xFF68E36C),
+                  size: 18,
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

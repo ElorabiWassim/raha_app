@@ -52,6 +52,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
   }
 
   Widget _buildAppBar() {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -62,7 +63,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           Container(width: 48, height: 48, alignment: Alignment.centerLeft),
           Expanded(
             child: Text(
-              AppLocalizations.of(context)!.myServicesTitle,
+              l10n?.myServicesTitle ?? 'My Services',
               textAlign: TextAlign.center,
               style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
             ),
@@ -84,6 +85,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
   }
 
   Widget _buildTabSelector() {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Container(
@@ -97,14 +99,14 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           children: [
             Expanded(
               child: _buildTabButton(
-                label: AppLocalizations.of(context)!.myBookingsTab,
+                label: l10n?.myBookingsTab ?? 'My Bookings',
                 isSelected: _selectedTabIndex == 0,
                 onTap: () => setState(() => _selectedTabIndex = 0),
               ),
             ),
             Expanded(
               child: _buildTabButton(
-                label: AppLocalizations.of(context)!.myDemandsTab,
+                label: l10n?.myDemandsTab ?? 'My Demands',
                 isSelected: _selectedTabIndex == 1,
                 onTap: () => setState(() => _selectedTabIndex = 1),
               ),
