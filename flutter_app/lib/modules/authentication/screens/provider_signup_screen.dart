@@ -24,7 +24,7 @@ class ProviderSignUpScreen extends StatelessWidget {
         authApi: AuthApi(
           baseUrl: const String.fromEnvironment(
             'BACKEND_BASE_URL',
-            defaultValue: 'http://10.0.2.2:5000',
+            defaultValue: 'http://10.15.243.27:5000',
           ),
         ),
       ),
