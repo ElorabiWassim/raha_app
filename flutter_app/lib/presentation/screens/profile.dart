@@ -44,7 +44,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
 
   Future<List<Map<String, dynamic>>> _fetchServices(String spId) async {
     final url = Uri.parse(
-      'http://localhost:5000/homeowner/getServices?sp_id=$spId',
+      'http://10.0.2.2:5000/homeowner/getServices?sp_id=$spId',
     );
     final response = await http.get(url);
 

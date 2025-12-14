@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:async'; // Required for Stream
+
 import '../../data/models/chat_message.dart';
-import '../../data/models/message.dart';
+import '../../data/models/message.dart'; // Ensure this matches your project structure
 import '../../data/models/conversation_model.dart';
+import '../../data/models/api_response.dart'; // Required for StreamBuilder types
 import '../../cubits/conversations_cubit.dart';
 import '../../cubits/conversations_state.dart';
 import '../../data/repositories/conversations_repository.dart';
 import '../../services/api_service.dart';
-import '../themes/app_text_style.dart';
+import '../themes/app_text_style.dart'; // Ensure this path is correct
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
@@ -152,7 +155,7 @@ class _MessagesScreenContent extends StatelessWidget {
     final lastMessage = conversation.lastMessage;
     final hasUnread = false; // TODO: Add unread count from backend
 
-    // Format time
+    // Format time helper
     String formatTime(DateTime dateTime) {
       final now = DateTime.now();
       final difference = now.difference(dateTime);
@@ -201,8 +204,9 @@ class _MessagesScreenContent extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (navContext) => BlocProvider.value(
-                  value: context.read<ConversationsCubit>()
-                    ..loadMessages(conversation.conversationId),
+                  value: context.read<ConversationsCubit>(),
+                  // We do NOT need to call loadMessages() here anymore
+                  // because the StreamBuilder in the next screen handles it.
                   child: ConversationDetailScreen(
                     conversationId: conversation.conversationId,
                     otherUser: conversation.otherUser,
@@ -358,6 +362,10 @@ class _MessagesScreenContent extends StatelessWidget {
   }
 }
 
+// =============================================================================
+// CONVERSATION DETAIL SCREEN (UPDATED FOR REAL-TIME STREAMS)
+// =============================================================================
+
 class ConversationDetailScreen extends StatefulWidget {
   final String conversationId;
   final OtherUser otherUser;
@@ -376,6 +384,17 @@ class ConversationDetailScreen extends StatefulWidget {
 class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  
+  // Define the Stream variable
+  late Stream<ApiResponse<List<ChatMessageModel>>> _messagesStream;
+
+  @override
+  void initState() {
+    super.initState();
+    // Grab the repository from the Cubit to access the stream
+    final repository = context.read<ConversationsCubit>().repository;
+    _messagesStream = repository.getMessagesStream(widget.conversationId);
+  }
 
   @override
   void dispose() {
@@ -390,11 +409,13 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
     final messageText = _messageController.text.trim();
     _messageController.clear();
 
+    // Use Cubit to send message (fire and forget)
     context.read<ConversationsCubit>().sendMessage(
       widget.conversationId,
       messageText,
     );
-
+    
+    // Scroll down immediately for better UX
     _scrollToBottom();
   }
 
@@ -422,86 +443,71 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
             children: [
               _buildAppBar(),
               Expanded(
-                child: BlocConsumer<ConversationsCubit, ConversationsState>(
-                  listener: (context, state) {
-                    if (state is MessageSent) {
-                      _scrollToBottom();
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is ConversationMessagesLoading) {
+                // REPLACED BlocConsumer WITH StreamBuilder
+                child: StreamBuilder<ApiResponse<List<ChatMessageModel>>>(
+                  stream: _messagesStream,
+                  builder: (context, snapshot) {
+                    
+                    // 1. Loading State (only initially)
+                    if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
-                    } else if (state is ConversationMessagesLoaded) {
-                      if (state.messages.isEmpty) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.chat_bubble_outline,
-                                size: 64,
-                                color: Colors.grey[300],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No messages yet',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Start the conversation!',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                    }
 
-                      return ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: state.messages.length,
-                        itemBuilder: (context, index) {
-                          final message = state.messages[index];
-                          return _MessageBubble(message: message);
-                        },
+                    final response = snapshot.data!;
+
+                    // 2. Error State
+                    if (!response.success) {
+                      return Center(
+                        child: Text(
+                          response.error ?? "Failed to load messages",
+                          style: GoogleFonts.poppins(color: Colors.red),
+                        ),
                       );
-                    } else if (state is ConversationsError) {
+                    }
+
+                    final messages = response.data ?? [];
+
+                    // 3. Empty State
+                    if (messages.isEmpty) {
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.error_outline,
+                              Icons.chat_bubble_outline,
                               size: 64,
-                              color: Colors.red[300],
+                              color: Colors.grey[300],
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              state.message,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(color: Colors.red),
+                              'No messages yet',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
                             ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<ConversationsCubit>().loadMessages(
-                                  widget.conversationId,
-                                );
-                              },
-                              child: const Text('Retry'),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Start the conversation!',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.grey[400],
+                              ),
                             ),
                           ],
                         ),
                       );
                     }
-                    return const SizedBox.shrink();
+
+                    // 4. List State (Success)
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        return _MessageBubble(message: messages[index]);
+                      },
+                    );
                   },
                 ),
               ),
@@ -525,7 +531,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back, color: AppColors.textDark),
+            icon: const Icon(Icons.arrow_back, color: AppColors.textDark),
             onPressed: () => Navigator.pop(context),
           ),
           CircleAvatar(
@@ -566,7 +572,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
               ],
             ),
           ),
-          Icon(Icons.more_vert, color: AppColors.textDark),
+          const Icon(Icons.more_vert, color: AppColors.textDark),
         ],
       ),
     );
@@ -590,13 +596,10 @@ class _MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: message.sender.isMe
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
+      alignment: message.sender.isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
-        crossAxisAlignment: message.sender.isMe
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            message.sender.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Container(
             margin: const EdgeInsets.symmetric(vertical: 4),
@@ -678,7 +681,8 @@ class _ChatInputField extends StatelessWidget {
                 onTap: isSending ? null : onSend,
                 child: CircleAvatar(
                   radius: 22,
-                  backgroundColor: isSending ? Colors.grey : AppColors.primary,
+                  backgroundColor:
+                      isSending ? Colors.grey : AppColors.primary,
                   child: isSending
                       ? const SizedBox(
                           width: 20,

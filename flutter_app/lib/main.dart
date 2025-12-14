@@ -30,7 +30,7 @@ void main() async {
 
   // Setup dependency injection for Cubit architecture
   // Update the baseUrl to match your backend URL
-  await setupDependencies(baseUrl: 'http://localhost:5000');
+  await setupDependencies(baseUrl: 'http://10.0.2.2:5000');
 
   runApp(
     MyApp(
