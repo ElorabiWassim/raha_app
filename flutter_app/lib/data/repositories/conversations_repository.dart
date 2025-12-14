@@ -1,3 +1,4 @@
+import 'dart:async'; // Required for Stream and Future.delayed
 import '../../services/api_service.dart';
 import '../models/conversation_model.dart';
 import '../models/api_response.dart';
@@ -6,6 +7,32 @@ class ConversationsRepository {
   final ApiService apiService;
 
   ConversationsRepository({required this.apiService});
+
+  // ---------------------------------------------------------------------------
+  // NEW: Real-time Message Stream (Polling)
+  // ---------------------------------------------------------------------------
+  /// Returns a stream that fetches messages automatically every [refreshInterval].
+  /// Use this in a StreamBuilder to see new messages without reloading.
+  Stream<ApiResponse<List<ChatMessageModel>>> getMessagesStream(
+    String conversationId, {
+    Duration refreshInterval = const Duration(seconds: 2),
+  }) async* {
+    
+    // 1. Fetch immediately so the user doesn't wait
+    yield await getConversationMessages(conversationId);
+
+    // 2. Enter a loop to keep checking the server
+    while (true) {
+      await Future.delayed(refreshInterval);
+      
+      // We reuse the existing logic to fetch data
+      yield await getConversationMessages(conversationId);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // EXISTING METHODS
+  // ---------------------------------------------------------------------------
 
   // Get all conversations for the current user
   Future<ApiResponse<List<ConversationModel>>> getUserConversations() async {

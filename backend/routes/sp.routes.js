@@ -29,6 +29,8 @@ router.put('/images/:image_id', upload.single('image'), spController.updateServi
 
 // Demands management
 router.get('/demands', spController.getDemands);
+router.get('/demands/category/:categoryId', spController.getDemandsByCategory);
+router.get('/demands/wilaya/:wilaya', spController.getDemandsByWilaya);
 router.get('/demands/:demandId', spController.getDemandDetails);
 
 // Offers management
