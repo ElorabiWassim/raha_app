@@ -896,14 +896,6 @@ const completeBooking = async (req, res) => {
     }
 };
 
-module.exports = {
-    getMyBookings,
-    getBookingHistory,
-    acceptBooking,
-    declineBooking,
-    completeBooking
-};
-
 const getCurrentSubscription = async (req, res) => {
     try {
         const sp_id = req.serviceProvider.sp_id;
@@ -984,68 +976,6 @@ const upgradeSubscription = async (req, res) => {
     }
 };
 
-const getProfile = async (req, res) => {
-    try {
-        const sp_id = req.serviceProvider.sp_id;
-
-        const { data: profile, error } = await supabase
-            .from('service_providers')
-            .select(`
-        *,
-        users (
-          user_id,
-          full_name,
-          email,
-          phone_number
-        )
-      `)
-            .eq('sp_id', sp_id)
-            .single();
-
-        if (error) {
-            throw error;
-        }
-
-        res.json({ profile });
-    } catch (error) {
-        console.error('Get profile error:', error);
-        res.status(500).json({ error: 'Failed to fetch profile' });
-    }
-};
-
-const updateProfile = async (req, res) => {
-    try {
-        const sp_id = req.serviceProvider.sp_id;
-        const { working_address, service_type, experience_years, job_done, description, verificationstatus } = req.body;
-
-        const updates = {};
-        if (working_address) updates.working_address = working_address;
-        if (service_type) updates.service_type = service_type;
-        if (experience_years !== undefined) updates.experience_years = experience_years;
-        if (job_done !== undefined) updates.jobs_done = job_done;
-        if (description) updates.description = description;
-        if (verificationstatus) updates.verification_status = verificationstatus;
-
-        const { data: profile, error } = await supabase
-            .from('service_providers')
-            .update(updates)
-            .eq('sp_id', sp_id)
-            .select()
-            .single();
-
-        if (error) {
-            throw error;
-        }
-
-        res.json({
-            message: 'Profile updated successfully',
-            profile
-        });
-    } catch (error) {
-        console.error('Update profile error:', error);
-        res.status(500).json({ error: 'Failed to update profile' });
-    }
-};
 
 const uploadServiceImages = async (req, res) => {
     try {
@@ -1070,7 +1000,7 @@ const uploadServiceImages = async (req, res) => {
         for (const image of images) {
             const timestamp = Date.now();
             const filename = `${service_id}_${timestamp}_${image.originalname}`;
-            const filePath = `service-images/${sp_id}/${filename}`; // 👈 This is what we save
+            const filePath = `service-images/${sp_id}/${filename}`; 
 
             // Upload to Supabase Storage
             const { error: uploadError } = await supabase.storage
@@ -1281,84 +1211,188 @@ const updateServiceImage = async (req, res) => {
     }
 };
 
-const updateProfilePicture = async (req, res) => {
+const getProfile = async (req, res) => {
     try {
-        const sp_id = req.serviceProvider.sp_id;
-        const image = req.file;
+        const sp_id = req.serviceProvider.sp_id; // Assumes middleware sets this
 
-        if (!image) {
-            return res.status(400).json({ error: 'No image provided' });
-        }
-
-        const { data: currentProfile, error: profileError } = await supabase
+        const { data, error } = await supabase
             .from('service_providers')
-            .select('profile_picture_url')
+            .select(`
+                *,
+                users:user_id ( full_name, email, phone_number, profile_picture_url )
+            `)
             .eq('sp_id', sp_id)
             .single();
 
-        if (profileError) {
-            throw profileError;
-        }
-        if (currentProfile.profile_picture_url) {
-            try {
-                const oldUrl = new URL(currentProfile.profile_picture_url);
-                const oldFilePath = oldUrl.pathname.split('/storage/v1/object/public/service-providers-profile-photos/')[1];
+        if (error) throw error;
 
-                if (oldFilePath) {
-                    await supabase.storage
-                        .from('service-providers-profile-photos')
-                        .remove([oldFilePath]);
-                }
-            } catch (deleteError) {
-                console.error('Error deleting old profile picture:', deleteError);
+        // Flatten the response for the frontend
+        const profile = {
+            ...data,
+            full_name: data.users?.full_name,
+            email: data.users?.email,
+            phone_number: data.users?.phone_number,
+            // Prioritize the user table picture, fallback to service_provider table if exists
+            profile_picture: data.users?.profile_picture_url || data.profile_picture_url 
+        };
 
-            }
-        }
-
-        const timestamp = Date.now();
-        const fileExtension = image.originalname.split('.').pop();
-        const filename = `${sp_id}_${timestamp}.${fileExtension}`;
-        const filePath = `${sp_id}/${filename}`;
-
-        const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('service-providers-profile-photos')
-            .upload(filePath, image.buffer, {
-                contentType: image.mimetype,
-                upsert: false
-            });
-
-        if (uploadError) {
-            throw uploadError;
-        }
-
-        const { data: urlData } = supabase.storage
-            .from('service-providers-profile-photos')
-            .getPublicUrl(filePath);
-
-        const { data: updatedProfile, error: updateError } = await supabase
-            .from('service_providers')
-            .update({
-                profile_picture_url: urlData.publicUrl
-            })
-            .eq('sp_id', sp_id)
-            .select()
-            .single();
-
-        if (updateError) {
-            throw updateError;
-        }
-
-        res.json({
-            message: 'Profile picture updated successfully',
-            profile_picture_url: urlData.publicUrl,
-            profile: updatedProfile
-        });
+        res.json({ success: true, profile });
     } catch (error) {
-        console.error('Update profile picture error:', error);
-        res.status(500).json({ error: 'Failed to update profile picture' });
+        console.error("Get profile error:", error);
+        res.status(500).json({ error: "Failed to load profile" });
     }
 };
 
+// 2. Update Profile Information (Text)
+const updateProfile = async (req, res) => {
+    try {
+        const sp_id = req.serviceProvider.sp_id;
+        const { full_name, profession, location, experience_years } = req.body;
+
+        // Update Service Provider Details
+        const { error: spError } = await supabase
+            .from('service_providers')
+            .update({
+                service_type: profession,
+                working_address: location,
+                experience_years: experience_years
+            })
+            .eq('sp_id', sp_id);
+
+        if (spError) throw spError;
+
+            if (full_name) {
+            const { error: userError } = await supabase
+                .from('users')
+                .update({ full_name: full_name })
+                .eq('user_id', sp_id); // Using sp_id to find the user
+            
+            if (userError) throw userError;
+        }
+        
+
+        res.json({ success: true, message: "Profile updated successfully" });
+    } catch (error) {
+        console.error("Update profile error:", error);
+        res.status(500).json({ error: "Failed to update profile" });
+    }
+};
+
+// 3. Update Profile Picture (Supabase Storage Logic)
+const updateProfilePicture = async (req, res) => {
+    try {
+        const sp_id = req.serviceProvider.sp_id;
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+
+        // Generate a safe file path
+        // Bucket name should exist in your Supabase Storage
+        const bucketName = 'service-providers-profile-photos'; 
+        const fileExt = file.originalname.split('.').pop();
+        const fileName = `profile_${sp_id}_${Date.now()}.${fileExt}`;
+        const filePath = `${sp_id}/${fileName}`;
+
+        // A. Upload to Supabase Storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from(bucketName)
+            .upload(filePath, file.buffer, {
+                contentType: file.mimetype,
+                upsert: true
+            });
+
+        if (uploadError) {
+            console.error("Supabase Upload Error:", uploadError);
+            return res.status(500).json({ error: "Failed to upload image to storage" });
+        }
+
+        // B. Get Public URL
+        const { data: urlData } = supabase.storage
+            .from(bucketName)
+            .getPublicUrl(filePath);
+
+        const publicUrl = urlData.publicUrl;
+
+        // C. Update Database
+        // We update both tables to ensure consistency
+        
+        // 1. Update service_providers table
+        const { error: spDbError } = await supabase
+            .from('service_providers')
+            .update({ profile_picture_url: publicUrl })
+            .eq('sp_id', sp_id);
+
+        if (spDbError) throw spDbError;
+
+        return res.status(200).json({
+            success: true,
+            message: "Profile picture uploaded successfully",
+            imageUrl: publicUrl
+        });
+
+    } catch (err) {
+        console.error("Server error:", err);
+        return res.status(500).json({ error: "Server error" });
+    }
+};
+const getSubscriptionPlans = async (req, res) => {
+    try {
+        
+        const plans = [
+            {
+                id: 'free',
+                name: 'Free',
+                price: 0,
+                period: 'Forever',
+                features: [
+                    'Create an account and list up to 3 services.',
+                    'List contact information.',
+                    'Lower priority in the listing of services.',
+                    'First 20 providers get Free Plan for 6 months.',
+                ],
+                is_recommended: false
+            },
+            {
+                id: 'pro',
+                name: 'Pro',
+                price: 700, 
+                period: '7,000 DA/year',
+                features: [
+                    'List up to 10 services.',
+                    'Receive bookings, requests, and client messages.',
+                    'Create and publish posts.',
+                    'Respond to user demands.',
+                    'Medium priority in search results.',
+                ],
+                is_recommended: true
+            },
+            {
+                id: 'elite',
+                name: 'Elite',
+                price: 1500, 
+                period: '15,000 DA/year',
+                features: [
+                    'List up to 20 services.',
+                    'View detailed profile insights (profile views count).',
+                    'Highest priority in displaying search results.',
+                    'Obtain a verified badge for increased trust.',
+                    'Promote services through advertisements.',
+                ],
+                is_recommended: false
+            }
+        ];
+
+        res.status(200).json({
+            success: true,
+            plans: plans
+        });
+    } catch (error) {
+        console.error('Get plans error:', error);
+        res.status(500).json({ error: 'Failed to fetch subscription plans' });
+    }
+};
 module.exports = {
     addService,
     editService,
@@ -1381,10 +1415,12 @@ module.exports = {
     getDemandsByWilaya,
     getDemandsByCategory,
     searchDemandsByTitle,
-    createCategory, getServiceById,
+    createCategory,
+    getServiceById,
     getServiceImages,
     uploadServiceImages,
     deleteServiceImage,
     updateServiceImage,
-    updateProfilePicture
+    updateProfilePicture,
+    getSubscriptionPlans
 };

@@ -30,13 +30,9 @@ import 'cubits/conversations_cubit.dart';
 
 final getIt = GetIt.instance;
 
-/// Initialize all dependencies for dependency injection
-/// Call this method in main.dart before runApp()
-Future<void> setupDependencies({String? baseUrl}) async {
-  // Register API Service
-  getIt.registerLazySingleton<ApiService>(() => ApiService());
 
-  // Register Repositories
+Future<void> setupDependencies({String? baseUrl}) async {
+  getIt.registerLazySingleton<ApiService>(() => ApiService());
   getIt.registerLazySingleton<DashboardRepository>(
     () => DashboardRepository(apiService: getIt<ApiService>()),
   );

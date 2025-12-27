@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:ra7a/l10n/app_localizations.dart';
+import '../../../../services/api_service.dart';
+import '../../../utils/plan_localizer.dart';
 class PlansPage extends StatefulWidget {
   const PlansPage({super.key});
 
@@ -8,70 +10,93 @@ class PlansPage extends StatefulWidget {
 }
 
 class _PlansPageState extends State<PlansPage> {
-  String selectedPlan = 'Pro';
+  // Store the actual Plan ID from the backend
+  String? _selectedPlanId;
+  List<dynamic> _plans = [];
+  bool _isLoading = true;
+  bool _isUpgrading = false;
 
-  final List<Map<String, dynamic>> plans = [
-    {
-      'name': 'Free',
-      'price': '0 DA',
-      'period': '',
-      'features': [
-        'Create an account and list up to 3 services.',
-        'List contact information.',
-        'Lower priority in the listing of services.',
-        'First 20 providers get Free Plan for 6 months.',
-      ],
-      'isRecommended': false,
-    },
-    {
-      'name': 'Pro',
-      'price': '700 DA/month',
-      'period': '7,000 DA/year',
-      'features': [
-        'List up to 10 services.',
-        'Receive bookings, requests, and client messages.',
-        'Create and publish posts.',
-        'Respond to user demands.',
-        'Medium priority in search results.',
-      ],
-      'isRecommended': true,
-    },
-    {
-      'name': 'Elite',
-      'price': '1,500 DA/month',
-      'period': '15,000 DA/year',
-      'features': [
-        'List up to 20 services.',
-        'View detailed profile insights (profile views count).',
-        'Highest priority in displaying search results.',
-        'Obtain a verified badge for increased trust.',
-        'Receive bookings, requests, and messages.',
-        'Create and publish posts.',
-        'Promote services through advertisements in the main feed.',
-        'Respond to user demands.',
-      ],
-      'isRecommended': false,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadPlans();
+  }
+
+  Future<void> _loadPlans() async {
+    try {
+      final plansData = await ApiService().getSubscriptionPlans();
+      
+      if (!mounted) return;
+      setState(() {
+        _plans = plansData;
+        _isLoading = false;
+        
+        // Optional: Set default selected plan (e.g., the first one or the user's current plan)
+        if (_plans.isNotEmpty && _selectedPlanId == null) {
+          _selectedPlanId = _plans[0]['id']?.toString(); 
+        }
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  Future<void> _handleUpgrade(AppLocalizations l10n) async {
+    if (_selectedPlanId == null) return;
+
+    setState(() => _isUpgrading = true);
+
+    try {
+      await ApiService().subscribeToPlan(_selectedPlanId!);
+      
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.subscriptionSuccess),
+          backgroundColor: const Color(0xFF4CAF50),
+        ),
+      );
+      // Optional: Refresh provider data or navigate back
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+      );
+    } finally {
+      if (mounted) setState(() => _isUpgrading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Color(0xFF4CAF50))),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
       body: SafeArea(
         child: Column(
           children: [
-            
+            // Header
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(color: Color(0xFFE8F5E9)),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.credit_card, color: Color(0xFF4CAF50), size: 28),
-                  SizedBox(width: 12),
+                  const Icon(Icons.credit_card, color: Color(0xFF4CAF50), size: 28),
+                  const SizedBox(width: 12),
                   Text(
-                    'Plans',
-                    style: TextStyle(
+                    l10n.plansTitle, // Localized Title
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF388E3C),
@@ -81,27 +106,45 @@ class _PlansPageState extends State<PlansPage> {
               ),
             ),
 
-            // Plans List
+           
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: plans.length,
-                itemBuilder: (context, index) {
-                  final plan = plans[index];
-                  return PlanCard(
-                    name: plan['name'],
-                    price: plan['price'],
-                    period: plan['period'],
-                    features: List<String>.from(plan['features']),
-                    isRecommended: plan['isRecommended'],
-                    isSelected: selectedPlan == plan['name'],
-                    onTap: () {
-                      setState(() {
-                        selectedPlan = plan['name'];
-                      });
-                    },
-                  );
-                },
+              child: RefreshIndicator(
+                onRefresh: _loadPlans,
+                color: const Color(0xFF4CAF50),
+                child: _plans.isEmpty 
+                  ? Center(child: Text(l10n.failedToLoadPlans))
+                  : ListView.builder(
+  itemCount: _plans.length,
+  itemBuilder: (context, index) {
+    final plan = _plans[index];
+    final String planId = plan['id']?.toString() ?? '';
+    
+    // Initialize helper
+    final localizer = PlanLocalizer(l10n);
+
+    // Get Localized Data based on ID
+    final String localizedName = localizer.getName(planId);
+    final List<String> localizedFeatures = localizer.getFeatures(planId);
+    
+    // Fallback: If arb is empty, use backend text (optional)
+    final featuresToShow = localizedFeatures.isNotEmpty 
+        ? localizedFeatures 
+        : List<String>.from(plan['features'] ?? []);
+
+    return PlanCard(
+      name: localizedName, // Use localized name
+      price: '${plan['price'] ?? 0} DA', 
+      period: plan['period'] ?? '',
+      features: featuresToShow, // Use localized features
+      isRecommended: plan['is_recommended'] ?? false,
+      isSelected: _selectedPlanId == planId,
+      l10n: l10n,
+      onTap: () {
+         setState(() => _selectedPlanId = planId);
+      },
+    );
+  },
+)
               ),
             ),
 
@@ -121,11 +164,9 @@ class _PlansPageState extends State<PlansPage> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Selected plan: $selectedPlan')),
-                    );
-                  },
+                  onPressed: (_isUpgrading || _selectedPlanId == null) 
+                      ? null 
+                      : () => _handleUpgrade(l10n),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4CAF50),
                     foregroundColor: Colors.white,
@@ -134,11 +175,18 @@ class _PlansPageState extends State<PlansPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 0,
+                    disabledBackgroundColor: Colors.grey[300],
                   ),
-                  child: const Text(
-                    'Upgrade Now',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                  child: _isUpgrading
+                      ? const SizedBox(
+                          height: 20, 
+                          width: 20, 
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                        )
+                      : Text(
+                          l10n.upgradeNow, // Localized Button
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
             ),
@@ -157,6 +205,7 @@ class PlanCard extends StatelessWidget {
   final bool isRecommended;
   final bool isSelected;
   final VoidCallback onTap;
+  final AppLocalizations l10n;
 
   const PlanCard({
     super.key,
@@ -167,6 +216,7 @@ class PlanCard extends StatelessWidget {
     required this.isRecommended,
     required this.isSelected,
     required this.onTap,
+    required this.l10n,
   });
 
   @override
@@ -219,9 +269,9 @@ class PlanCard extends StatelessWidget {
                       color: const Color(0xFF4CAF50),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Text(
-                      'Recommended',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.recommended, // Localized "Recommended"
+                      style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -232,16 +282,31 @@ class PlanCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            
+            // Price Section
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  price,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFF4CAF50),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: price,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF4CAF50),
+                          fontFamily: 'Roboto', // Ensure font consistency
+                        ),
+                      ),
+                      TextSpan(
+                        text: l10n.perMonth, // Localized "/month"
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF6B7280),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 if (period.isNotEmpty)
@@ -260,7 +325,7 @@ class PlanCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            
+            // Features List
             ...features.map(
               (feature) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),

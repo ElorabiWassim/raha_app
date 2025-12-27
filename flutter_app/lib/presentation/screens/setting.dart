@@ -87,11 +87,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 35,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.person, size: 40, color: Color(0xFF68E36C)),
-          ),
+         CircleAvatar(
+  radius: 35,
+  backgroundColor: Colors.white,
+  // 1. Load the image if the URL exists and is not empty
+  backgroundImage: (widget.provider.profileImageUrl != null && widget.provider.profileImageUrl!.isNotEmpty)
+      ? NetworkImage(widget.provider.profileImageUrl!)
+      : null,
+  // 2. Show the Icon ONLY if the image is missing (fallback)
+  child: (widget.provider.profileImageUrl == null || widget.provider.profileImageUrl!.isEmpty)
+      ? Icon(Icons.person, size: 40, color: Color(0xFF68E36C))
+      : null,
+),
           SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -136,12 +143,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return _buildSection(
       title: l10n.account,
       children: [
-        _buildSettingsTile(
-          icon: Icons.person_outline,
-          title: l10n.editProfile,
-          subtitle: l10n.updatePersonalInfo,
-          onTap: () => _showComingSoon(l10n.editProfile),
-        ),
+        
         _buildDivider(),
         _buildSettingsTile(
           icon: Icons.lock_outline,

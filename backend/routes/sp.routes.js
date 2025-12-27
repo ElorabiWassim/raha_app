@@ -7,9 +7,7 @@ const { addServiceValidator, editServiceValidator } = require('../validators/sp.
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Public routes would go here if needed
-// router.get('/reviews/:spId', validate(spIdValidator), spController.getReviewsForSP);
-// router.get('/rating/:spId', validate(spIdValidator), spController.getAverageRating);
+
 
 // Protected routes - authentication required
 router.use(authenticate);
@@ -31,8 +29,10 @@ router.put('/images/:image_id', upload.single('image'), spController.updateServi
 router.get('/demands', spController.getDemands);
 router.get('/demands/category/:categoryId', spController.getDemandsByCategory);
 router.get('/demands/wilaya/:wilaya', spController.getDemandsByWilaya);
+router.get('/demands/title',spController.searchDemandsByTitle)
 router.get('/demands/:demandId', spController.getDemandDetails);
-
+router.post('/plans/subscribe', spController.upgradeSubscription);
+router.get('/plans', spController.getSubscriptionPlans);
 // Offers management
 router.post('/offers/send', spController.sendOffer);
 router.get('/offers/my', spController.getMyOffers);
@@ -40,8 +40,11 @@ router.get('/offers/my', spController.getMyOffers);
 // Bookings management
 router.get('/bookings', spController.getMyBookings);
 router.get('/bookings/history', spController.getBookingHistory);
-router.post('/bookings/:bookingId/accept', spController.acceptBooking);
-router.post('/bookings/:bookingId/decline', spController.declineBooking);
-router.post('/bookings/:bookingId/complete', spController.completeBooking);
+router.put('/bookings/:bookingId/accept', spController.acceptBooking);
+router.put('/bookings/:bookingId/decline', spController.declineBooking);
+router.put('/bookings/:bookingId/complete', spController.completeBooking);
+router.put('/profiles/update', spController.updateProfile);
+router.put('/profiles/update/image', upload.single('image'), spController.updateProfilePicture);
+
 
 module.exports = router;

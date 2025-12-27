@@ -1154,7 +1154,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fixedPrice => 'سعر ثابت';
 
   @override
-  String get enterPrice => '٠٫٠٠';
+  String get enterPrice => '٠٠٠';
 
   @override
   String get pleaseEnterServiceName => 'الرجاء إدخال اسم الخدمة';
@@ -1167,4 +1167,227 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get serviceAddedSuccessfully => 'تمت إضافة الخدمة بنجاح!';
+
+  @override
+  String get myServicesTitle => 'خدماتي';
+
+  @override
+  String get myBookingsTab => 'حجوزاتي';
+
+  @override
+  String get myDemandsTab => 'طلباتي';
+
+  @override
+  String get statusUpcoming => 'قادم';
+
+  @override
+  String get statusCompleted => 'مكتمل';
+
+  @override
+  String get statusCancelled => 'ملغى';
+
+  @override
+  String get statusPending => 'قيد الانتظار';
+
+  @override
+  String get statusInProgress => 'قيد التنفيذ';
+
+  @override
+  String get actionRate => 'قيم';
+
+  @override
+  String get actionDetails => 'تفاصيل';
+
+  @override
+  String get noDemandsSubtitle => 'حاول تعديل البحث أو الفلاتر';
+
+  @override
+  String get searchPlaceholder => 'البحث بالعنوان أو الفئة...';
+
+  @override
+  String get sortDate => 'التاريخ';
+
+  @override
+  String get sortBudget => 'الميزانية';
+
+  @override
+  String get sortStatus => 'الحالة';
+
+  @override
+  String get categoryElectrical => 'كهرباء';
+
+  @override
+  String get categoryPlumbing => 'سباكة';
+
+  @override
+  String get categoryPainting => 'دهان';
+
+  @override
+  String get categoryCarpentry => 'نجارة';
+
+  @override
+  String get categoryCleaning => 'تنظيف';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String providersApplied(int count) {
+    return '$count مقدمي خدمات تقدموا';
+  }
+
+  @override
+  String get titleAddDemand => 'إضافة طلب جديد';
+
+  @override
+  String get questionLocation => 'أين تحتاج الخدمة؟';
+
+  @override
+  String get labelAddress => 'أدخل عنوانك';
+
+  @override
+  String get hintAddress => 'أدخل عنوانك';
+
+  @override
+  String get errorAddress => 'يرجى إدخال العنوان';
+
+  @override
+  String get questionCategory => 'ما هو نوع الخدمة؟';
+
+  @override
+  String get labelCategory => 'الفئة';
+
+  @override
+  String get errorCategory => 'يرجى اختيار فئة';
+
+  @override
+  String get questionServiceTitle => 'ما هو عنوان هذه الخدمة؟';
+
+  @override
+  String get labelTitle => 'العنوان';
+
+  @override
+  String get hintTitle => 'أدخل عنوان الخدمة';
+
+  @override
+  String get errorTitle => 'يرجى إدخال عنوان للخدمة';
+
+  @override
+  String get labelDate => 'التاريخ';
+
+  @override
+  String get labelTime => 'الوقت';
+
+  @override
+  String get questionDescription => 'الوصف';
+
+  @override
+  String get hintDescription => 'صف الخدمة التي تحتاجها...';
+
+  @override
+  String get errorDescription => 'يرجى إدخال وصف';
+
+  @override
+  String get btnPost => 'نشر';
+
+  @override
+  String get msgDemandAddedSuccess => 'تم إضافة الطلب بنجاح!';
+
+  @override
+  String msgDemandAddedFail(String error) {
+    return 'فشل إضافة الطلب: $error';
+  }
+
+  @override
+  String get catCleaning => 'تنظيف';
+
+  @override
+  String get catPlumbing => 'سباكة';
+
+  @override
+  String get catElectrical => 'كهرباء';
+
+  @override
+  String get catGardening => 'بستنة';
+
+  @override
+  String get catHandyman => 'حرفي';
+
+  @override
+  String get catPainting => 'دهان';
+
+  @override
+  String get catMoving => 'نقل أثاث';
+
+  @override
+  String get titleMessages => 'الرسائل';
+
+  @override
+  String get actionRetry => 'إعادة المحاولة';
+
+  @override
+  String get labelYesterday => 'أمس';
+
+  @override
+  String get msgNoMessagesYet => 'لا توجد رسائل بعد';
+
+  @override
+  String get titleNoConversations => 'لا توجد محادثات حتى الآن';
+
+  @override
+  String get msgStartBookingToChat => 'ابدأ بحجز خدمة للدردشة\nمع مزود الخدمة.';
+
+  @override
+  String get msgFailedToLoadMessages => 'فشل تحميل الرسائل';
+
+  @override
+  String get msgStartConversation => 'ابدأ المحادثة!';
+
+  @override
+  String get hintTypeMessage => 'اكتب رسالتك...';
+
+  @override
+  String get upgradeNow => 'ترقية الآن';
+
+  @override
+  String get recommended => 'موصى به';
+
+  @override
+  String get selectedPlan => 'الخطة المحددة';
+
+  @override
+  String get currentPlan => 'الخطة الحالية';
+
+  @override
+  String get perMonth => '/شهر';
+
+  @override
+  String get perYear => '/سنة';
+
+  @override
+  String get failedToLoadPlans => 'فشل تحميل الخطط';
+
+  @override
+  String get subscriptionSuccess => 'تم ترقية الخطة بنجاح!';
+
+  @override
+  String get planFreeName => 'مجاني';
+
+  @override
+  String get planProName => 'برو';
+
+  @override
+  String get planEliteName => 'إيليت';
+
+  @override
+  String get planFreeFeatures => 'إنشاء حساب وإدراج ما يصل إلى 3 خدمات.|إدراج معلومات الاتصال.|أولوية عرض منخفضة.|مجاناً لمدة 6 أشهر لأول 20 مشتركاً.';
+
+  @override
+  String get planProFeatures => 'إدراج ما يصل إلى 10 خدمات.|تلقي الحجوزات والرسائل.|إنشاء المنشورات.|الرد على طلبات المستخدمين.|أولوية عرض متوسطة.';
+
+  @override
+  String get planEliteFeatures => 'إدراج ما يصل إلى 20 خدمة.|عرض إحصائيات مفصلة للملف الشخصي.|أولوية عرض عالية في النتائج.|الحصول على شارة التوثيق.|ترويج الخدمات عبر الإعلانات.';
+
+  @override
+  String get unknownPlan => 'خطة غير معروفة';
 }

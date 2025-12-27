@@ -13,6 +13,7 @@ class ServiceProvider {
   int totalEarnings;
   String imagePath;
   List<Service> services;
+  
 
   ServiceProvider({
     required this.id,
@@ -33,6 +34,7 @@ class ServiceProvider {
 }
 
 class Service {
+
   String title;
   String price;
   bool isActive;

@@ -242,7 +242,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     );
   }
 
-  // ===== KEEP ALL YOUR EXISTING UI METHODS BELOW (NO CHANGES NEEDED) =====
+  
 
   Widget _buildServiceDetailsSection(AppLocalizations l10n) {
     return Column(

@@ -639,5 +639,96 @@
   "pleaseEnterServiceName": "Please enter a service name",
   "pleaseEnterDescription": "Please enter a description",
   "pleaseEnterPrice": "Please enter a price",
-  "serviceAddedSuccessfully": "Service added successfully!"
+  "serviceAddedSuccessfully": "Service added successfully!",
+  "myServicesTitle": "My Services",
+  "myBookingsTab": "My Bookings",
+  "myDemandsTab": "My Demands",
+  "statusUpcoming": "Upcoming",
+  "statusCompleted": "Completed",
+  "statusCancelled": "Cancelled",
+  "statusPending": "Pending",
+  "statusInProgress": "In Progress",
+  "actionRate": "Rate",
+  "actionDetails": "Details",
+ 
+  "noDemandsSubtitle": "Try adjusting your search or filters",
+ 
+  "searchPlaceholder": "Search by title or category...",
+  
+  "sortDate": "Date",
+  "sortBudget": "Budget",
+  "sortStatus": "Status",
+  "categoryElectrical": "Electrical",
+  "categoryPlumbing": "Plumbing",
+  "categoryPainting": "Painting",
+  "categoryCarpentry": "Carpentry",
+  "categoryCleaning": "Cleaning",
+  "filterAll": "All",
+  "providersApplied": "{count} Service Providers Applied",
+  "@providersApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "titleAddDemand": "Add New Demand",
+  "questionLocation": "Where is the service needed?",
+  "labelAddress": "Enter your address",
+  "hintAddress": "Enter your address",
+  "errorAddress": "Please enter an address",
+  "questionCategory": "What is the type of the service?",
+  "labelCategory": "Category",
+  "errorCategory": "Please select a category",
+  "questionServiceTitle": "What is the title of this service?",
+  "labelTitle": "Title",
+  "hintTitle": "Enter the title of the service",
+  "errorTitle": "Please enter a title",
+  "labelDate": "Date",
+  "labelTime": "Time",
+  "questionDescription": "Description",
+  "hintDescription": "Describe the service you need...",
+  "errorDescription": "Please enter a description",
+  "btnPost": "Post",
+  "msgDemandAddedSuccess": "Demand added successfully!",
+  "msgDemandAddedFail": "Failed to add demand: {error}",
+  "@msgDemandAddedFail": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "catCleaning": "Cleaning",
+  "catPlumbing": "Plumbing",
+  "catElectrical": "Electrical",
+  "catGardening": "Gardening",
+  "catHandyman": "Handyman",
+  "catPainting": "Painting",
+  "catMoving": "Moving",
+  "titleMessages": "Messages",
+  "actionRetry": "Retry",
+  "labelYesterday": "Yesterday",
+  "msgNoMessagesYet": "No messages yet",
+  "titleNoConversations": "No Conversations Yet",
+  "msgStartBookingToChat": "Start booking a service to begin\nchatting with a provider.",
+  
+  "msgFailedToLoadMessages": "Failed to load messages",
+  "msgStartConversation": "Start the conversation!",
+  "hintTypeMessage": "Type your message...",
+  "upgradeNow": "Upgrade Now",
+  "recommended": "Recommended",
+  "selectedPlan": "Selected Plan",
+  "currentPlan": "Current Plan",
+  "perMonth": "/month",
+  "perYear": "/year",
+  "failedToLoadPlans": "Failed to load plans",
+  "subscriptionSuccess": "Plan upgraded successfully!",
+  "planFreeName": "Free",
+  "planProName": "Pro",
+  "planEliteName": "Elite",
+  "planFreeFeatures": "Create an account and list up to 3 services.|List contact information.|Lower priority listing.|First 20 providers get Free Plan for 6 months.",
+  "planProFeatures": "List up to 10 services.|Receive bookings and requests.|Create posts.|Respond to demands.|Medium priority.",
+  "planEliteFeatures": "List up to 20 services.|View profile insights.|Highest priority.|Verified badge.|Promote services.",
+  "unknownPlan": "Unknown Plan"
 }
