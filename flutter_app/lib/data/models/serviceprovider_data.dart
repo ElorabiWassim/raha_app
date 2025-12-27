@@ -11,6 +11,8 @@ class ServiceProvider {
   int confirmedJobs;
   int totalEarnings;
   List<Service> services;
+  String? profileImageUrl;
+  
 
   ServiceProvider({
     required this.name,
@@ -25,11 +27,13 @@ class ServiceProvider {
     required this.confirmedJobs,
     required this.totalEarnings,
     required this.services,
+    required this.profileImageUrl
   });
 }
 
 // Service Model
 class Service {
+  final String id;
   String title;
   String price;
   bool isActive;
@@ -40,6 +44,7 @@ class Service {
 
 
   Service({
+    required this.id,
     required this.title,
     required this.price,
     required this.isActive,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubits/bookings/bookings_cubit.dart';
-import '../../l10n_amine/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../data/models/booking_model.dart';
 import '../themes/app_text_style.dart';
 import 'rate_report_provider_screen.dart';

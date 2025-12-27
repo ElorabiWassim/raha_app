@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:async'; // Required for Stream
+import 'package:intl/intl.dart'; // Added for DateFormat
+import 'dart:async';
 
 import '../../data/models/chat_message.dart';
-import '../../data/models/message.dart'; // Ensure this matches your project structure
 import '../../data/models/conversation_model.dart';
-import '../../data/models/api_response.dart'; // Required for StreamBuilder types
+import '../../data/models/api_response.dart';
 import '../../cubits/conversations_cubit.dart';
 import '../../cubits/conversations_state.dart';
 import '../../data/repositories/conversations_repository.dart';
 import '../../services/api_service.dart';
-import '../themes/app_text_style.dart'; // Ensure this path is correct
+import '../themes/app_text_style.dart';
+import '../../l10n/app_localizations.dart'; // Ensure this path is correct
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
@@ -77,7 +78,7 @@ class _MessagesScreenContent extends StatelessWidget {
                                     .read<ConversationsCubit>()
                                     .loadConversations();
                               },
-                              child: const Text('Retry'),
+                              child: Text(AppLocalizations.of(context)!.actionRetry),
                             ),
                           ],
                         ),
@@ -114,7 +115,7 @@ class _MessagesScreenContent extends StatelessWidget {
                     }
 
                     // Show empty state
-                    return _buildEmptyState();
+                    return _buildEmptyState(context);
                   },
                 ),
               ),
@@ -140,7 +141,7 @@ class _MessagesScreenContent extends StatelessWidget {
             ],
           ),
           Text(
-            'Messages',
+            AppLocalizations.of(context)!.titleMessages,
             style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
           ),
         ],
@@ -154,26 +155,22 @@ class _MessagesScreenContent extends StatelessWidget {
   ) {
     final lastMessage = conversation.lastMessage;
     final hasUnread = false; // TODO: Add unread count from backend
+    final l10n = AppLocalizations.of(context)!;
 
-    // Format time helper
+    // Format time helper using Intl and Localization
     String formatTime(DateTime dateTime) {
       final now = DateTime.now();
       final difference = now.difference(dateTime);
+      final locale = Localizations.localeOf(context).toString();
 
       if (difference.inDays == 0) {
-        final hour = dateTime.hour > 12
-            ? dateTime.hour - 12
-            : (dateTime.hour == 0 ? 12 : dateTime.hour);
-        final minute = dateTime.minute.toString().padLeft(2, '0');
-        final period = dateTime.hour >= 12 ? 'PM' : 'AM';
-        return '$hour:$minute $period';
+        return DateFormat.jm(locale).format(dateTime); // e.g., 5:30 PM or 17:30
       } else if (difference.inDays == 1) {
-        return 'Yesterday';
+        return l10n.labelYesterday;
       } else if (difference.inDays < 7) {
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        return days[dateTime.weekday - 1];
+        return DateFormat.E(locale).format(dateTime); // e.g., Mon, Tue, Lun, Mar
       } else {
-        return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+        return DateFormat.yMd(locale).format(dateTime); // e.g., 10/25/2023
       }
     }
 
@@ -199,14 +196,11 @@ class _MessagesScreenContent extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // Navigate to conversation detail screen
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (navContext) => BlocProvider.value(
                   value: context.read<ConversationsCubit>(),
-                  // We do NOT need to call loadMessages() here anymore
-                  // because the StreamBuilder in the next screen handles it.
                   child: ConversationDetailScreen(
                     conversationId: conversation.conversationId,
                     otherUser: conversation.otherUser,
@@ -225,7 +219,9 @@ class _MessagesScreenContent extends StatelessWidget {
                   radius: 28,
                   backgroundColor: AppColors.primary.withValues(alpha: .1),
                   child: Text(
-                    conversation.otherUser.fullName[0].toUpperCase(),
+                    conversation.otherUser.fullName.isNotEmpty
+                        ? conversation.otherUser.fullName[0].toUpperCase()
+                        : '?',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -276,7 +272,7 @@ class _MessagesScreenContent extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              lastMessage?.text ?? 'No messages yet',
+                              lastMessage?.text ?? l10n.msgNoMessagesYet,
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: hasUnread
@@ -316,7 +312,8 @@ class _MessagesScreenContent extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -338,7 +335,7 @@ class _MessagesScreenContent extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'No Conversations Yet',
+              l10n.titleNoConversations,
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -347,7 +344,7 @@ class _MessagesScreenContent extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Start booking a service to begin\nchatting with a provider.',
+              l10n.msgStartBookingToChat,
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 14,
@@ -363,12 +360,12 @@ class _MessagesScreenContent extends StatelessWidget {
 }
 
 // =============================================================================
-// CONVERSATION DETAIL SCREEN (UPDATED FOR REAL-TIME STREAMS)
+// CONVERSATION DETAIL SCREEN
 // =============================================================================
 
 class ConversationDetailScreen extends StatefulWidget {
   final String conversationId;
-  final OtherUser otherUser;
+  final dynamic otherUser; // Using dynamic to access properties safely
 
   const ConversationDetailScreen({
     super.key,
@@ -384,14 +381,11 @@ class ConversationDetailScreen extends StatefulWidget {
 class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
-  // Define the Stream variable
   late Stream<ApiResponse<List<ChatMessageModel>>> _messagesStream;
 
   @override
   void initState() {
     super.initState();
-    // Grab the repository from the Cubit to access the stream
     final repository = context.read<ConversationsCubit>().repository;
     _messagesStream = repository.getMessagesStream(widget.conversationId);
   }
@@ -409,13 +403,11 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
     final messageText = _messageController.text.trim();
     _messageController.clear();
 
-    // Use Cubit to send message (fire and forget)
     context.read<ConversationsCubit>().sendMessage(
       widget.conversationId,
       messageText,
     );
-    
-    // Scroll down immediately for better UX
+
     _scrollToBottom();
   }
 
@@ -433,6 +425,8 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -441,25 +435,21 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              _buildAppBar(),
+              _buildAppBar(context),
               Expanded(
-                // REPLACED BlocConsumer WITH StreamBuilder
                 child: StreamBuilder<ApiResponse<List<ChatMessageModel>>>(
                   stream: _messagesStream,
                   builder: (context, snapshot) {
-                    
-                    // 1. Loading State (only initially)
                     if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
                     final response = snapshot.data!;
 
-                    // 2. Error State
                     if (!response.success) {
                       return Center(
                         child: Text(
-                          response.error ?? "Failed to load messages",
+                          response.error ?? l10n.msgFailedToLoadMessages,
                           style: GoogleFonts.poppins(color: Colors.red),
                         ),
                       );
@@ -467,7 +457,6 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
 
                     final messages = response.data ?? [];
 
-                    // 3. Empty State
                     if (messages.isEmpty) {
                       return Center(
                         child: Column(
@@ -480,7 +469,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'No messages yet',
+                              l10n.msgNoMessagesYet,
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 color: Colors.grey,
@@ -488,7 +477,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Start the conversation!',
+                              l10n.msgStartConversation,
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 color: Colors.grey[400],
@@ -499,7 +488,6 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
                       );
                     }
 
-                    // 4. List State (Success)
                     return ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(16),
@@ -522,7 +510,13 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    // Determine role label based on user role
+    String roleLabel = widget.otherUser.role == 'service_provider'
+        ? l10n.roleServiceProvider
+        : l10n.roleHomeowner;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -538,7 +532,9 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
             radius: 18,
             backgroundColor: AppColors.primary.withValues(alpha: .1),
             child: Text(
-              widget.otherUser.fullName[0].toUpperCase(),
+              widget.otherUser.fullName.isNotEmpty
+                  ? widget.otherUser.fullName[0].toUpperCase()
+                  : '?',
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -561,9 +557,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
                   ),
                 ),
                 Text(
-                  widget.otherUser.role == 'service_provider'
-                      ? 'Service Provider'
-                      : 'Homeowner',
+                  roleLabel,
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     color: AppColors.textLight,
@@ -584,17 +578,10 @@ class _MessageBubble extends StatelessWidget {
 
   const _MessageBubble({required this.message});
 
-  String _formatTime(DateTime dateTime) {
-    final hour = dateTime.hour > 12
-        ? dateTime.hour - 12
-        : (dateTime.hour == 0 ? 12 : dateTime.hour);
-    final minute = dateTime.minute.toString().padLeft(2, '0');
-    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
-    return '$hour:$minute $period';
-  }
-
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).toString();
+    
     return Align(
       alignment: message.sender.isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
@@ -629,7 +616,7 @@ class _MessageBubble extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: Text(
-              _formatTime(message.sentAt),
+              DateFormat.jm(locale).format(message.sentAt),
               style: const TextStyle(fontSize: 11, color: Colors.grey),
             ),
           ),
@@ -656,7 +643,7 @@ class _ChatInputField extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: "Type your message...",
+                hintText: AppLocalizations.of(context)!.hintTypeMessage,
                 hintStyle: const TextStyle(color: Colors.grey),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

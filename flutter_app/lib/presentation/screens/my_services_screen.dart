@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubits/bookings/bookings_cubit.dart';
 import '../../logic/cubits/demands/demands_cubit.dart';
-import '../../l10n_amine/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../themes/app_text_style.dart';
 import 'my_bookings_tab.dart';
 import 'my_demands_tab.dart';

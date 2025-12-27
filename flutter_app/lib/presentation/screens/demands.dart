@@ -12,18 +12,18 @@ class DemandsPage extends StatefulWidget {
 class _DemandsPageState extends State<DemandsPage> {
   String? selectedCategory;
   String? selectedWilaya;
+  String? _searchQuery;
   final ApiService _apiService = ApiService();
   List<Map<String, dynamic>> jobs = [];
   bool _isLoading = true;
   final TextEditingController _searchController = TextEditingController();
 
-  // You'll need to fetch these from your backend categories endpoint
-  // For now, using static data - TODO: fetch from backend
+  
   final List<Map<String, String>> categories = [
-    {'id': '1', 'name': 'Plumbing'},
-    {'id': '2', 'name': 'Electrical'},
-    {'id': '3', 'name': 'Gardening'},
-    {'id': '4', 'name': 'Cleaning'},
+    {'id': 'a75af59d-3e61-402d-9bd2-54a5e64fc950', 'name': 'Plumbing'},
+    {'id': '069dc664-5fd9-435c-a688-cc002e46243b', 'name': 'Electrical'},
+    {'id': '3e53048d-1367-4e9f-ac4e-e39e5936dc0e', 'name': 'Gardening'},
+    {'id': '6ca0c6a3-efa3-481e-b40a-a173bbcdb283', 'name': 'Cleaning'},
   ];
 
   final List<String> wilayas = [
@@ -56,9 +56,13 @@ class _DemandsPageState extends State<DemandsPage> {
 
     try {
       Map<String, dynamic> response;
-
+       if (_searchController.text.isNotEmpty) {
+        response = await _apiService.searchDemands(
+          query: _searchController.text,
+        );
+      }
       // Load based on selected filters
-      if (selectedWilaya != null) {
+      else if (selectedWilaya != null) {
         response = await _apiService.getDemandsByWilaya(
           wilaya: selectedWilaya!,
         );
@@ -159,6 +163,7 @@ class _DemandsPageState extends State<DemandsPage> {
     setState(() {
       selectedCategory = null;
       selectedWilaya = null;
+      _searchQuery = null;
     });
     _loadDemands();
   }
@@ -224,6 +229,19 @@ class _DemandsPageState extends State<DemandsPage> {
                         Icons.search,
                         color: Color(0xFF6B7280),
                       ),
+                      
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, color: Colors.grey),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _searchQuery = null;
+                                });
+                                _loadDemands(); // Reload all
+                              },
+                            )
+                          : null,
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -236,14 +254,17 @@ class _DemandsPageState extends State<DemandsPage> {
                       ),
                     ),
                     onSubmitted: (value) {
-                      // TODO: Implement search functionality when backend endpoint is ready
                       if (value.isNotEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Search feature coming soon!'),
-                            backgroundColor: Color(0xFF4CAF50),
-                          ),
-                        );
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                        _loadDemands(); // Trigger search
+                      } else {
+                         // If empty, reload normal list
+                         setState(() {
+                          _searchQuery = null;
+                        });
+                        _loadDemands();
                       }
                     },
                   ),

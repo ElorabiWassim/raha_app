@@ -269,14 +269,18 @@ class _RequestsPageState extends State<RequestsPage> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: requests.length,
       itemBuilder: (context, index) {
-        final booking = requests[index];
-        return RequestCard(
-          booking: booking,
-          onAccept: () => _acceptBooking(booking['booking_id']),
-          onDecline: () => _declineBooking(booking['booking_id']),
-          onComplete: () => _completeBooking(booking['booking_id']),
-        );
-      },
+  final booking = requests[index];
+  
+  // DEBUG PRINT
+  print('Attempting action on Booking ID: ${booking['booking_id']}'); 
+  
+  return RequestCard(
+    booking: booking,
+    onAccept: () => _acceptBooking(booking['booking_id'].toString()), // Ensure toString()
+    onDecline: () => _declineBooking(booking['booking_id'].toString()),
+    onComplete: () => _completeBooking(booking['booking_id'].toString()),
+  );
+},
     );
   }
 

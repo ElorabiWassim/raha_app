@@ -2376,6 +2376,444 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Service added successfully!'**
   String get serviceAddedSuccessfully;
+
+  /// No description provided for @myServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Services'**
+  String get myServicesTitle;
+
+  /// No description provided for @myBookingsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookings'**
+  String get myBookingsTab;
+
+  /// No description provided for @myDemandsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'My Demands'**
+  String get myDemandsTab;
+
+  /// No description provided for @statusUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get statusUpcoming;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get statusInProgress;
+
+  /// No description provided for @actionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get actionRate;
+
+  /// No description provided for @actionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get actionDetails;
+
+  /// No description provided for @noDemandsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search or filters'**
+  String get noDemandsSubtitle;
+
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by title or category...'**
+  String get searchPlaceholder;
+
+  /// No description provided for @sortDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get sortDate;
+
+  /// No description provided for @sortBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get sortBudget;
+
+  /// No description provided for @sortStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get sortStatus;
+
+  /// No description provided for @categoryElectrical.
+  ///
+  /// In en, this message translates to:
+  /// **'Electrical'**
+  String get categoryElectrical;
+
+  /// No description provided for @categoryPlumbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Plumbing'**
+  String get categoryPlumbing;
+
+  /// No description provided for @categoryPainting.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting'**
+  String get categoryPainting;
+
+  /// No description provided for @categoryCarpentry.
+  ///
+  /// In en, this message translates to:
+  /// **'Carpentry'**
+  String get categoryCarpentry;
+
+  /// No description provided for @categoryCleaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get categoryCleaning;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @providersApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Service Providers Applied'**
+  String providersApplied(int count);
+
+  /// No description provided for @titleAddDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Demand'**
+  String get titleAddDemand;
+
+  /// No description provided for @questionLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is the service needed?'**
+  String get questionLocation;
+
+  /// No description provided for @labelAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your address'**
+  String get labelAddress;
+
+  /// No description provided for @hintAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your address'**
+  String get hintAddress;
+
+  /// No description provided for @errorAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an address'**
+  String get errorAddress;
+
+  /// No description provided for @questionCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the type of the service?'**
+  String get questionCategory;
+
+  /// No description provided for @labelCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get labelCategory;
+
+  /// No description provided for @errorCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a category'**
+  String get errorCategory;
+
+  /// No description provided for @questionServiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the title of this service?'**
+  String get questionServiceTitle;
+
+  /// No description provided for @labelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get labelTitle;
+
+  /// No description provided for @hintTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the title of the service'**
+  String get hintTitle;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a title'**
+  String get errorTitle;
+
+  /// No description provided for @labelDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get labelDate;
+
+  /// No description provided for @labelTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get labelTime;
+
+  /// No description provided for @questionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get questionDescription;
+
+  /// No description provided for @hintDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the service you need...'**
+  String get hintDescription;
+
+  /// No description provided for @errorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a description'**
+  String get errorDescription;
+
+  /// No description provided for @btnPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get btnPost;
+
+  /// No description provided for @msgDemandAddedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Demand added successfully!'**
+  String get msgDemandAddedSuccess;
+
+  /// No description provided for @msgDemandAddedFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add demand: {error}'**
+  String msgDemandAddedFail(String error);
+
+  /// No description provided for @catCleaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get catCleaning;
+
+  /// No description provided for @catPlumbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Plumbing'**
+  String get catPlumbing;
+
+  /// No description provided for @catElectrical.
+  ///
+  /// In en, this message translates to:
+  /// **'Electrical'**
+  String get catElectrical;
+
+  /// No description provided for @catGardening.
+  ///
+  /// In en, this message translates to:
+  /// **'Gardening'**
+  String get catGardening;
+
+  /// No description provided for @catHandyman.
+  ///
+  /// In en, this message translates to:
+  /// **'Handyman'**
+  String get catHandyman;
+
+  /// No description provided for @catPainting.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting'**
+  String get catPainting;
+
+  /// No description provided for @catMoving.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving'**
+  String get catMoving;
+
+  /// No description provided for @titleMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get titleMessages;
+
+  /// No description provided for @actionRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get actionRetry;
+
+  /// No description provided for @labelYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get labelYesterday;
+
+  /// No description provided for @msgNoMessagesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get msgNoMessagesYet;
+
+  /// No description provided for @titleNoConversations.
+  ///
+  /// In en, this message translates to:
+  /// **'No Conversations Yet'**
+  String get titleNoConversations;
+
+  /// No description provided for @msgStartBookingToChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Start booking a service to begin\nchatting with a provider.'**
+  String get msgStartBookingToChat;
+
+  /// No description provided for @msgFailedToLoadMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load messages'**
+  String get msgFailedToLoadMessages;
+
+  /// No description provided for @msgStartConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the conversation!'**
+  String get msgStartConversation;
+
+  /// No description provided for @hintTypeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your message...'**
+  String get hintTypeMessage;
+
+  /// No description provided for @upgradeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade Now'**
+  String get upgradeNow;
+
+  /// No description provided for @recommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get recommended;
+
+  /// No description provided for @selectedPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Plan'**
+  String get selectedPlan;
+
+  /// No description provided for @currentPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Plan'**
+  String get currentPlan;
+
+  /// No description provided for @perMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/month'**
+  String get perMonth;
+
+  /// No description provided for @perYear.
+  ///
+  /// In en, this message translates to:
+  /// **'/year'**
+  String get perYear;
+
+  /// No description provided for @failedToLoadPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load plans'**
+  String get failedToLoadPlans;
+
+  /// No description provided for @subscriptionSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan upgraded successfully!'**
+  String get subscriptionSuccess;
+
+  /// No description provided for @planFreeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get planFreeName;
+
+  /// No description provided for @planProName.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro'**
+  String get planProName;
+
+  /// No description provided for @planEliteName.
+  ///
+  /// In en, this message translates to:
+  /// **'Elite'**
+  String get planEliteName;
+
+  /// No description provided for @planFreeFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account and list up to 3 services.|List contact information.|Lower priority listing.|First 20 providers get Free Plan for 6 months.'**
+  String get planFreeFeatures;
+
+  /// No description provided for @planProFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'List up to 10 services.|Receive bookings and requests.|Create posts.|Respond to demands.|Medium priority.'**
+  String get planProFeatures;
+
+  /// No description provided for @planEliteFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'List up to 20 services.|View profile insights.|Highest priority.|Verified badge.|Promote services.'**
+  String get planEliteFeatures;
+
+  /// No description provided for @unknownPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Plan'**
+  String get unknownPlan;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

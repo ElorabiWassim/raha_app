@@ -1167,4 +1167,227 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get serviceAddedSuccessfully => 'Service ajouté avec succès !';
+
+  @override
+  String get myServicesTitle => 'Mes Services';
+
+  @override
+  String get myBookingsTab => 'Mes Réservations';
+
+  @override
+  String get myDemandsTab => 'Mes Demandes';
+
+  @override
+  String get statusUpcoming => 'À venir';
+
+  @override
+  String get statusCompleted => 'Terminé';
+
+  @override
+  String get statusCancelled => 'Annulé';
+
+  @override
+  String get statusPending => 'En attente';
+
+  @override
+  String get statusInProgress => 'En cours';
+
+  @override
+  String get actionRate => 'Évaluer';
+
+  @override
+  String get actionDetails => 'Détails';
+
+  @override
+  String get noDemandsSubtitle => 'Essayez d\'ajuster votre recherche ou vos filtres';
+
+  @override
+  String get searchPlaceholder => 'Rechercher par titre ou catégorie...';
+
+  @override
+  String get sortDate => 'Date';
+
+  @override
+  String get sortBudget => 'Budget';
+
+  @override
+  String get sortStatus => 'Statut';
+
+  @override
+  String get categoryElectrical => 'Électricité';
+
+  @override
+  String get categoryPlumbing => 'Plomberie';
+
+  @override
+  String get categoryPainting => 'Peinture';
+
+  @override
+  String get categoryCarpentry => 'Menuiserie';
+
+  @override
+  String get categoryCleaning => 'Nettoyage';
+
+  @override
+  String get filterAll => 'Tout';
+
+  @override
+  String providersApplied(int count) {
+    return '$count Prestataires ont postulé';
+  }
+
+  @override
+  String get titleAddDemand => 'Nouvelle Demande';
+
+  @override
+  String get questionLocation => 'Où avez-vous besoin du service ?';
+
+  @override
+  String get labelAddress => 'Entrez votre adresse';
+
+  @override
+  String get hintAddress => 'Entrez votre adresse';
+
+  @override
+  String get errorAddress => 'Veuillez entrer une adresse';
+
+  @override
+  String get questionCategory => 'Quel est le type de service ?';
+
+  @override
+  String get labelCategory => 'Catégorie';
+
+  @override
+  String get errorCategory => 'Veuillez choisir une catégorie';
+
+  @override
+  String get questionServiceTitle => 'Quel est le titre de ce service ?';
+
+  @override
+  String get labelTitle => 'Titre';
+
+  @override
+  String get hintTitle => 'Entrez le titre du service';
+
+  @override
+  String get errorTitle => 'Veuillez entrer un titre';
+
+  @override
+  String get labelDate => 'Date';
+
+  @override
+  String get labelTime => 'Heure';
+
+  @override
+  String get questionDescription => 'Description';
+
+  @override
+  String get hintDescription => 'Décrivez le service dont vous avez besoin...';
+
+  @override
+  String get errorDescription => 'Veuillez entrer une description';
+
+  @override
+  String get btnPost => 'Publier';
+
+  @override
+  String get msgDemandAddedSuccess => 'Demande ajoutée avec succès !';
+
+  @override
+  String msgDemandAddedFail(String error) {
+    return 'Échec de l\'ajout : $error';
+  }
+
+  @override
+  String get catCleaning => 'Nettoyage';
+
+  @override
+  String get catPlumbing => 'Plomberie';
+
+  @override
+  String get catElectrical => 'Électricité';
+
+  @override
+  String get catGardening => 'Jardinage';
+
+  @override
+  String get catHandyman => 'Bricolage';
+
+  @override
+  String get catPainting => 'Peinture';
+
+  @override
+  String get catMoving => 'Déménagement';
+
+  @override
+  String get titleMessages => 'Messages';
+
+  @override
+  String get actionRetry => 'Réessayer';
+
+  @override
+  String get labelYesterday => 'Hier';
+
+  @override
+  String get msgNoMessagesYet => 'Pas encore de messages';
+
+  @override
+  String get titleNoConversations => 'Aucune conversation';
+
+  @override
+  String get msgStartBookingToChat => 'Réservez un service pour commencer\nà discuter avec un prestataire.';
+
+  @override
+  String get msgFailedToLoadMessages => 'Échec du chargement des messages';
+
+  @override
+  String get msgStartConversation => 'Commencez la conversation !';
+
+  @override
+  String get hintTypeMessage => 'Écrivez votre message...';
+
+  @override
+  String get upgradeNow => 'Mettre à niveau';
+
+  @override
+  String get recommended => 'Recommandé';
+
+  @override
+  String get selectedPlan => 'Plan sélectionné';
+
+  @override
+  String get currentPlan => 'Plan actuel';
+
+  @override
+  String get perMonth => '/mois';
+
+  @override
+  String get perYear => '/an';
+
+  @override
+  String get failedToLoadPlans => 'Impossible de charger les plans';
+
+  @override
+  String get subscriptionSuccess => 'Plan mis à niveau avec succès !';
+
+  @override
+  String get planFreeName => 'Gratuit';
+
+  @override
+  String get planProName => 'Pro';
+
+  @override
+  String get planEliteName => 'Elite';
+
+  @override
+  String get planFreeFeatures => 'Créer un compte et lister jusqu\'à 3 services.|Lister les coordonnées.|Priorité basse.|Gratuit 6 mois pour les 20 premiers.';
+
+  @override
+  String get planProFeatures => 'Lister jusqu\'à 10 services.|Recevoir réservations et messages.|Créer des posts.|Répondre aux demandes.|Priorité moyenne.';
+
+  @override
+  String get planEliteFeatures => 'Lister jusqu\'à 20 services.|Voir statistiques.|Priorité haute.|Badge vérifié.|Promouvoir les services.';
+
+  @override
+  String get unknownPlan => 'Plan Inconnu';
 }
