@@ -37,7 +37,7 @@ class ProfessionalCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 28,
-            backgroundImage: (imagePath != null && imagePath.isNotEmpty)
+            backgroundImage: (imagePath.isNotEmpty)
                 ? NetworkImage(imagePath)
                 : AssetImage(imagePath),
           ),

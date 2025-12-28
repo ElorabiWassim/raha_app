@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import '../themes/app_text_style.dart';
 import '../../data/models/provider_offers_model.dart';
 import 'dart:ui';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProviderOffersScreen extends StatefulWidget {
+  final String demandId;
   final String demandTitle;
   final String demandCategory;
   final String demandDescription;
@@ -13,6 +16,7 @@ class ProviderOffersScreen extends StatefulWidget {
 
   const ProviderOffersScreen({
     super.key,
+    required this.demandId,
     required this.demandTitle,
     required this.demandCategory,
     required this.demandDescription,
@@ -29,11 +33,64 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
   String? acceptedProviderId;
   List<ProviderOffer> offers = [];
   List<String> rejectedOfferIds = [];
+  bool _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
-    offers = _getProviderOffers();
+    _loadOffers();
+  }
+
+  Future<void> _loadOffers() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final url = Uri.parse(
+        'http://10.0.2.2:5000/homeowner/getDemandOffers?demand_id=${widget.demandId}',
+      );
+      final response = await http.get(url);
+
+      if (response.statusCode != 200) {
+        setState(() {
+          _error = 'Failed to load offers';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final decoded = jsonDecode(response.body);
+      final list = decoded is List ? decoded : <dynamic>[];
+      final mapped = list.map((raw) {
+        final map = (raw as Map).cast<String, dynamic>();
+        final spId = (map['sp_id'] ?? '').toString();
+        final name = (map['sp_name'] ?? '—').toString();
+        final price = map['proposed_price'];
+        final message = (map['message'] ?? '').toString();
+
+        return ProviderOffer(
+          id: spId,
+          providerName: name,
+          providerImage: '',
+          rating: 0,
+          price: int.tryParse(price?.toString() ?? '') ?? 0,
+          description: message,
+        );
+      }).toList();
+
+      setState(() {
+        offers = mapped;
+        _isLoading = false;
+      });
+    } catch (_) {
+      setState(() {
+        _error = 'Failed to load offers';
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -56,27 +113,33 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
             children: [
               _buildAppBar(),
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  children: [
-                    _buildDemandSummaryCard(),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Provider Offers (${visibleOffers.length})',
-                      style: AppTextStyles.custom(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textDark,
-                        letterSpacing: -0.015,
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : (_error != null)
+                    ? Center(child: Text(_error!))
+                    : ListView(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                        children: [
+                          _buildDemandSummaryCard(),
+                          const SizedBox(height: 24),
+                          Text(
+                            'Provider Offers (${visibleOffers.length})',
+                            style: AppTextStyles.custom(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textDark,
+                              letterSpacing: -0.015,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          if (visibleOffers.isEmpty)
+                            _buildNoOffersState()
+                          else
+                            ...visibleOffers.map(
+                              (offer) => _buildOfferCard(offer),
+                            ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (visibleOffers.isEmpty)
-                      _buildNoOffersState()
-                    else
-                      ...visibleOffers.map((offer) => _buildOfferCard(offer)),
-                  ],
-                ),
               ),
             ],
           ),
@@ -479,11 +542,47 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                           child: SizedBox(
                             height: 48,
                             child: ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  acceptedProviderId = offer.id;
-                                });
-                                Navigator.pop(context);
+                              onPressed: () async {
+                                try {
+                                  final url = Uri.parse(
+                                    'http://10.0.2.2:5000/homeowner/acceptDemand',
+                                  );
+                                  final response = await http.post(
+                                    url,
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                    },
+                                    body: jsonEncode({
+                                      'demand_id': widget.demandId,
+                                      'sp_id': offer.id,
+                                    }),
+                                  );
+
+                                  if (response.statusCode >= 200 &&
+                                      response.statusCode < 300) {
+                                    if (!mounted) return;
+                                    setState(() {
+                                      acceptedProviderId = offer.id;
+                                    });
+                                    Navigator.pop(context);
+                                  } else {
+                                    if (!mounted) return;
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Failed to accept offer'),
+                                      ),
+                                    );
+                                  }
+                                } catch (_) {
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Failed to accept offer'),
+                                    ),
+                                  );
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
@@ -692,58 +791,5 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
         ),
       ),
     );
-  }
-
-  List<ProviderOffer> _getProviderOffers() {
-    return [
-      ProviderOffer(
-        id: '1',
-        providerName: 'Ahmed Benali',
-        providerImage: 'https://i.pravatar.cc/150?img=12',
-        rating: 4.5,
-        price: 1500,
-        description: 'Experienced plumber, ready to start immediately.',
-      ),
-      ProviderOffer(
-        id: '2',
-        providerName: 'Yacine Djebbar',
-        providerImage: 'https://i.pravatar.cc/150?img=33',
-        rating: 4.8,
-        price: 1800,
-        description: 'Quick and reliable service. 5 years of experience.',
-      ),
-      ProviderOffer(
-        id: '3',
-        providerName: 'Fatima Zohra',
-        providerImage: 'https://i.pravatar.cc/150?img=47',
-        rating: 4.2,
-        price: 1400,
-        description: 'Affordable and clean work guaranteed.',
-      ),
-      ProviderOffer(
-        id: '4',
-        providerName: 'Karim Messaoudi',
-        providerImage: 'https://i.pravatar.cc/150?img=15',
-        rating: 4.7,
-        price: 1650,
-        description: 'Professional service with quality materials included.',
-      ),
-      ProviderOffer(
-        id: '5',
-        providerName: 'Amina Bouaziz',
-        providerImage: 'https://i.pravatar.cc/150?img=45',
-        rating: 4.9,
-        price: 1900,
-        description: 'Top-rated provider with 10+ years experience.',
-      ),
-      ProviderOffer(
-        id: '6',
-        providerName: 'Riad Hamdi',
-        providerImage: 'https://i.pravatar.cc/150?img=68',
-        rating: 4.3,
-        price: 1350,
-        description: 'Budget-friendly option with guaranteed satisfaction.',
-      ),
-    ];
   }
 }

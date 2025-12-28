@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/booking_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 // State
 abstract class BookingsState extends Equatable {
@@ -31,41 +34,63 @@ class BookingsError extends BookingsState {
 class BookingsCubit extends Cubit<BookingsState> {
   BookingsCubit() : super(BookingsInitial());
 
+  BookingStatus _parseStatus(dynamic status) {
+    final s = (status ?? '').toString().toLowerCase();
+    if (s.contains('cancel')) return BookingStatus.cancelled;
+    if (s.contains('complete')) return BookingStatus.completed;
+    return BookingStatus.upcoming;
+  }
+
   Future<void> loadBookings() async {
     try {
       emit(BookingsLoading());
-      await Future.delayed(const Duration(seconds: 1)); // Simulate API
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('user_id');
+      if (userId == null || userId.isEmpty) {
+        emit(const BookingsError('Please login to view bookings'));
+        return;
+      }
 
-      // Mock Data
-      final bookings = [
-        Booking(
-          id: '1',
-          providerName: 'Karim Benzema',
-          providerImage: 'https://i.pravatar.cc/150?img=12',
-          serviceName: 'Plumbing Repair',
-          dateTime: '25 Oct, 10:00 AM',
-          price: '5,000 DZD',
-          status: BookingStatus.upcoming,
-        ),
-        Booking(
-          id: '2',
-          providerName: 'Nadia Belkacem',
-          providerImage: 'https://i.pravatar.cc/150?img=47',
-          serviceName: 'House Cleaning',
-          dateTime: '22 Oct, 02:00 PM',
-          price: '3,500 DZD',
-          status: BookingStatus.completed,
-        ),
-        Booking(
-          id: '3',
-          providerName: 'Ahmed Djebbour',
-          providerImage: 'https://i.pravatar.cc/150?img=33',
-          serviceName: 'AC Maintenance',
-          dateTime: '15 Oct, 09:30 AM',
-          price: '6,000 DZD',
-          status: BookingStatus.cancelled,
-        ),
-      ];
+      final url = Uri.parse(
+        'http://10.0.2.2:5000/homeowner/getBookingOfUser/$userId',
+      );
+      final response = await http.get(url);
+
+      if (response.statusCode != 200) {
+        emit(const BookingsError('Failed to load bookings'));
+        return;
+      }
+
+      final decoded = jsonDecode(response.body);
+      final rawBookings = (decoded is Map && decoded['bookings'] is List)
+          ? decoded['bookings'] as List
+          : <dynamic>[];
+
+      final bookings = rawBookings.map((b) {
+        final map = (b as Map).cast<String, dynamic>();
+        final serviceProvider =
+            map['service_provider'] as Map<String, dynamic>?;
+        final username = serviceProvider?['username'] as Map<String, dynamic>?;
+        final serviceCategory =
+            serviceProvider?['service_category'] as Map<String, dynamic>?;
+        final priceObj = map['price'] as Map<String, dynamic>?;
+
+        final providerName = (username?['full_name'] ?? '').toString();
+        final serviceName = (serviceCategory?['name'] ?? '').toString();
+        final date = (map['date'] ?? '').toString();
+        final time = (map['time'] ?? '').toString();
+        final priceAmount = priceObj?['price_amount'];
+
+        return Booking(
+          id: (map['booking_id'] ?? '').toString(),
+          providerName: providerName.isNotEmpty ? providerName : '—',
+          providerImage: '',
+          serviceName: serviceName.isNotEmpty ? serviceName : '—',
+          dateTime: [date, time].where((e) => e.isNotEmpty).join(' '),
+          price: priceAmount != null ? '${priceAmount.toString()} DZD' : '',
+          status: _parseStatus(map['status']),
+        );
+      }).toList();
 
       emit(BookingsLoaded(bookings));
     } catch (e) {

@@ -56,7 +56,12 @@ class MyBookingsTab extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(booking.providerImage),
+                  backgroundImage: booking.providerImage.isNotEmpty
+                      ? NetworkImage(booking.providerImage)
+                      : null,
+                  child: booking.providerImage.isEmpty
+                      ? Icon(Icons.person, color: AppColors.textLight)
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -143,9 +148,8 @@ class MyBookingsTab extends StatelessWidget {
                     ),
                     child: Text(
                       booking.status == BookingStatus.completed
-                          ? AppLocalizations.of(context)?.actionRate ?? 'Rate'
-                          : AppLocalizations.of(context)?.actionDetails ??
-                                'Details',
+                          ? AppLocalizations.of(context).actionRate
+                          : AppLocalizations.of(context).actionDetails,
                       style: AppTextStyles.buttonMedium,
                     ),
                   ),
@@ -168,17 +172,17 @@ class MyBookingsTab extends StatelessWidget {
       case BookingStatus.upcoming:
         backgroundColor = AppColors.statusUpcomingBg;
         textColor = AppColors.statusUpcoming;
-        label = l10n?.statusUpcoming ?? 'Upcoming';
+        label = l10n.statusUpcoming;
         break;
       case BookingStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = l10n?.statusCompleted ?? 'Completed';
+        label = l10n.statusCompleted;
         break;
       case BookingStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = l10n?.statusCancelled ?? 'Cancelled';
+        label = l10n.statusCancelled;
         break;
     }
 

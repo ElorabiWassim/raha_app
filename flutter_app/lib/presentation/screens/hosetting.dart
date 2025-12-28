@@ -5,6 +5,7 @@ import 'package:ra7a/l10n/app_localizations.dart';
 import './profilehome.dart';
 import '../../modules/authentication/screens/login.dart';
 import '../../cubits/language_cubit.dart';
+import '../../services/api_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   final ProfileData profileData;
@@ -41,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         currentProfileData = result;
       });
 
-      final l10n = AppLocalizations.of(context)!;
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.profileUpdatedSuccess),
@@ -54,7 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Color(0xFFE8F5E9),
@@ -284,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildMenuItem(
                     icon: Icons.lock_outline,
                     title: l10n.changePassword,
-                    onTap: () {},
+                    onTap: _showChangePasswordDialog,
                   ),
                   Divider(height: 1, thickness: 1, color: Colors.grey[200]),
                   _buildMenuItem(
@@ -463,10 +464,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -506,7 +504,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Color(0xFF68E36C),
+            activeThumbColor: Color(0xFF68E36C),
             activeTrackColor: Color(0xFF68E36C).withValues(alpha: 0.5),
           ),
         ],
@@ -515,7 +513,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showLanguageDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     // Save the parent context reference
     final parentContext = context;
 
@@ -534,10 +532,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(width: 12),
                 Text(
                   l10n.changeLanguage,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -546,7 +541,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 _buildLanguageOption(
                   context: parentContext, // Use parent context
-                  dialogContext: dialogContext, // Pass dialog context for closing
+                  dialogContext:
+                      dialogContext, // Pass dialog context for closing
                   icon: '🇬🇧',
                   languageName: l10n.english,
                   languageCode: 'en',
@@ -624,10 +620,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         child: Row(
           children: [
-            Text(
-              icon,
-              style: TextStyle(fontSize: 24),
-            ),
+            Text(icon, style: TextStyle(fontSize: 24)),
             SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -640,11 +633,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: Color(0xFF68E36C),
-                size: 24,
-              ),
+              Icon(Icons.check_circle, color: Color(0xFF68E36C), size: 24),
           ],
         ),
       ),
@@ -652,14 +641,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showLogoutDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(l10n.logout),
         content: Text(l10n.logoutConfirm),
         actions: [
@@ -670,6 +657,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
+              ApiService().logout();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -681,5 +669,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  void _showChangePasswordDialog() {
+    final l10n = AppLocalizations.of(context);
+    final controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(l10n.changePassword),
+        content: TextField(
+          controller: controller,
+          obscureText: true,
+          decoration: InputDecoration(hintText: l10n.changePassword),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _changePassword(controller.text);
+            },
+            child: Text(l10n.save),
+          ),
+        ],
+      ),
+    ).then((_) => controller.dispose());
+  }
+
+  Future<void> _changePassword(String newPassword) async {
+    final l10n = AppLocalizations.of(context);
+    final trimmed = newPassword.trim();
+    if (trimmed.isEmpty) return;
+
+    try {
+      await ApiService().changePassword(newPassword: trimmed);
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.passwordUpdatedSuccess)));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
+      );
+    }
   }
 }

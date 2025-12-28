@@ -52,6 +52,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((s) {
         return {
+          'service_id': s['service_id'] ?? '',
           'title': s['name'] ?? '',
           'price': '${s['price_amount'] ?? ''} ${s['price_type'] ?? ''}',
           'description': s['description'] ?? '',
@@ -122,18 +123,6 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
 
         if (state is ProfileLoaded) {
           final p = state.profile;
-
-          final services =
-              (p['services'] as List<dynamic>?)
-                  ?.map(
-                    (s) => {
-                      'title': s['title'] ?? '',
-                      'pricingModel': s['pricing_model'] ?? '',
-                      'price': s['price'] ?? '',
-                    },
-                  )
-                  .toList() ??
-              [];
 
           return Scaffold(
             backgroundColor: Colors.grey[50],
@@ -439,7 +428,11 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
                       MaterialPageRoute(
                         builder: (context) => BlocProvider(
                           create: (context) => BookServiceCubit(),
-                          child: BookService(service_name: service['title']),
+                          child: BookService(
+                            service_name: service['title'],
+                            serviceId: service['service_id'] ?? '',
+                            spId: spId,
+                          ),
                         ),
                       ),
                     );

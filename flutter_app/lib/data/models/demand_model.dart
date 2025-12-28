@@ -30,10 +30,16 @@ class Demand {
   });
 
   factory Demand.fromJson(Map<String, dynamic> json) {
+    final serviceCategories = json['service_categories'];
+    String? categoryName;
+    if (serviceCategories is Map) {
+      categoryName = serviceCategories['name']?.toString();
+    }
+
     return Demand(
-      id: json['id']?.toString() ?? '',
+      id: (json['demand_id'] ?? json['id'])?.toString() ?? '',
       title: json['title'] ?? '',
-      category: json['category'] ?? '',
+      category: categoryName ?? json['category'] ?? '',
       description: json['description'] ?? '',
       postedDate: json['posted_date'] ?? json['postedDate'] ?? '',
       location: json['location'] ?? '',

@@ -37,7 +37,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       print(' Loading provider data...');
 
       final profileData = await _apiService.getProfile();
-      print('Profile loaded: ${profileData}');
+      print('Profile loaded: $profileData');
 
       final servicesData = await _apiService.getMyServices();
       print('Services loaded: ${servicesData.length} services');
@@ -45,7 +45,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
      
       final List<Service> servicesWithImages = [];
       for (var s in servicesData) {
-        print(' Processing service: ${s}');
+        print(' Processing service: $s');
 
         List<dynamic> imageList = [];
         try {
