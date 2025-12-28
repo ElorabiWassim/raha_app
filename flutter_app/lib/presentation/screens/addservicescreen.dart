@@ -206,12 +206,10 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           onTap: () async {
             final picker = ImagePicker();
             final images = await picker.pickMultiImage();
-            if (images != null) {
-              setState(() {
-                _selectedImages = images;
-              });
-            }
-          },
+            setState(() {
+              _selectedImages = images;
+            });
+                    },
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 40),

@@ -7,9 +7,27 @@ import '../widgets/elevatedButton.dart';
 // Ensure this import points to your generated localizations file
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../cubits/demands_cubits.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddDemand extends StatefulWidget {
-  const AddDemand({super.key});
+  final String? demandId;
+  final String? initialCategoryName;
+  final String? initialTitle;
+  final String? initialLocation;
+  final String? initialDescription;
+  final DateTime? initialDate;
+  final String? initialTime;
+
+  const AddDemand({
+    super.key,
+    this.demandId,
+    this.initialCategoryName,
+    this.initialTitle,
+    this.initialLocation,
+    this.initialDescription,
+    this.initialDate,
+    this.initialTime,
+  });
   @override
   State<AddDemand> createState() => _AddDemand();
 }
@@ -23,28 +41,67 @@ class _AddDemand extends State<AddDemand> {
   String? selectedTime;
   String? selectedCategory;
 
+  @override
+  void initState() {
+    super.initState();
+    addressController.text = widget.initialLocation ?? '';
+    serviceTitleController.text = widget.initialTitle ?? '';
+    descriptionController.text = widget.initialDescription ?? '';
+    selectedDate = widget.initialDate;
+    selectedTime = widget.initialTime;
+    selectedCategory = widget.initialCategoryName;
+  }
+
   void onPressSubmit() async {
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     if (_formKey.currentState!.validate()) {
       final cubit = context.read<AddDemandCubit>();
 
+      final prefs = await SharedPreferences.getInstance();
+      final homeownerId = prefs.getString('user_id');
+      if (homeownerId == null || homeownerId.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Please login first')));
+        return;
+      }
+
       try {
-        await cubit.addDemand(
-          homeownerId: "5cc32637-3714-416d-ac57-177e353ca30d",
-          categoryName: selectedCategory!,
-          title: serviceTitleController.text,
-          location: addressController.text,
-          date: selectedDate!.toIso8601String(),
-          time: selectedTime!,
-          description: descriptionController.text,
-        );
+        if (widget.demandId != null && widget.demandId!.isNotEmpty) {
+          await cubit.editDemand(
+            demandId: widget.demandId!,
+            categoryName: selectedCategory!,
+            title: serviceTitleController.text,
+            location: addressController.text,
+            date: selectedDate!.toIso8601String(),
+            time: selectedTime!,
+            description: descriptionController.text,
+          );
+        } else {
+          await cubit.addDemand(
+            homeownerId: homeownerId,
+            categoryName: selectedCategory!,
+            title: serviceTitleController.text,
+            location: addressController.text,
+            date: selectedDate!.toIso8601String(),
+            time: selectedTime!,
+            description: descriptionController.text,
+          );
+        }
 
         if (!mounted) return;
         Navigator.pop(context);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.msgDemandAddedSuccess)),
+          SnackBar(
+            content: Text(
+              widget.demandId != null && widget.demandId!.isNotEmpty
+                  ? 'Demand updated'
+                  : l10n.msgDemandAddedSuccess,
+            ),
+          ),
         );
       } catch (e) {
         if (!mounted) return;
@@ -58,7 +115,7 @@ class _AddDemand extends State<AddDemand> {
   @override
   Widget build(BuildContext context) {
     // Access localizations
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     // Map for Categories: Key (Backend value) -> Value (Display text)
     final Map<String, String> categoryMap = {
@@ -104,45 +161,57 @@ class _AddDemand extends State<AddDemand> {
                   labelStyle: const TextStyle(color: Color(0xFF1E293B)),
                   hintText: l10n.hintAddress,
                   hintStyle: const TextStyle(color: Color(0xFFB8B9B9)),
-                  prefixIcon: const Icon(Icons.location_on, color: Color(0xFF53B538)),
+                  prefixIcon: const Icon(
+                    Icons.location_on,
+                    color: Color(0xFF53B538),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFF53B538), width: 1),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF53B538),
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                validator: (value) =>
-                    value!.isEmpty ? l10n.errorAddress : null,
+                validator: (value) => value!.isEmpty ? l10n.errorAddress : null,
               ),
               const SizedBox(height: 12),
-              
+
               QuestionDemand(question: l10n.questionCategory),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: l10n.labelCategory,
                   labelStyle: const TextStyle(color: Color(0xFF1E293B)),
-                  prefixIcon: const Icon(Icons.category, color: Color(0xFF53B538)),
+                  prefixIcon: const Icon(
+                    Icons.category,
+                    color: Color(0xFF53B538),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFF53B538), width: 1),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF53B538),
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 items: categoryMap.entries
-                    .map((entry) => DropdownMenuItem(
-                          value: entry.key, // Keeps English value for Backend
-                          child: Text(entry.value), // Shows Localized text
-                        ))
+                    .map(
+                      (entry) => DropdownMenuItem(
+                        value: entry.key, // Keeps English value for Backend
+                        child: Text(entry.value), // Shows Localized text
+                      ),
+                    )
                     .toList(),
                 onChanged: (val) => setState(() => selectedCategory = val),
-                validator: (value) =>
-                    value == null ? l10n.errorCategory : null,
+                validator: (value) => value == null ? l10n.errorCategory : null,
               ),
               const SizedBox(height: 12),
 
@@ -155,18 +224,23 @@ class _AddDemand extends State<AddDemand> {
                   labelStyle: const TextStyle(color: Color(0xFF1E293B)),
                   hintText: l10n.hintTitle,
                   hintStyle: const TextStyle(color: Color(0xFFB8B9B9)),
-                  prefixIcon: const Icon(Icons.assignment, color: Color(0xFF53B538)),
+                  prefixIcon: const Icon(
+                    Icons.assignment,
+                    color: Color(0xFF53B538),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFF53B538), width: 1),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF53B538),
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                validator: (value) =>
-                    value!.isEmpty ? l10n.errorTitle : null,
+                validator: (value) => value!.isEmpty ? l10n.errorTitle : null,
               ),
               const SizedBox(height: 12),
 
@@ -223,7 +297,10 @@ class _AddDemand extends State<AddDemand> {
                     borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFF53B538), width: 1),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF53B538),
+                      width: 1,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),

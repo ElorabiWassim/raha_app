@@ -24,7 +24,6 @@ class ApiService {
     };
   }
 
-  
   Future<Map<String, dynamic>> get(String endpoint) async {
     try {
       final headers = await _getHeaders();
@@ -38,7 +37,6 @@ class ApiService {
     }
   }
 
-  
   Future<Map<String, dynamic>> post(
     String endpoint,
     Map<String, dynamic> body,
@@ -56,7 +54,6 @@ class ApiService {
     }
   }
 
-  
   Future<Map<String, dynamic>> put(
     String endpoint,
     Map<String, dynamic> body,
@@ -74,7 +71,6 @@ class ApiService {
     }
   }
 
-  
   Map<String, dynamic> _handleResponse(http.Response response) {
     try {
       final jsonResponse = json.decode(response.body);
@@ -95,8 +91,6 @@ class ApiService {
     }
   }
 
- 
-
   Future<Map<String, dynamic>> getProfile() async {
     final headers = await _getHeaders();
     final response = await http.get(
@@ -113,7 +107,6 @@ class ApiService {
     }
   }
 
- 
   Future<List<dynamic>> getImagesByServiceId(String serviceId) async {
     final headers = await _getHeaders();
     final response = await http.get(
@@ -122,9 +115,8 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-
       final data = json.decode(response.body);
-      return data['images'] ?? []; 
+      return data['images'] ?? [];
     } else {
       throw Exception('Failed to load images for service $serviceId');
     }
@@ -151,7 +143,6 @@ class ApiService {
     }
   }
 
-  
   Future<String> addService({
     required String name,
     required String description,
@@ -174,14 +165,13 @@ class ApiService {
 
     if (response.statusCode == 201) {
       final data = json.decode(response.body);
-      return data['service']['service_id']; 
+      return data['service']['service_id'];
     } else {
       final error = json.decode(response.body)['error'] ?? 'Unknown error';
       throw Exception('Add service failed: $error');
     }
   }
 
-  
   Future<void> uploadServiceImages({
     required String serviceId,
     required List<http.MultipartFile> images,
@@ -199,7 +189,6 @@ class ApiService {
       throw Exception('Image upload failed');
     }
   }
-  
 
   Future<Map<String, dynamic>> getDemands({
     String? categoryId,
@@ -209,7 +198,6 @@ class ApiService {
   }) async {
     final headers = await _getHeaders();
 
-    
     final queryParams = {
       'status': status,
       'page': page.toString(),
@@ -272,6 +260,7 @@ class ApiService {
       throw Exception('Failed to load demands by category');
     }
   }
+
   Future<Map<String, dynamic>> sendOffer({
     required String demandId,
     required String message,
@@ -297,13 +286,14 @@ class ApiService {
       throw Exception(error['error'] ?? 'Failed to send offer');
     }
   }
+
   Future<Map<String, dynamic>> register({
     required String fullName,
     required String email,
     required String phoneNumber,
     required String password,
-    required String role, 
-    String? homeAddress, 
+    required String role,
+    String? homeAddress,
   }) async {
     final response = await http.post(
       Uri.parse('$authBaseUrl/register'),
@@ -350,7 +340,6 @@ class ApiService {
       print('=== Login successful ===');
       print('Response data: $data');
 
-      
       final token = data['session']?['access_token'] ?? '';
       print('Token to save: $token');
 
@@ -363,7 +352,44 @@ class ApiService {
     }
   }
 
-  
+  Future<Map<String, dynamic>> googleAuth({
+    required String idToken,
+    String? role,
+    String? phoneNumber,
+    String? homeAddress,
+    String? workingAddress,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$authBaseUrl/google'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'idToken': idToken,
+        if (role != null && role.isNotEmpty) 'role': role,
+        if (phoneNumber != null) 'phone_number': phoneNumber,
+        if (homeAddress != null) 'home_address': homeAddress,
+        if (workingAddress != null) 'working_address': workingAddress,
+      }),
+    );
+
+    final data = json.decode(response.body) as Map<String, dynamic>;
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final token = data['session']?['access_token'] ?? '';
+      if (token is String && token.isNotEmpty) {
+        await _saveToken(token);
+      }
+      final user = data['user'];
+      if (user is Map<String, dynamic>) {
+        await _saveUserData(user);
+      }
+      return data;
+    }
+
+    throw Exception(
+      (data['error'] as String?) ?? 'Google authentication failed',
+    );
+  }
+
   Future<void> _saveToken(String token) async {
     print('=== _saveToken called ===');
     print('Saving token: $token');
@@ -371,12 +397,10 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', token);
 
-    
     final savedToken = prefs.getString('jwt_token');
     print('Token saved and verified: $savedToken');
   }
 
-  
   Future<void> _saveUserData(Map<String, dynamic> user) async {
     print('=== _saveUserData called ===');
     print('User data received: $user');
@@ -393,30 +417,30 @@ class ApiService {
     print('  email: $email (null: ${email == null})');
     print('  role: $role (null: ${role == null})');
 
-   
     if (userId == null) print('WARNING: userId is NULL - using fallback');
-    if (fullName == null)
+    if (fullName == null) {
       print('WARNING: fullName is NULL - using email as fallback');
+    }
     if (email == null) print('WARNING: email is NULL');
-    if (role == null)
+    if (role == null) {
       print('WARNING: role is NULL - using homeowner as fallback');
+    }
 
-    
     final finalUserId = userId ?? '';
     final finalFullName = fullName ?? email ?? '';
     final finalEmail = email ?? '';
     final finalRole = role ?? 'homeowner';
 
     if (finalUserId.isNotEmpty) await prefs.setString('user_id', finalUserId);
-    if (finalFullName.isNotEmpty)
+    if (finalFullName.isNotEmpty) {
       await prefs.setString('full_name', finalFullName);
+    }
     if (finalEmail.isNotEmpty) await prefs.setString('email', finalEmail);
     if (finalRole.isNotEmpty) await prefs.setString('role', finalRole);
 
     print('=== Data saved successfully ===');
   }
 
-  
   Future<String?> getUserRole() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('role');
@@ -427,7 +451,6 @@ class ApiService {
     return prefs.getString('jwt_token') != null;
   }
 
-  
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt_token');
@@ -436,7 +459,31 @@ class ApiService {
     await prefs.remove('email');
     await prefs.remove('role');
   }
- 
+
+  Future<void> changePassword({required String newPassword}) async {
+    final headers = await _getHeaders();
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:5000/api/profile/password'),
+      headers: headers,
+      body: json.encode({'newPassword': newPassword}),
+    );
+
+    if (response.statusCode == 200) return;
+    final data = json.decode(response.body);
+    throw Exception(data['error'] ?? 'Failed to change password');
+  }
+
+  Future<void> deleteAccount() async {
+    final headers = await _getHeaders();
+    final response = await http.delete(
+      Uri.parse('http://10.0.2.2:5000/api/profile/account'),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) return;
+    final data = json.decode(response.body);
+    throw Exception(data['error'] ?? 'Failed to delete account');
+  }
 
   Future<Map<String, dynamic>> getMyBookings() async {
     final headers = await _getHeaders();
@@ -474,8 +521,7 @@ class ApiService {
   Future<Map<String, dynamic>> acceptBooking(String bookingId) async {
     final headers = await _getHeaders();
 
-
-    final response = await http.put( 
+    final response = await http.put(
       Uri.parse('$baseUrl/bookings/$bookingId/accept'),
       headers: headers,
     );
@@ -490,7 +536,6 @@ class ApiService {
   Future<Map<String, dynamic>> declineBooking(String bookingId) async {
     final headers = await _getHeaders();
 
-    
     final response = await http.put(
       Uri.parse('$baseUrl/bookings/$bookingId/decline'),
       headers: headers,
@@ -506,7 +551,6 @@ class ApiService {
   Future<Map<String, dynamic>> completeBooking(String bookingId) async {
     final headers = await _getHeaders();
 
-    
     final response = await http.put(
       Uri.parse('$baseUrl/bookings/$bookingId/complete'),
       headers: headers,
@@ -518,10 +562,11 @@ class ApiService {
       throw Exception('Failed to complete booking: ${response.body}');
     }
   }
-  
 
   Future<Map<String, dynamic>> updateService(
-      String serviceId, Map<String, dynamic> updates) async {
+    String serviceId,
+    Map<String, dynamic> updates,
+  ) async {
     final headers = await _getHeaders();
     final response = await http.put(
       Uri.parse('$baseUrl/services/$serviceId'),
@@ -561,7 +606,7 @@ class ApiService {
       throw Exception('Failed to load service details: ${response.body}');
     }
   }
-  
+
   Future<void> updateProfile({
     String? name,
     String? profession,
@@ -576,9 +621,8 @@ class ApiService {
     if (location != null) body['location'] = location;
     if (experience != null) body['experience_years'] = experience;
 
-  
     final response = await http.put(
-      Uri.parse('$baseUrl/profiles/update'), 
+      Uri.parse('$baseUrl/profiles/update'),
       headers: headers,
       body: json.encode(body),
     );
@@ -588,51 +632,43 @@ class ApiService {
     }
   }
 
-  
-  Future<String> updateProfilePicture( imageFile) async {
+  Future<String> updateProfilePicture(imageFile) async {
     final headers = await _getHeaders();
-   
+
     headers.remove('Content-Type');
 
-    
     var request = http.MultipartRequest(
       'PUT',
-      Uri.parse('$baseUrl/profiles/update/image'), 
+      Uri.parse('$baseUrl/profiles/update/image'),
     );
 
     request.headers.addAll(headers);
 
-    
     request.files.add(
-      await http.MultipartFile.fromPath(
-        'image', 
-        imageFile.path,
-      ),
+      await http.MultipartFile.fromPath('image', imageFile.path),
     );
 
-    
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      
-      return data['imageUrl'] ?? data['profile_picture_url']; 
+
+      return data['imageUrl'] ?? data['profile_picture_url'];
     } else {
       throw Exception('Failed to upload profile picture: ${response.body}');
     }
   }
 
   Future<Map<String, dynamic>> createCategory(
-      String name, String description) async {
+    String name,
+    String description,
+  ) async {
     final headers = await _getHeaders();
     final response = await http.post(
       Uri.parse('$baseUrl/categories'),
       headers: headers,
-      body: json.encode({
-        'name': name,
-        'description': description,
-      }),
+      body: json.encode({'name': name, 'description': description}),
     );
 
     if (response.statusCode == 201) {
@@ -699,16 +735,15 @@ class ApiService {
     int limit = 20,
   }) async {
     final headers = await _getHeaders();
-    
-    final queryParams = {
-      'page': page.toString(),
-      'limit': limit.toString(),
-    };
+
+    final queryParams = {'page': page.toString(), 'limit': limit.toString()};
     if (status != null) {
       queryParams['status'] = status;
     }
 
-    final uri = Uri.parse('$baseUrl/offers/my').replace(queryParameters: queryParams);
+    final uri = Uri.parse(
+      '$baseUrl/offers/my',
+    ).replace(queryParameters: queryParams);
     final response = await http.get(uri, headers: headers);
 
     if (response.statusCode == 200) {
@@ -717,10 +752,11 @@ class ApiService {
       throw Exception('Failed to load my offers: ${response.body}');
     }
   }
+
   Future<List<dynamic>> getSubscriptionPlans() async {
     final headers = await _getHeaders();
     final response = await http.get(
-      Uri.parse('$baseUrl/plans'), 
+      Uri.parse('$baseUrl/plans'),
       headers: headers,
     );
 
@@ -732,15 +768,12 @@ class ApiService {
     }
   }
 
-  Future<void> subscribeToPlan(String tierName)async {
+  Future<void> subscribeToPlan(String tierName) async {
     final headers = await _getHeaders();
     final response = await http.post(
       Uri.parse('$baseUrl/plans/subscribe'),
       headers: headers,
-      body: json.encode({
-    'tier': tierName, 
-    'payment_method': 'credit_card' 
-  }),
+      body: json.encode({'tier': tierName, 'payment_method': 'credit_card'}),
     );
 
     if (response.statusCode != 200 && response.statusCode != 201) {
@@ -748,22 +781,22 @@ class ApiService {
     }
   }
 
-
- Future<Map<String, dynamic>> searchDemands({
+  Future<Map<String, dynamic>> searchDemands({
     required String query,
     int page = 1,
     int limit = 20,
   }) async {
     final headers = await _getHeaders();
     final queryParams = {
-      'query': query, 
+      'query': query,
       'page': page.toString(),
       'limit': limit.toString(),
     };
-    final uri = Uri.parse('$baseUrl/demands/title')
-        .replace(queryParameters: queryParams);
+    final uri = Uri.parse(
+      '$baseUrl/demands/title',
+    ).replace(queryParameters: queryParams);
 
-    print(' Searching URL: $uri'); 
+    print(' Searching URL: $uri');
 
     final response = await http.get(uri, headers: headers);
 
@@ -777,5 +810,4 @@ class ApiService {
       throw Exception('Failed to search demands: ${response.body}');
     }
   }
-  
 }

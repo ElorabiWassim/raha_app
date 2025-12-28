@@ -13,6 +13,8 @@ class MyProfileScreen extends StatelessWidget {
     address: '123 Main Draria, Algiers, Algeria',
   );
 
+  MyProfileScreen({super.key});
+
   void _navigateToPage(BuildContext context, String pageName) async {
     final l10n = AppLocalizations.of(context)!;
 

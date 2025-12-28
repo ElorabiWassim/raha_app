@@ -107,7 +107,7 @@ class _MyAppViewState extends State<MyAppView> {
 
           supportedLocales: const [Locale('en'), Locale('fr'), Locale('ar')],
 
-          localizationsDelegates: const [
+          localizationsDelegates: [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

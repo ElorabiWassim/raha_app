@@ -162,9 +162,9 @@ const signupProvider = async (req, res) => {
       });
     }
 
-    // 4. Insert into provider_application table
+    // 4. Insert into provider_applications table
     const { error: appError } = await supabase
-      .from('provider_application')
+      .from('provider_applications')
       .insert([
         {
           user_id: user.id,

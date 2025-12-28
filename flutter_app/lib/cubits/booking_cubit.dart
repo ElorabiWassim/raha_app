@@ -1,8 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class BookServiceRequest {
   //we will use this class to construct the request
@@ -75,7 +72,12 @@ class BookServiceCubit extends Cubit<BookServiceState> {
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
 
-      emit(BookServiceSuccess());
+      final statusCode = response.statusCode ?? 0;
+      if (statusCode >= 200 && statusCode < 300) {
+        emit(BookServiceSuccess());
+      } else {
+        emit(BookServiceFailure('Booking failed (HTTP $statusCode)'));
+      }
     } catch (e) {
       emit(BookServiceFailure(e.toString()));
     }

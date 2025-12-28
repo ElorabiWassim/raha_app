@@ -343,7 +343,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
                   _checkModified();
                 });
               },
-              activeColor: Color(0xFF68E36C),
+              activeThumbColor: Color(0xFF68E36C),
               title: Text(_isActive ? l10n.active : l10n.inactive, style: TextStyle(fontWeight: FontWeight.bold, color: _isActive ? Color(0xFF68E36C) : Colors.grey[600])),
               subtitle: Text(_isActive ? l10n.serviceVisible : l10n.serviceHidden, style: TextStyle(fontSize: 12)),
             ),

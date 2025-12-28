@@ -10,10 +10,10 @@ class SendOfferScreen extends StatefulWidget {
   final String demandTitle;
 
   const SendOfferScreen({
-    Key? key,
+    super.key,
     required this.demandId,
     required this.demandTitle,
-  }) : super(key: key);
+  });
 
   @override
   State<SendOfferScreen> createState() => _SendOfferScreenState();

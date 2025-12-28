@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const spRoutes = require('./routes/sp.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -39,5 +40,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = app;
 module.exports = app;
