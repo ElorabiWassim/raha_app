@@ -28,7 +28,7 @@ class ServiceProviderProfileCubit extends Cubit<ServiceProviderProfileState> {
 
     try {
       final url = Uri.parse(
-        "http://10.15.243.27:5000/homeowner/getServiceProviderProfile?sp_id=$spId",
+        "http://10.189.170.27:5000/homeowner/getServiceProviderProfile?sp_id=$spId",
       );
 
       final response = await http.get(url);

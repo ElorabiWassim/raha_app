@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.15.243.27:5000/api/sp';
-  static const String authBaseUrl = 'http://10.15.243.27:5000/api/auth';
+  static const String baseUrl = 'http://10.189.170.27:5000/api/sp';
+  static const String authBaseUrl = 'http://10.189.170.27:5000/api/auth';
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -29,7 +29,7 @@ class ApiService {
     try {
       final headers = await _getHeaders();
       final response = await http.get(
-        Uri.parse('http://10.15.243.27:5000$endpoint'),
+        Uri.parse('http://10.189.170.27:5000$endpoint'),
         headers: headers,
       );
       return _handleResponse(response);
@@ -46,7 +46,7 @@ class ApiService {
     try {
       final headers = await _getHeaders();
       final response = await http.post(
-        Uri.parse('http://10.15.243.27:5000$endpoint'),
+        Uri.parse('http://10.189.170.27:5000$endpoint'),
         headers: headers,
         body: json.encode(body),
       );
@@ -64,7 +64,7 @@ class ApiService {
     try {
       final headers = await _getHeaders();
       final response = await http.put(
-        Uri.parse('http://10.15.243.27:5000$endpoint'),
+        Uri.parse('http://10.189.170.27:5000$endpoint'),
         headers: headers,
         body: json.encode(body),
       );
@@ -100,7 +100,7 @@ class ApiService {
   Future<Map<String, dynamic>> getProfile() async {
     final headers = await _getHeaders();
     final response = await http.get(
-      Uri.parse('http://10.15.243.27:5000/api/profile'),
+      Uri.parse('http://10.189.170.27:5000/api/profile'),
       headers: headers,
     );
 

@@ -70,7 +70,7 @@ class BookServiceCubit extends Cubit<BookServiceState> {
 
       // Send request
       final response = await dio.post(
-        "http://10.10.15.243.27.2.2:5000/homeowner/bookService",
+        "http://10.189.170.27:5000/homeowner/bookService",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
