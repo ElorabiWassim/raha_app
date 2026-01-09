@@ -17,6 +17,7 @@ import '../../services/api_service.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
+
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
@@ -42,7 +43,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       final servicesData = await _apiService.getMyServices();
       print('Services loaded: ${servicesData.length} services');
 
-     
       final List<Service> servicesWithImages = [];
       for (var s in servicesData) {
         print(' Processing service: $s');
@@ -52,16 +52,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           imageList = await _apiService.getImagesByServiceId(s['service_id']);
         } catch (e) {
           print(' Failed to load images for service ${s['service_id']}: $e');
-          
         }
 
-       
         List<String> imageUrls = imageList
             .map((img) => img['image_url'] as String)
             .where((url) => url.isNotEmpty)
             .toList();
 
-        
         String categoryName = 'General';
         try {
           if (s['service_categories'] != null) {
@@ -85,35 +82,32 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
         );
       }
-    final List<Map<String, String>> categories = [
-    {'id': 'a75af59d-3e61-402d-9bd2-54a5e64fc950', 'name': 'Plumbing'},
-    {'id': '069dc664-5fd9-435c-a688-cc002e46243b', 'name': 'Electrical'},
-    {'id': '3e53048d-1367-4e9f-ac4e-e39e5936dc0e', 'name': 'Gardening'},
-    {'id': '6ca0c6a3-efa3-481e-b40a-a173bbcdb283', 'name': 'Cleaning'},
-  ];
-  String getProfessionName(String? id) {
+
+      final List<Map<String, String>> categories = [
+        {'id': 'a75af59d-3e61-402d-9bd2-54a5e64fc950', 'name': 'Plumbing'},
+        {'id': '069dc664-5fd9-435c-a688-cc002e46243b', 'name': 'Electrical'},
+        {'id': '3e53048d-1367-4e9f-ac4e-e39e5936dc0e', 'name': 'Gardening'},
+        {'id': '6ca0c6a3-efa3-481e-b40a-a173bbcdb283', 'name': 'Cleaning'},
+      ];
+
+      String getProfessionName(String? id) {
         if (id == null) return 'Service Provider';
         final category = categories.firstWhere(
           (cat) => cat['id'] == id,
-          orElse: () => {'name': 'Service Provider'}, 
+          orElse: () => {'name': 'Service Provider'},
         );
         return category['name']!;
       }
+
       final provider = ServiceProvider(
         name: profileData['profile']['full_name'] ?? 'Service Provider',
-        profession:
-            getProfessionName(profileData['profile']['service_type']),
+        profession: getProfessionName(profileData['profile']['service_type']),
         location: profileData['profile']['working_address'] ?? 'Not specified',
-        rating: 4.9,
-        reviewCount: 125,
         jobsDone: profileData['profile']['jobs_done']?.toString() ?? '0',
-        experience: '${profileData['profile']['experience_years'] ?? 0} ',
-        responseTime: '< 1hr',
-        pendingRequests: 5,
-        confirmedJobs: 3,
-        totalEarnings: 45000,
+        experience: '${profileData['profile']['experience_years'] ?? 0}',
         services: servicesWithImages,
         profileImageUrl: profileData['profile']['profile_picture_url'],
+        // Removed dummy fields: rating, reviewCount, earnings, etc.
       );
 
       context.read<ServiceProviderCubit>().initializeProvider(provider);
@@ -126,21 +120,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       print(' Error loading provider data: $e');
       print('Stack trace: $stackTrace');
 
-      
       if (e.toString().contains('Invalid token') ||
           e.toString().contains('401') ||
           e.toString().contains('Unauthorized')) {
-        print(
-          ' Authentication error detected - clearing token and redirecting to login',
-        );
+        print(' Authentication error detected - clearing token and redirecting to login');
 
-        
         final prefs = await SharedPreferences.getInstance();
         await prefs.remove('jwt_token');
         await prefs.remove('userRole');
 
         if (mounted) {
-          
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
@@ -245,14 +234,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 }
 
 class ServiceProviderHome extends StatelessWidget {
-  final VoidCallback onRefresh; // ← Add this
+  final VoidCallback onRefresh;
 
   const ServiceProviderHome({
     super.key,
-    required this.onRefresh, // ← Make it required
+    required this.onRefresh,
   });
 
-  Future<void> _navigateToPage( 
+  Future<void> _navigateToPage(
     BuildContext context,
     String pageName, {
     Service? service,
@@ -266,7 +255,6 @@ class ServiceProviderHome extends StatelessWidget {
 
     Widget? page;
 
-    // Route logic
     switch (pageName) {
       case 'Add Service':
         page = AddServiceScreen(
@@ -282,16 +270,14 @@ class ServiceProviderHome extends StatelessWidget {
         break;
 
       case 'Edit Profile':
-        // Linked to Backend
         page = EditProfileScreen(provider: provider);
         break;
 
       case 'Edit Service':
-        
         if (service != null && serviceIndex != null) {
           page = EditServiceScreen(
             service: service,
-            serviceId: serviceIndex, 
+            serviceId: serviceIndex,
           );
         }
         break;
@@ -306,13 +292,11 @@ class ServiceProviderHome extends StatelessWidget {
     }
 
     if (page != null) {
-      
       final result = await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => page!),
       );
 
-      
       if (result == true) {
         onRefresh();
       }
@@ -412,7 +396,7 @@ class ServiceProviderHome extends StatelessWidget {
           body: RefreshIndicator(
             color: Color(0xFF68E36C),
             onRefresh: () async {
-              onRefresh(); // Also use it here for pull-to-refresh
+              onRefresh();
               await Future.delayed(Duration(milliseconds: 500));
             },
             child: SingleChildScrollView(
@@ -437,10 +421,8 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildProfileCard(BuildContext context, ServiceProvider provider) {
-    
     final l10n = AppLocalizations.of(context)!;
 
-    // 1. Check if we have a valid image URL
     final hasImage = provider.profileImageUrl != null &&
         provider.profileImageUrl!.isNotEmpty;
 
@@ -486,11 +468,9 @@ class ServiceProviderHome extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 38,
                     backgroundColor: Colors.white,
-                    
                     backgroundImage: hasImage
                         ? NetworkImage(provider.profileImageUrl!)
                         : null,
-                    
                     child: !hasImage
                         ? Icon(
                             Icons.person,
@@ -513,28 +493,13 @@ class ServiceProviderHome extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 6),
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.amber, size: 18),
-                          SizedBox(width: 4),
-                          Text(
-                            '${provider.rating}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            '(${provider.reviewCount} ${l10n.reviews})',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withValues(alpha: 0.9),
-                            ),
-                          ),
-                        ],
+                      SizedBox(height: 4),
+                      Text(
+                        provider.profession,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
                       ),
                       SizedBox(height: 4),
                       Row(
@@ -586,9 +551,9 @@ class ServiceProviderHome extends StatelessWidget {
         children: [
           Expanded(
             child: _buildStatCard(
-              icon: Icons.payments_outlined,
-              value: '${provider.totalEarnings} DA',
-              label: l10n.totalEarnings,
+              icon: Icons.work_outline,
+              value: '${provider.experience} ${"years"}',
+              label: l10n.experience,
               color: Color(0xFF68E36C),
             ),
           ),
@@ -814,11 +779,10 @@ class ServiceProviderHome extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: provider.services.asMap().entries.map((entry) {
-              int index = entry.key;
               Service service = entry.value;
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-        child: _buildServiceCard(context, service),
+                child: _buildServiceCard(context, service),
               );
             }).toList(),
           ),
@@ -830,11 +794,9 @@ class ServiceProviderHome extends StatelessWidget {
   Widget _buildServiceCard(BuildContext context, Service service) {
     final l10n = AppLocalizations.of(context)!;
 
-    // Get first image or use placeholder
     String imageUrl = service.images.isNotEmpty
         ? service.images.first
-        : 'https://share.google/DlrdB62D0M8pDPkgl';
-    print('Service Image URL: $imageUrl');
+        : 'https://placehold.co/60x60/EFEFEF/AAAAAA?text=+';
 
     return Material(
       color: Colors.transparent,
@@ -868,7 +830,6 @@ class ServiceProviderHome extends StatelessWidget {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                // Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
@@ -896,7 +857,6 @@ class ServiceProviderHome extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 12),
-                // Service info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

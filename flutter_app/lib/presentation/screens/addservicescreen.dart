@@ -28,9 +28,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   final List<String> _categories = [
     'Plumbing',
     'Electrical',
-    'Carpentry',
+    'Gardening',
     'Cleaning',
-    'Painting',
+    
   ];
 
   @override
@@ -54,10 +54,10 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   String? _getCategoryIdByName(String name) {
     const Map<String, String> categoryMap = {
       'Plumbing': 'a75af59d-3e61-402d-9bd2-54a5e64fc950',
-      'Electrical': '2',
-      'Carpentry': '3',
-      'Cleaning': '4',
-      'Painting': '5',
+      'Electrical': '069dc664-5fd9-435c-a688-cc002e46243b',
+      'Gardening': '3e53048d-1367-4e9f-ac4e-e39e5936dc0e',
+      'Cleaning': '6ca0c6a3-efa3-481e-b40a-a173bbcdb283',
+     
     };
     return categoryMap[name];
   }
