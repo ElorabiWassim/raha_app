@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/Wilayas.dart';
 import '../../cubits/wilaya_cubit.dart';
 import 'service_provider_screen.dart';
 import 'package:ra7a/l10n/app_localizations.dart';

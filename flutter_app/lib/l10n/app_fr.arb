@@ -399,6 +399,8 @@
   "updatePersonalInfo": "Mettre à jour vos informations personnelles",
   "changePassword": "Changer le mot de passe",
   "updatePassword": "Mettre à jour votre mot de passe",
+  "save": "Enregistrer",
+  "passwordUpdatedSuccess": "Mot de passe mis à jour avec succès",
   "verification": "Vérification",
   "verifyAccount": "Vérifier votre compte",
   "verified": "Vérifié",

@@ -1,0 +1,12 @@
+# Flutter localization configuration.
+#
+# This project references `package:ra7a/l10n/app_localizations.dart`, which
+# re-exports from `lib/l10n_amine/`. To keep things consistent, we generate
+# localizations into `lib/l10n_amine/`.
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-dir: lib/l10n_amine
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+synthetic-package: false
+nullable-getter: false

@@ -398,6 +398,8 @@
   "updatePersonalInfo": "تحديث معلوماتك الشخصية",
   "changePassword": "تغيير كلمة المرور",
   "updatePassword": "تحديث كلمة المرور الخاصة بك",
+  "save": "حفظ",
+  "passwordUpdatedSuccess": "تم تحديث كلمة المرور بنجاح",
   "verification": "التحقق",
   "verifyAccount": "تحقق من حسابك",
   "verified": "موثق",

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ra7a/data/remote/auth_api.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import 'package:ra7a/services/api_service.dart';
 import '../../../../logic/cubits/signup/signup_cubit.dart';
 import '../../../../logic/cubits/signup/signup_state.dart';
 import 'login.dart';
-import 'verification.dart';
 import 'splash.dart';
 import '../../../presentation/screens/homesp.dart';
 
@@ -60,6 +61,88 @@ class _ProviderSignUpScreenContentState
   String? _selectedServiceType;
   DateTime? _selectedDate;
 
+  Future<void> _handleGoogleSignup() async {
+    final localizations = AppLocalizations.of(context);
+    try {
+      final serverClientId = const String.fromEnvironment(
+        'GOOGLE_SERVER_CLIENT_ID',
+        defaultValue: '',
+      );
+
+      if (serverClientId.isEmpty) {
+        throw Exception(
+          'Missing GOOGLE_SERVER_CLIENT_ID. Run with --dart-define=GOOGLE_SERVER_CLIENT_ID=YOUR_WEB_CLIENT_ID',
+        );
+      }
+
+      final googleSignIn = GoogleSignIn(
+        serverClientId: serverClientId,
+        scopes: const ['email', 'profile'],
+      );
+
+      final account = await googleSignIn.signIn();
+      if (account == null) return; // user cancelled
+
+      final auth = await account.authentication;
+      final idToken = auth.idToken;
+      if (idToken == null || idToken.isEmpty) {
+        throw Exception(
+          'Google idToken is null. Ensure you used the Web client ID as serverClientId and configured Google Sign-In correctly.',
+        );
+      }
+
+      final api = ApiService();
+      await api.googleAuth(
+        idToken: idToken,
+        role: 'service_provider',
+        phoneNumber: _phoneController.text.trim().isEmpty
+            ? null
+            : _phoneController.text.trim(),
+        workingAddress:
+            (_cityController.text.trim().isEmpty &&
+                _neighborhoodController.text.trim().isEmpty)
+            ? null
+            : '${_cityController.text.trim()}, ${_neighborhoodController.text.trim()}'
+                  .trim(),
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            localizations.loginWelcomeBack,
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: primaryColor,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString().replaceAll('Exception: ', ''),
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   void dispose() {
     _fullNameController.dispose();
@@ -73,7 +156,7 @@ class _ProviderSignUpScreenContentState
   }
 
   List<String> _getServiceTypes(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     return [
       localizations.signupServiceTypePlumbing,
       localizations.signupServiceTypeElectrical,
@@ -118,12 +201,6 @@ class _ProviderSignUpScreenContentState
         );
         return;
       }
-      if (_passwordController.text != _confirmPasswordController.text) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
-        return;
-      }
 
       context.read<SignupCubit>().signupProvider(
         fullName: _fullNameController.text,
@@ -145,7 +222,7 @@ class _ProviderSignUpScreenContentState
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     return Theme(
       data: ThemeData(
         textSelectionTheme: TextSelectionThemeData(
@@ -237,6 +314,16 @@ class _ProviderSignUpScreenContentState
                         Icons.person_outline,
                         localizations.signupFullNameHint,
                         controller: _fullNameController,
+                        validator: (value) {
+                          final v = (value ?? '').trim();
+                          if (v.isEmpty) {
+                            return 'Please enter ${localizations.signupFullName}';
+                          }
+                          if (v.length < 2) {
+                            return 'Full name must be at least 2 characters';
+                          }
+                          return null;
+                        },
                       ),
 
                       // Email
@@ -247,6 +334,16 @@ class _ProviderSignUpScreenContentState
                         localizations.signupEmailHint,
                         inputType: TextInputType.emailAddress,
                         controller: _emailController,
+                        validator: (value) {
+                          final v = (value ?? '').trim();
+                          if (v.isEmpty) return 'Email is required';
+                          final emailRegex = RegExp(
+                            r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                          );
+                          if (!emailRegex.hasMatch(v))
+                            return 'Email must be valid';
+                          return null;
+                        },
                       ),
 
                       // Date of Birth
@@ -305,6 +402,18 @@ class _ProviderSignUpScreenContentState
                         localizations.signupPhoneNumberHint,
                         inputType: TextInputType.phone,
                         controller: _phoneController,
+                        validator: (value) {
+                          final v = (value ?? '').trim();
+                          if (v.isEmpty) {
+                            return 'Please enter ${localizations.signupPhoneNumber}';
+                          }
+                          final cleaned = v.replaceAll(RegExp(r'\s+'), '');
+                          final phoneRegex = RegExp(r'^\+?[0-9]{8,15}$');
+                          if (!phoneRegex.hasMatch(cleaned)) {
+                            return 'Phone number must be valid';
+                          }
+                          return null;
+                        },
                       ),
 
                       // City
@@ -373,7 +482,7 @@ class _ProviderSignUpScreenContentState
                           ],
                         ),
                         child: DropdownButtonFormField<String>(
-                          value: _selectedServiceType,
+                          initialValue: _selectedServiceType,
                           decoration: InputDecoration(
                             hintText: localizations.signupSelectServiceType,
                             hintStyle: GoogleFonts.poppins(
@@ -442,6 +551,14 @@ class _ProviderSignUpScreenContentState
                           () => _obscurePassword = !_obscurePassword,
                         ),
                         controller: _passwordController,
+                        validator: (value) {
+                          final v = (value ?? '').trim();
+                          if (v.isEmpty) return 'Password is required';
+                          if (v.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
                       ),
 
                       // Confirm Password
@@ -453,6 +570,14 @@ class _ProviderSignUpScreenContentState
                         () =>
                             setState(() => _obscureConfirm = !_obscureConfirm),
                         controller: _confirmPasswordController,
+                        validator: (value) {
+                          final v = (value ?? '').trim();
+                          if (v.isEmpty) return 'Please confirm your password';
+                          if (v != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
                       ),
 
                       // Terms Checkbox
@@ -572,7 +697,7 @@ class _ProviderSignUpScreenContentState
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: _handleGoogleSignup,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -670,6 +795,7 @@ class _ProviderSignUpScreenContentState
     String placeholder, {
     TextInputType inputType = TextInputType.text,
     required TextEditingController controller,
+    String? Function(String?)? validator,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -694,12 +820,14 @@ class _ProviderSignUpScreenContentState
             cursorColor: primaryColor,
             keyboardType: inputType,
             style: GoogleFonts.poppins(fontSize: 16, color: textDark),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter $label';
-              }
-              return null;
-            },
+            validator:
+                validator ??
+                (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter $label';
+                  }
+                  return null;
+                },
             decoration: InputDecoration(
               hintText: placeholder,
               hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
@@ -732,6 +860,7 @@ class _ProviderSignUpScreenContentState
     bool obscure,
     VoidCallback toggleVisibility, {
     required TextEditingController controller,
+    String? Function(String?)? validator,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -756,12 +885,14 @@ class _ProviderSignUpScreenContentState
             cursorColor: primaryColor,
             obscureText: obscure,
             style: GoogleFonts.poppins(fontSize: 16, color: textDark),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter $label';
-              }
-              return null;
-            },
+            validator:
+                validator ??
+                (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter $label';
+                  }
+                  return null;
+                },
             decoration: InputDecoration(
               hintText: placeholder,
               hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),

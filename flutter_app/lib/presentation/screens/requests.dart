@@ -224,11 +224,11 @@ class _RequestsPageState extends State<RequestsPage> {
                             SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: _loadBookings,
-                              child: Text('Retry'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF4CAF50),
                                 foregroundColor: Colors.white,
                               ),
+                              child: Text('Retry'),
                             ),
                           ],
                         ),

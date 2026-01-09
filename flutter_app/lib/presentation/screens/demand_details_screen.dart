@@ -8,8 +8,7 @@ import 'send_offer_screen.dart';
 class DemandDetailsScreen extends StatelessWidget {
   final String demandId;
 
-  const DemandDetailsScreen({Key? key, required this.demandId})
-    : super(key: key);
+  const DemandDetailsScreen({super.key, required this.demandId});
 
   @override
   Widget build(BuildContext context) {

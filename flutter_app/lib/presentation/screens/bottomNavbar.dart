@@ -38,7 +38,7 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final List<String> _labels = [
+    final List<String> labels = [
       l10n.home,
       l10n.bookings,
       l10n.messages,
@@ -120,7 +120,7 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
                         fontSize: isSelected ? 12 : 11,
                       ),
                       duration: const Duration(milliseconds: 300),
-                      child: Text(_labels[index]),
+                      child: Text(labels[index]),
                     ),
                   ],
                 ),
