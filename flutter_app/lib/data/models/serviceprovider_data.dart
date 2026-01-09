@@ -2,7 +2,7 @@ class ServiceProvider {
   String name;
   String profession;
   String location;
-  double? rating;
+  int  ? rating;
   int? reviewCount;
   String jobsDone;
   String experience;

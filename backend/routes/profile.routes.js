@@ -10,5 +10,5 @@ router.get('/', profileController.getProfile);
 router.put('/', profileController.updateProfile);
 router.put('/password', profileController.changePassword);
 router.delete('/account', profileController.deleteAccount);
-
+router.get('/profile', profileController.getServiceProviderProfile);
 module.exports = router;
