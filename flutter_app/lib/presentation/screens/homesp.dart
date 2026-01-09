@@ -104,6 +104,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         profession: getProfessionName(profileData['profile']['service_type']),
         location: profileData['profile']['working_address'] ?? 'Not specified',
         jobsDone: profileData['profile']['jobs_done']?.toString() ?? '0',
+        rating :profileData['profile']['rating_avg'] ?? 0,
+        reviewCount: profileData['profile']['review_count'] ?? 1,
         experience: '${profileData['profile']['experience_years'] ?? 0}',
         services: servicesWithImages,
         profileImageUrl: profileData['profile']['profile_picture_url'],

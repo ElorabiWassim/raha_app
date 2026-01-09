@@ -44,7 +44,65 @@ const getProfile = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+async function getServiceProviderProfile(req, res) {
+  try {
+    const { sp_id } = req.query; 
 
+    if (!sp_id) return res.status(400).json({ error: "sp_id is required" });
+
+    // 1. Get Provider Info
+    const { data: spData, error: spError } = await supabase
+      .from('service_providers')
+      .select(`
+        sp_id,
+        description,
+        working_address,
+        experience_years,
+        jobs_done,
+        profile_picture_url,
+        users:users!service_providers_sp_id_fkey ( full_name )
+      `)
+      .eq('sp_id', sp_id)
+      .maybeSingle();
+
+    if (spError || !spData) return res.status(404).json({ error: "Provider not found" });
+
+    // 2. Get Reviews
+    const { data: reviewsData, error: reviewError } = await supabase
+      .from('reviews')
+      .select('rating')
+      .eq('sp_id', sp_id);
+
+    let avgReview = 0;
+    let totalReviews = 0;
+
+    if (!reviewError && reviewsData && reviewsData.length > 0) {
+      totalReviews = reviewsData.length;
+      const sumRatings = reviewsData.reduce((sum, r) => sum + r.rating, 0);
+      avgReview = sumRatings / totalReviews;
+    }
+
+    const profile = {
+      sp_id: spData.sp_id,
+      name: spData.users?.full_name || null,
+      description: spData.description,
+      average_review: avgReview,     // Dynamic Rating
+      total_reviews: totalReviews,   // Dynamic Count
+      location: spData.working_address,
+      jobs_done: spData.jobs_done,
+      experience: spData.experience_years,
+      profile_picture_url : spData.profile_picture_url
+    };
+
+    return res.status(200).json(profile);
+
+  } catch (err) {
+    console.error("Server error:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
+module.exports = { getServiceProviderProfile };
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user.user_id;
@@ -163,5 +221,5 @@ module.exports = {
   getProfile,
   updateProfile,
   changePassword,
-  deleteAccount,
+  deleteAccount,getServiceProviderProfile
 };
