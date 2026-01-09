@@ -21,7 +21,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _priceController;
-  late bool _isActive;
+  
 
   bool _isLoading = false;
   bool _isModified = false;
@@ -31,7 +31,9 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
     super.initState();
     _titleController = TextEditingController(text: widget.service.title);
     _priceController = TextEditingController(text: widget.service.price);
-    _isActive = widget.service.isActive;
+  
+
+
 
     _titleController.addListener(_checkModified);
     _priceController.addListener(_checkModified);
@@ -40,8 +42,8 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
   void _checkModified() {
     setState(() {
       _isModified = _titleController.text != widget.service.title ||
-          _priceController.text != widget.service.price ||
-          _isActive != widget.service.isActive;
+          _priceController.text != widget.service.price ;
+        
     });
   }
 
@@ -62,7 +64,6 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
       final updates = {
         'name': _titleController.text,
         'price_amount': double.tryParse(_priceController.text) ?? 0.0,
-        'is_active': _isActive,
         
       };
 
@@ -187,8 +188,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
               _buildServiceIcon(),
               SizedBox(height: 24),
               _buildFormSection(l10n, _isLoading),
-              SizedBox(height: 24),
-              _buildStatusSection(l10n, _isLoading),
+              
               SizedBox(height: 24),
               _buildPricingGuide(l10n),
               SizedBox(height: 32),
@@ -315,44 +315,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
     );
   }
   
-  Widget _buildStatusSection(AppLocalizations l10n, bool isLoading) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.serviceStatus, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
-          SizedBox(height: 16),
-          Container(
-            decoration: BoxDecoration(
-              color: _isActive ? Color(0xFF68E36C).withValues(alpha: 0.1) : Colors.grey[100],
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _isActive ? Color(0xFF68E36C) : Colors.grey[300]!),
-            ),
-            child: SwitchListTile(
-              value: _isActive,
-              onChanged: isLoading ? null : (value) {
-                setState(() {
-                  _isActive = value;
-                  _checkModified();
-                });
-              },
-              activeColor: Color(0xFF68E36C),
-              title: Text(_isActive ? l10n.active : l10n.inactive, style: TextStyle(fontWeight: FontWeight.bold, color: _isActive ? Color(0xFF68E36C) : Colors.grey[600])),
-              subtitle: Text(_isActive ? l10n.serviceVisible : l10n.serviceHidden, style: TextStyle(fontSize: 12)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  
+ 
   Widget _buildPricingGuide(AppLocalizations l10n) {
      return Container(
        margin: EdgeInsets.symmetric(horizontal: 16),

@@ -17,7 +17,6 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
-  late TextEditingController _professionController;
   late TextEditingController _locationController;
   late TextEditingController _experienceController;
   
@@ -30,12 +29,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.provider.name);
-    _professionController = TextEditingController(text: widget.provider.profession);
+    
     _locationController = TextEditingController(text: widget.provider.location);
     _experienceController = TextEditingController(text: widget.provider.experience);
     
     _nameController.addListener(_checkModified);
-    _professionController.addListener(_checkModified);
     _locationController.addListener(_checkModified);
     _experienceController.addListener(_checkModified);
   }
@@ -43,7 +41,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _checkModified() {
     setState(() {
       _isModified = _nameController.text != widget.provider.name ||
-          _professionController.text != widget.provider.profession ||
           _locationController.text != widget.provider.location ||
           _experienceController.text != widget.provider.experience ||
           _selectedImage != null;
@@ -53,7 +50,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _professionController.dispose();
     _locationController.dispose();
     _experienceController.dispose();
     super.dispose();
@@ -86,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // 1. Update Text Details
       await api.updateProfile(
         name: _nameController.text,
-        profession: _professionController.text,
+       
         location: _locationController.text,
         experience: _experienceController.text,
       );
@@ -279,8 +275,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           SizedBox(height: 16),
           _buildTextField(controller: _nameController, label: l10n.name, icon: Icons.person_outline),
-          SizedBox(height: 16),
-          _buildTextField(controller: _professionController, label: l10n.profession, icon: Icons.work_outline),
           SizedBox(height: 16),
           _buildTextField(controller: _locationController, label: l10n.location, icon: Icons.location_on_outlined),
           SizedBox(height: 16),

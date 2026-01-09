@@ -1226,13 +1226,11 @@ const getProfile = async (req, res) => {
 
         if (error) throw error;
 
-        // Flatten the response for the frontend
         const profile = {
             ...data,
             full_name: data.users?.full_name,
             email: data.users?.email,
             phone_number: data.users?.phone_number,
-            // Prioritize the user table picture, fallback to service_provider table if exists
             profile_picture: data.users?.profile_picture_url || data.profile_picture_url 
         };
 
@@ -1242,18 +1240,14 @@ const getProfile = async (req, res) => {
         res.status(500).json({ error: "Failed to load profile" });
     }
 };
-
-// 2. Update Profile Information (Text)
 const updateProfile = async (req, res) => {
     try {
         const sp_id = req.serviceProvider.sp_id;
-        const { full_name, profession, location, experience_years } = req.body;
-
-        // Update Service Provider Details
+        const { full_name, location, experience_years } = req.body;
         const { error: spError } = await supabase
             .from('service_providers')
             .update({
-                service_type: profession,
+              
                 working_address: location,
                 experience_years: experience_years
             })
