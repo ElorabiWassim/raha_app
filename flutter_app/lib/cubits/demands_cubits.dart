@@ -73,13 +73,60 @@ class AddDemandCubit extends Cubit<AddDemandState> {
         // If response is not JSON, just keep raw body
       }
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         emit(AddDemandSuccess(message: serverMessage));
       } else {
         emit(AddDemandFailure(message: "Error: $serverMessage"));
       }
     } catch (e) {
       print("Exception occurred: $e");
+      emit(AddDemandFailure(message: "Failed to connect to server: $e"));
+    }
+  }
+
+  Future<void> editDemand({
+    required String demandId,
+    required String categoryName,
+    required String title,
+    required String location,
+    required String date,
+    required String time,
+    required String description,
+  }) async {
+    emit(AddDemandLoading());
+
+    final url = Uri.parse("http://10.0.2.2:5000/homeowner/editDemand");
+    final body = {
+      'demand_id': demandId,
+      'category_name': categoryName,
+      'title': title,
+      'location': location,
+      'date': date,
+      'time': time,
+      'description': description,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(body),
+      );
+
+      String serverMessage = response.body;
+      try {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse is Map && jsonResponse.containsKey('message')) {
+          serverMessage = jsonResponse['message'];
+        }
+      } catch (_) {}
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        emit(AddDemandSuccess(message: serverMessage));
+      } else {
+        emit(AddDemandFailure(message: "Error: $serverMessage"));
+      }
+    } catch (e) {
       emit(AddDemandFailure(message: "Failed to connect to server: $e"));
     }
   }

@@ -1,4 +1,5 @@
 const supabase = require('../config/supabase');
+const bcrypt = require('bcryptjs');
 
 const getProfile = async (req, res) => {
   try {
@@ -89,12 +90,6 @@ const updateProfile = async (req, res) => {
         return res.status(400).json({ error: error.message });
       }
 
-      // Update Auth User Metadata if full_name changed
-      if (userUpdates.full_name) {
-        await supabase.auth.updateUser({
-          data: { full_name: userUpdates.full_name },
-        });
-      }
     }
 
     // Update role-specific table
@@ -125,9 +120,12 @@ const changePassword = async (req, res) => {
     const { newPassword } = req.body;
     if (!newPassword) return res.status(400).json({ error: 'New password required' });
 
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
+    const userId = req.user.user_id;
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const { error } = await supabase
+      .from('users')
+      .update({ password: hashedPassword, updated_at: new Date().toISOString() })
+      .eq('user_id', userId);
 
     if (error) return res.status(400).json({ error: error.message });
 
@@ -142,8 +140,12 @@ const deleteAccount = async (req, res) => {
   try {
     const userId = req.user.user_id;
 
-    // Delete Auth user (will cascade to other tables if foreign keys are set up properly)
-    const { error } = await supabase.auth.admin.deleteUser(userId);
+    // Best-effort cleanup. If you have FK cascades, these deletes are safe.
+    await supabase.from('provider_applications').delete().eq('user_id', userId);
+    await supabase.from('homeowners').delete().eq('homeowner_id', userId);
+    await supabase.from('service_providers').delete().eq('sp_id', userId);
+
+    const { error } = await supabase.from('users').delete().eq('user_id', userId);
 
     if (error) {
       console.error('Delete user error:', error);

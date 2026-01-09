@@ -4,6 +4,7 @@ import '../../data/models/serviceprovider_data.dart';
 import '../../modules/authentication/screens/login.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../cubits/language_cubit.dart';
+import '../../services/api_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   final ServiceProvider provider;
@@ -27,7 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -87,18 +88,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       child: Row(
         children: [
-         CircleAvatar(
-  radius: 35,
-  backgroundColor: Colors.white,
-  // 1. Load the image if the URL exists and is not empty
-  backgroundImage: (widget.provider.profileImageUrl != null && widget.provider.profileImageUrl!.isNotEmpty)
-      ? NetworkImage(widget.provider.profileImageUrl!)
-      : null,
-  // 2. Show the Icon ONLY if the image is missing (fallback)
-  child: (widget.provider.profileImageUrl == null || widget.provider.profileImageUrl!.isEmpty)
-      ? Icon(Icons.person, size: 40, color: Color(0xFF68E36C))
-      : null,
-),
+          CircleAvatar(
+            radius: 35,
+            backgroundColor: Colors.white,
+            // 1. Load the image if the URL exists and is not empty
+            backgroundImage:
+                (widget.provider.profileImageUrl != null &&
+                    widget.provider.profileImageUrl!.isNotEmpty)
+                ? NetworkImage(widget.provider.profileImageUrl!)
+                : null,
+            // 2. Show the Icon ONLY if the image is missing (fallback)
+            child:
+                (widget.provider.profileImageUrl == null ||
+                    widget.provider.profileImageUrl!.isEmpty)
+                ? Icon(Icons.person, size: 40, color: Color(0xFF68E36C))
+                : null,
+          ),
           SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -138,18 +143,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAccountSection() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return _buildSection(
       title: l10n.account,
       children: [
-        
         _buildDivider(),
         _buildSettingsTile(
           icon: Icons.lock_outline,
           title: l10n.changePassword,
           subtitle: l10n.updatePassword,
-          onTap: () => _showComingSoon(l10n.changePassword),
+          onTap: _showChangePasswordDialog,
         ),
         _buildDivider(),
         _buildSettingsTile(
@@ -178,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildNotificationsSection() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return _buildSection(
       title: l10n.notifications,
@@ -223,7 +227,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildPreferencesSection() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return _buildSection(
       title: l10n.preferences,
@@ -277,7 +281,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSupportSection() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return _buildSection(
       title: l10n.supportAbout,
@@ -314,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildDangerZone() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return _buildSection(
       title: l10n.dangerZone,
@@ -473,7 +477,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Color(0xFF68E36C),
+            activeThumbColor: Color(0xFF68E36C),
             activeTrackColor: Color(0xFF68E36C).withValues(alpha: 0.5),
           ),
         ],
@@ -489,7 +493,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showLanguageDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final parentContext = context;
 
     showDialog(
@@ -507,10 +511,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(width: 12),
                 Text(
                   l10n.changeLanguage,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -568,7 +569,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required String languageCode,
     required bool isSelected,
   }) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return InkWell(
       onTap: () {
@@ -598,10 +599,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         child: Row(
           children: [
-            Text(
-              icon,
-              style: TextStyle(fontSize: 24),
-            ),
+            Text(icon, style: TextStyle(fontSize: 24)),
             SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -614,11 +612,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: Color(0xFF68E36C),
-                size: 24,
-              ),
+              Icon(Icons.check_circle, color: Color(0xFF68E36C), size: 24),
           ],
         ),
       ),
@@ -626,7 +620,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showComingSoon(String feature) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -637,14 +631,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showLogoutDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(l10n.logout),
         content: Text(l10n.logoutConfirm),
         actions: [
@@ -655,6 +647,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
+              ApiService().logout();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -669,14 +662,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showDeleteDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(l10n.deleteAccount),
         content: Text(l10n.deleteAccountConfirm),
         actions: [
@@ -687,17 +678,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${l10n.accountDeletion} - ${l10n.comingSoon}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              _deleteAccount();
             },
             child: Text(l10n.delete, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
+  }
+
+  void _showChangePasswordDialog() {
+    final l10n = AppLocalizations.of(context);
+    final controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(l10n.changePassword),
+        content: TextField(
+          controller: controller,
+          obscureText: true,
+          decoration: InputDecoration(hintText: l10n.changePassword),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _changePassword(controller.text);
+            },
+            child: Text(l10n.save),
+          ),
+        ],
+      ),
+    ).then((_) => controller.dispose());
+  }
+
+  Future<void> _changePassword(String newPassword) async {
+    final l10n = AppLocalizations.of(context);
+    final trimmed = newPassword.trim();
+    if (trimmed.isEmpty) return;
+
+    try {
+      await ApiService().changePassword(newPassword: trimmed);
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.passwordUpdatedSuccess)));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
+      );
+    }
+  }
+
+  Future<void> _deleteAccount() async {
+    try {
+      await ApiService().deleteAccount();
+      await ApiService().logout();
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

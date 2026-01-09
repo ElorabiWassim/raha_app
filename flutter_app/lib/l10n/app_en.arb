@@ -405,6 +405,8 @@
   "updatePersonalInfo": "Update your personal information",
   "changePassword": "Change Password",
   "updatePassword": "Update your password",
+  "save": "Save",
+  "passwordUpdatedSuccess": "Password updated successfully",
   "verification": "Verification",
   "verifyAccount": "Verify your account",
   "verified": "Verified",

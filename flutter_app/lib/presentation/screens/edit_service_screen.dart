@@ -315,7 +315,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
     );
   }
   
- 
+
   Widget _buildPricingGuide(AppLocalizations l10n) {
      return Container(
        margin: EdgeInsets.symmetric(horizontal: 16),

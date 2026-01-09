@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/proffesionalCardWidget.dart';
-import '../../data/models/fetched_service_provider.dart';
 
 import 'profile.dart';
 import 'package:ra7a/l10n/app_localizations.dart';

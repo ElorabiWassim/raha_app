@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/demand_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 // State
 abstract class DemandsState extends Equatable {
@@ -74,61 +77,107 @@ class DemandsCubit extends Cubit<DemandsState> {
 
   DemandsCubit() : super(DemandsInitial());
 
+  DemandStatus _parseBackendStatus(dynamic status) {
+    final s = (status ?? '').toString().toLowerCase();
+    if (s.contains('cancel')) return DemandStatus.cancelled;
+    if (s.contains('complete')) return DemandStatus.completed;
+    if (s.contains('match') || s.contains('in_progress') || s == 'matched') {
+      return DemandStatus.inProgress;
+    }
+    return DemandStatus.pending;
+  }
+
+  IconData _iconForCategory(String category) {
+    switch (category.toLowerCase()) {
+      case 'electrical':
+        return Icons.electrical_services_outlined;
+      case 'plumbing':
+        return Icons.plumbing_outlined;
+      case 'painting':
+        return Icons.format_paint_outlined;
+      case 'cleaning':
+        return Icons.cleaning_services_outlined;
+      case 'gardening':
+        return Icons.grass_outlined;
+      case 'handyman':
+        return Icons.handyman_outlined;
+      case 'moving':
+        return Icons.local_shipping_outlined;
+      default:
+        return Icons.work_outline;
+    }
+  }
+
   Future<void> loadDemands() async {
     try {
       emit(DemandsLoading());
-      await Future.delayed(const Duration(seconds: 1)); // Simulate API
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('user_id');
+      if (userId == null || userId.isEmpty) {
+        emit(const DemandsError('Please login to view demands'));
+        return;
+      }
 
-      // Mock Data
-      _allDemands = [
-        Demand(
-          id: '1',
-          title: 'Fix AC Unit',
-          category:
-              'Electrical', // Note: In real app, use IDs or consistent keys
-          description:
-              'AC not cooling properly, making strange noises when turned on...',
-          postedDate: 'Oct 26, 2023',
-          location: 'Algiers',
-          budget: '8,000 DZD',
-          preferredTime: 'Oct 28, PM',
-          status: DemandStatus.pending,
-          icon: Icons.ac_unit_outlined,
-          applicantsCount: 3,
-        ),
-        Demand(
-          id: '2',
-          title: 'Fix Leaky Kitchen Sink',
-          category: 'Plumbing',
-          description:
-              'Constant dripping under the sink, needs immediate attention...',
-          postedDate: 'Oct 24, 2023',
-          location: 'Oran',
-          budget: '5,000 - 7,000 DZD',
-          preferredTime: 'ASAP',
-          status: DemandStatus.inProgress,
-          icon: Icons.plumbing_outlined,
+      final url = Uri.parse(
+        'http://10.0.2.2:5000/homeowner/getUserDemands?homeowner_id=$userId',
+      );
+      final response = await http.get(url);
+
+      if (response.statusCode != 200) {
+        emit(const DemandsError('Failed to load demands'));
+        return;
+      }
+
+      final decoded = jsonDecode(response.body);
+      final list = decoded is List ? decoded : <dynamic>[];
+
+      _allDemands = list.map((raw) {
+        final map = (raw as Map).cast<String, dynamic>();
+        final categoryObj = map['service_categories'] as Map<String, dynamic>?;
+        final categoryName = (categoryObj?['name'] ?? '').toString();
+
+        final date = (map['date'] ?? '').toString();
+        final time = (map['time'] ?? '').toString();
+        final preferredTime = [date, time].where((e) => e.isNotEmpty).join(' ');
+
+        return Demand(
+          id: (map['demand_id'] ?? '').toString(),
+          title: (map['title'] ?? '').toString(),
+          category: categoryName,
+          description: (map['description'] ?? '').toString(),
+          postedDate: date,
+          location: (map['location'] ?? '').toString(),
+          budget: '',
+          preferredTime: preferredTime,
+          status: _parseBackendStatus(map['status']),
+          icon: _iconForCategory(categoryName),
           applicantsCount: 0,
-        ),
-        Demand(
-          id: '3',
-          title: 'Paint Living Room Walls',
-          category: 'Painting',
-          description:
-              'Need to paint the living room, approx 20sqm. Color: beige...',
-          postedDate: 'Oct 15, 2023',
-          location: 'Constantine',
-          budget: '15,000 DZD',
-          preferredTime: 'Oct 20, AM',
-          status: DemandStatus.completed,
-          icon: Icons.format_paint_outlined,
-          applicantsCount: 0,
-        ),
-      ];
+        );
+      }).toList();
 
       emit(DemandsLoaded(demands: _allDemands));
     } catch (e) {
       emit(const DemandsError("Failed to load demands"));
+    }
+  }
+
+  Future<void> cancelDemand(String demandId) async {
+    if (demandId.isEmpty) return;
+    try {
+      final url = Uri.parse('http://10.0.2.2:5000/homeowner/cancelDemand');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'demand_id': demandId}),
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        await loadDemands();
+      } else {
+        emit(const DemandsError('Failed to cancel demand'));
+      }
+    } catch (_) {
+      emit(const DemandsError('Failed to cancel demand'));
     }
   }
 

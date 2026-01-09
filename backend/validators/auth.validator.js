@@ -3,9 +3,12 @@ const { body } = require('express-validator');
 // Login validator
 const loginValidator = [
   body('email')
+    .trim()
     .notEmpty()
     .withMessage('Email is required')
-    .trim(),
+    .isEmail()
+    .withMessage('Email must be valid')
+    .normalizeEmail(),
   body('password')
     .notEmpty()
     .withMessage('Password is required')
@@ -16,9 +19,12 @@ const loginValidator = [
 // Registration validator
 const registerValidator = [
   body('email')
+    .trim()
     .notEmpty()
     .withMessage('Email is required')
-    .trim(),
+    .isEmail()
+    .withMessage('Email must be valid')
+    .normalizeEmail(),
   body('password')
     .notEmpty()
     .withMessage('Password is required')

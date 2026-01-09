@@ -1,4 +1,5 @@
 /// Custom exception classes for better error handling
+library;
 
 class AppException implements Exception {
   final String message;
@@ -12,48 +13,43 @@ class AppException implements Exception {
 }
 
 class NetworkException extends AppException {
-  NetworkException(String message, {String? code, dynamic originalError})
-    : super(message, code: code, originalError: originalError);
+  NetworkException(super.message, {super.code, super.originalError});
 }
 
 class ApiException extends AppException {
   final int? statusCode;
 
   ApiException(
-    String message, {
+    super.message, {
     this.statusCode,
-    String? code,
-    dynamic originalError,
-  }) : super(message, code: code, originalError: originalError);
+    super.code,
+    super.originalError,
+  });
 }
 
 class ValidationException extends AppException {
   final Map<String, String>? fieldErrors;
 
   ValidationException(
-    String message, {
+    super.message, {
     this.fieldErrors,
-    String? code,
-    dynamic originalError,
-  }) : super(message, code: code, originalError: originalError);
+    super.code,
+    super.originalError,
+  });
 }
 
 class AuthenticationException extends AppException {
-  AuthenticationException(String message, {String? code, dynamic originalError})
-    : super(message, code: code, originalError: originalError);
+  AuthenticationException(super.message, {super.code, super.originalError});
 }
 
 class AuthorizationException extends AppException {
-  AuthorizationException(String message, {String? code, dynamic originalError})
-    : super(message, code: code, originalError: originalError);
+  AuthorizationException(super.message, {super.code, super.originalError});
 }
 
 class NotFoundException extends AppException {
-  NotFoundException(String message, {String? code, dynamic originalError})
-    : super(message, code: code, originalError: originalError);
+  NotFoundException(super.message, {super.code, super.originalError});
 }
 
 class ServerException extends AppException {
-  ServerException(String message, {String? code, dynamic originalError})
-    : super(message, code: code, originalError: originalError);
+  ServerException(super.message, {super.code, super.originalError});
 }

@@ -8,10 +8,18 @@ import '../../cubits/booking_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BookService extends StatefulWidget {
   final String service_name;
-  const BookService({super.key, required this.service_name});
+  final String serviceId;
+  final String spId;
+  const BookService({
+    super.key,
+    required this.service_name,
+    required this.serviceId,
+    required this.spId,
+  });
   @override
   State<BookService> createState() => _BookService();
 }
@@ -25,58 +33,73 @@ class _BookService extends State<BookService> {
   late String selectedTime;
   List<File> selectedImages = [];
 
-  void onPressSubmit() {
+  Future<void> onPressSubmit() async {
     if (_formKey.currentState!.validate()) {
       final cubit = context.read<BookServiceCubit>();
 
-      final spIdv = "d342a8f9-652d-42d9-965e-c3a5b3e5500c";
-      final homeownerIdv = "0de85f0b-f9aa-4a5e-932b-8d2120db9f83";
-      final serviceIdv = "93f83a4c-19b6-43a2-b0ef-5901e32d2963";
+      final prefs = await SharedPreferences.getInstance();
+      final homeownerIdv = prefs.getString('user_id');
+      if (homeownerIdv == null || homeownerIdv.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Please login first.')));
+        return;
+      }
+
+      if (widget.serviceId.isEmpty || widget.spId.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Missing service/provider id.')),
+        );
+        return;
+      }
+
       final photos = selectedImages.map((file) => file.path).toList();
       final request = BookServiceRequest(
         description: descriptionController.text.trim(),
-        serviceId: serviceIdv,
+        serviceId: widget.serviceId,
         homeownerId: homeownerIdv,
-        spId: spIdv,
+        spId: widget.spId,
         date: selectedDate.toIso8601String(),
         time: selectedTime,
         location: addressController.text.trim(),
         photosPaths: photos,
       );
 
-      // Listen to state changes for submission result
-      cubit.stream.listen((state) {
-        if (state is BookServiceSuccess) {
-          Navigator.of(context).pop(); // close the screen
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Service booked successfully!')),
-          );
-        } else if (state is BookServiceFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Failed to book service')));
-        }
-      });
+      await cubit.bookService(request);
+      if (!mounted) return;
 
-      cubit.bookService(request);
+      final state = cubit.state;
+      if (state is BookServiceSuccess) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Service booked successfully!')),
+        );
+      } else if (state is BookServiceFailure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              state.message.isEmpty ? 'Failed to book service' : state.message,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Failed to book service')));
+      }
     }
   }
 
   Future<void> pickImages() async {
     final ImagePicker picker = ImagePicker();
-    final List<XFile>? images = await picker.pickMultiImage();
+    final List<XFile> images = await picker.pickMultiImage();
 
-    if (images != null) {
-      setState(() {
-        selectedImages = images.map((img) => File(img.path)).toList();
-      });
-      // Print file paths to verify
-      for (var img in selectedImages) {
-        print('Selected image: ${img.path}');
-      }
-    } else {
-      print('No images selected.');
-    }
+    if (images.isEmpty) return;
+    setState(() {
+      selectedImages = images.map((img) => File(img.path)).toList();
+    });
   }
 
   @override
@@ -199,7 +222,7 @@ class _BookService extends State<BookService> {
               ),
 
               SizedBox(height: 40),
-              btn(onPressSubmit, "Book Service"),
+              btn(() => onPressSubmit(), "Book Service"),
             ],
           ),
         ),

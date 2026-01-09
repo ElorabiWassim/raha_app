@@ -241,6 +241,984 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signupAlreadyHaveAccount => 'Vous avez déjà un compte ? ';
 
   @override
+  String get dashboardTitle => 'Tableau de bord';
+
+  @override
+  String get dashboardTotalUsers => 'Total utilisateurs';
+
+  @override
+  String get dashboardVerifiedSPs => 'Prestataires vérifiés';
+
+  @override
+  String get dashboardActiveBookings => 'Réservations actives';
+
+  @override
+  String get dashboardRevenue => 'Revenus';
+
+  @override
+  String get dashboardRecentActivity => 'Activité récente';
+
+  @override
+  String get dashboardLogout => 'Déconnexion';
+
+  @override
+  String get dashboardLogoutConfirm =>
+      'Êtes-vous sûr de vouloir vous déconnecter ?';
+
+  @override
+  String get dashboardCancel => 'Annuler';
+
+  @override
+  String get demandsTitle => 'Emplois ouverts';
+
+  @override
+  String get demandsSearchHint => 'Rechercher des emplois...';
+
+  @override
+  String get demandsCategory => 'Catégorie';
+
+  @override
+  String get demandsWilaya => 'Wilaya';
+
+  @override
+  String get demandsCategoryPlumbing => 'Plomberie';
+
+  @override
+  String get demandsCategoryElectrical => 'Électricité';
+
+  @override
+  String get demandsCategoryGardening => 'Jardinage';
+
+  @override
+  String get demandsCategoryCleaning => 'Nettoyage';
+
+  @override
+  String get demandsPosted => 'Publié';
+
+  @override
+  String get demandsSendOffer => 'Envoyer une offre';
+
+  @override
+  String get demandsOfferSent => 'Offre envoyée !';
+
+  @override
+  String get applicationsTitle => 'Candidatures de prestataires';
+
+  @override
+  String get applicationsSearchHint => 'Rechercher des candidatures...';
+
+  @override
+  String get applicationsApplied => 'Candidature';
+
+  @override
+  String get applicationsServicesOffered => 'Services offerts :';
+
+  @override
+  String get applicationsAccept => 'Accepter';
+
+  @override
+  String get applicationsDecline => 'Refuser';
+
+  @override
+  String applicationsAccepted(String name) {
+    return '$name accepté';
+  }
+
+  @override
+  String applicationsDeclined(String name) {
+    return '$name refusé';
+  }
+
+  @override
+  String get plansTitle => 'Plans';
+
+  @override
+  String get plansRecommended => 'Recommandé';
+
+  @override
+  String get plansUpgradeNow => 'Mettre à niveau';
+
+  @override
+  String plansSelectedPlan(String plan) {
+    return 'Plan sélectionné : $plan';
+  }
+
+  @override
+  String get plansFree => 'Gratuit';
+
+  @override
+  String get plansFreePriceValue => '0 DA';
+
+  @override
+  String get plansFreeFeature1 =>
+      'Créer un compte et répertorier jusqu\'à 3 services.';
+
+  @override
+  String get plansFreeFeature2 => 'Répertorier les informations de contact.';
+
+  @override
+  String get plansFreeFeature3 =>
+      'Priorité inférieure dans la liste des services.';
+
+  @override
+  String get plansFreeFeature4 =>
+      'Les 20 premiers prestataires obtiennent le plan gratuit pendant 6 mois.';
+
+  @override
+  String get plansPro => 'Pro';
+
+  @override
+  String get plansProPriceValue => '700 DA/mois';
+
+  @override
+  String get plansProPeriodValue => '7 000 DA/an';
+
+  @override
+  String get plansProFeature1 => 'Répertorier jusqu\'à 10 services.';
+
+  @override
+  String get plansProFeature2 =>
+      'Recevoir des réservations, des demandes et des messages clients.';
+
+  @override
+  String get plansProFeature3 => 'Créer et publier des publications.';
+
+  @override
+  String get plansProFeature4 => 'Répondre aux demandes des utilisateurs.';
+
+  @override
+  String get plansProFeature5 =>
+      'Priorité moyenne dans les résultats de recherche.';
+
+  @override
+  String get plansElite => 'Élite';
+
+  @override
+  String get plansElitePriceValue => '1 500 DA/mois';
+
+  @override
+  String get plansElitePeriodValue => '15 000 DA/an';
+
+  @override
+  String get plansEliteFeature1 => 'Répertorier jusqu\'à 20 services.';
+
+  @override
+  String get plansEliteFeature2 =>
+      'Afficher des informations détaillées sur le profil (nombre de vues du profil).';
+
+  @override
+  String get plansEliteFeature3 =>
+      'Priorité la plus élevée dans l\'affichage des résultats de recherche.';
+
+  @override
+  String get plansEliteFeature4 =>
+      'Obtenir un badge vérifié pour une confiance accrue.';
+
+  @override
+  String get plansEliteFeature5 =>
+      'Recevoir des réservations, des demandes et des messages.';
+
+  @override
+  String get plansEliteFeature6 => 'Créer et publier des publications.';
+
+  @override
+  String get plansEliteFeature7 =>
+      'Promouvoir les services par le biais de publicités dans le fil principal.';
+
+  @override
+  String get plansEliteFeature8 => 'Répondre aux demandes des utilisateurs.';
+
+  @override
+  String get verificationTitle => 'Vérification des documents';
+
+  @override
+  String get verificationSubtitle =>
+      'Téléchargez vos documents pour vérification';
+
+  @override
+  String get verificationNationalID => 'Carte d\'identité / Passeport';
+
+  @override
+  String get verificationCertificate => 'Certificat professionnel';
+
+  @override
+  String get verificationProfilePicture => 'Photo de profil';
+
+  @override
+  String get verificationRequired => 'Obligatoire';
+
+  @override
+  String get verificationClearHeadshot => 'Photo de face claire requise';
+
+  @override
+  String get verificationTapToUpload => 'Appuyez pour télécharger';
+
+  @override
+  String get verificationDocumentUploaded => 'Document téléchargé';
+
+  @override
+  String get verificationAcceptedFormats =>
+      'Accepté : JPG, PNG, PDF. Taille max : 5 Mo';
+
+  @override
+  String get verificationSubmit => 'Soumettre pour examen';
+
+  @override
+  String get verificationSuccess => 'Candidature soumise !';
+
+  @override
+  String get verificationSuccessMessage =>
+      'Nous examinons vos documents. Vous recevrez une notification dans 2-3 jours ouvrables.';
+
+  @override
+  String get verificationBackToVerification => 'Retour à la vérification';
+
+  @override
+  String get reportsTitle => 'Gérer les signalements';
+
+  @override
+  String get reportsSearchHint => 'Rechercher des signalements...';
+
+  @override
+  String reportsFilterNew(int count) {
+    return 'Nouveau ($count)';
+  }
+
+  @override
+  String get reportsFilterInProgress => 'En cours';
+
+  @override
+  String get reportsFilterResolved => 'Résolu';
+
+  @override
+  String get reportsHomeowner => 'PROPRIÉTAIRE';
+
+  @override
+  String get reportsProvider => 'PRESTATAIRE';
+
+  @override
+  String get details => 'Détails';
+
+  @override
+  String get reportsResolve => 'Résoudre';
+
+  @override
+  String get requestsTitle => 'Demandes de service';
+
+  @override
+  String get requestsTabRequests => 'Demandes';
+
+  @override
+  String get requestsTabHistory => 'Historique';
+
+  @override
+  String get requestsStatusPending => 'En attente';
+
+  @override
+  String get requestsStatusConfirmed => 'Confirmé';
+
+  @override
+  String get requestsStatusCompleted => 'Terminé';
+
+  @override
+  String get requestsAccept => 'Accepter';
+
+  @override
+  String get requestsDecline => 'Refuser';
+
+  @override
+  String get requestsViewDetails => 'Voir les détails';
+
+  @override
+  String get account => 'Compte';
+
+  @override
+  String get updatePersonalInfo =>
+      'Mettre à jour vos informations personnelles';
+
+  @override
+  String get changePassword => 'Changer le mot de passe';
+
+  @override
+  String get updatePassword => 'Mettre à jour votre mot de passe';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get passwordUpdatedSuccess => 'Mot de passe mis à jour avec succès';
+
+  @override
+  String get verification => 'Vérification';
+
+  @override
+  String get verifyAccount => 'Vérifier votre compte';
+
+  @override
+  String get verified => 'Vérifié';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get pushNotifications => 'Notifications push';
+
+  @override
+  String get receivePushNotifications => 'Recevoir des notifications push';
+
+  @override
+  String get emailNotifications => 'Notifications par e-mail';
+
+  @override
+  String get receiveEmailNotifications =>
+      'Recevoir des notifications par e-mail';
+
+  @override
+  String get smsNotifications => 'Notifications SMS';
+
+  @override
+  String get receiveSmsNotifications => 'Recevoir des notifications SMS';
+
+  @override
+  String get preferences => 'Préférences';
+
+  @override
+  String get darkMode => 'Mode sombre';
+
+  @override
+  String get enableDarkTheme => 'Activer le thème sombre';
+
+  @override
+  String get serviceArea => 'Zone de service';
+
+  @override
+  String get supportAbout => 'Support et à propos';
+
+  @override
+  String get helpCenter => 'Centre d\'aide';
+
+  @override
+  String get getHelpSupport => 'Obtenir de l\'aide et du support';
+
+  @override
+  String get privacyPolicy => 'Politique de confidentialité';
+
+  @override
+  String get readPrivacyPolicy => 'Lire notre politique de confidentialité';
+
+  @override
+  String get termsOfService => 'Conditions d\'utilisation';
+
+  @override
+  String get readTermsOfService => 'Lire nos conditions d\'utilisation';
+
+  @override
+  String get about => 'À propos';
+
+  @override
+  String get version => 'Version 1.0.0';
+
+  @override
+  String get dangerZone => 'Zone dangereuse';
+
+  @override
+  String get logout => 'Déconnexion';
+
+  @override
+  String get signOutAccount => 'Se déconnecter de votre compte';
+
+  @override
+  String get deleteAccount => 'Supprimer le compte';
+
+  @override
+  String get permanentlyDeleteAccount =>
+      'Supprimer définitivement votre compte';
+
+  @override
+  String get logoutConfirm => 'Êtes-vous sûr de vouloir vous déconnecter ?';
+
+  @override
+  String get deleteAccountConfirm =>
+      'Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.';
+
+  @override
+  String get accountDeletionComingSoon =>
+      'Suppression du compte - Bientôt disponible';
+
+  @override
+  String get myAddresses => 'Mes adresses';
+
+  @override
+  String get twoFactorAuth => 'Authentification à deux facteurs';
+
+  @override
+  String get contactSupport => 'Contacter le support';
+
+  @override
+  String get securityPrivacy => 'Sécurité et confidentialité';
+
+  @override
+  String get greetingWassim => 'Bonjour Wassim';
+
+  @override
+  String get browseCategories => 'Parcourir les catégories';
+
+  @override
+  String get topRatedNearYou => 'Les mieux notés près de chez vous';
+
+  @override
+  String get professionalAmineFaiz => 'Amine Faiz';
+
+  @override
+  String get professionMasterPlumber => 'Plombier expert';
+
+  @override
+  String get professionalMariaHaniya => 'Maria Haniya';
+
+  @override
+  String get professionExpertCarpenter => 'Charpentier expert';
+
+  @override
+  String get professionalAliImem => 'Ali Imem';
+
+  @override
+  String get professionGardeningLandscaping =>
+      'Jardinage et aménagement paysager';
+
+  @override
+  String get editProfile => 'Modifier le profil';
+
+  @override
+  String get myProfile => 'Mon profil';
+
+  @override
+  String get settings => 'Paramètres';
+
+  @override
+  String get verifiedHomeowner => 'Propriétaire vérifié';
+
+  @override
+  String get paymentMethods => 'Modes de paiement';
+
+  @override
+  String get helpSupport => 'Aide et support';
+
+  @override
+  String get saveChanges => 'Enregistrer les modifications';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get fullName => 'Nom complet';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get homeAddress => 'Adresse du domicile';
+
+  @override
+  String get profileUpdatedSuccess => 'Profil mis à jour avec succès !';
+
+  @override
+  String get comingSoon => 'Bientôt disponible';
+
+  @override
+  String navigationTo(String page) {
+    return 'Navigation vers $page';
+  }
+
+  @override
+  String get language => 'Langue';
+
+  @override
+  String get english => 'Anglais';
+
+  @override
+  String get french => 'Français';
+
+  @override
+  String get arabic => 'Arabe';
+
+  @override
+  String get changeLanguage => 'Changer la langue';
+
+  @override
+  String languageChanged(String language) {
+    return 'Langue changée en $language';
+  }
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get reviews => 'Avis';
+
+  @override
+  String get message => 'Message';
+
+  @override
+  String get call => 'Appeler';
+
+  @override
+  String get jobsDone => 'Travaux effectués';
+
+  @override
+  String get experience => 'Expérience';
+
+  @override
+  String get response => 'Réponse';
+
+  @override
+  String get backgroundChecked => 'Antécédents vérifiés';
+
+  @override
+  String get licensedInsured => 'Licencié et assuré';
+
+  @override
+  String get services => 'Services';
+
+  @override
+  String get reviewsTab => 'Avis';
+
+  @override
+  String get portfolio => 'Portfolio';
+
+  @override
+  String get reviewsSummary => 'Résumé des avis';
+
+  @override
+  String get basedOn => 'Basé sur';
+
+  @override
+  String get portfolioDescription =>
+      'Les éléments du portfolio seront affichés ici.';
+
+  @override
+  String get home => 'Accueil';
+
+  @override
+  String get demands => 'Demandes';
+
+  @override
+  String get requests => 'Requêtes';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get plans => 'Plans';
+
+  @override
+  String get notificationsComingSoon => 'Notifications - Bientôt disponible';
+
+  @override
+  String get welcomeBack => 'Bienvenue,';
+
+  @override
+  String get totalEarnings => 'Gains totaux';
+
+  @override
+  String get quickActions => 'Actions rapides';
+
+  @override
+  String get addService => 'Ajouter un service';
+
+  @override
+  String get myServices => 'Mes services';
+
+  @override
+  String get viewAll => 'Voir tout';
+
+  @override
+  String get active => 'Actif';
+
+  @override
+  String get inactive => 'Inactif';
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get accountDeletion => 'Suppression du compte';
+
+  @override
+  String get languageChangedTo => 'Langue changée en';
+
+  @override
+  String get bookings => 'Réservations';
+
+  @override
+  String get availableServiceProviders =>
+      'Prestataires de services disponibles';
+
+  @override
+  String get selectWilaya => 'Sélectionner une wilaya';
+
+  @override
+  String get dashboard => 'Tableau de bord';
+
+  @override
+  String get applications => 'Applications';
+
+  @override
+  String get reports => 'Rapports';
+
+  @override
+  String get cleaning => 'Nettoyage';
+
+  @override
+  String get plumbing => 'Plomberie';
+
+  @override
+  String get electrical => 'Électricité';
+
+  @override
+  String get gardening => 'Jardinage';
+
+  @override
+  String get handyman => 'Bricolage';
+
+  @override
+  String get painting => 'Peinture';
+
+  @override
+  String get moving => 'Déménagement';
+
+  @override
+  String get more => 'Plus';
+
+  @override
+  String get selectDate => 'Sélectionner une date';
+
+  @override
+  String get cantFindService => 'Vous ne trouvez pas le bon service ?';
+
+  @override
+  String get cantFindServiceDescription =>
+      'Dites-nous ce dont vous avez besoin, et nous\ntrouverons le bon professionnel pour vous.';
+
+  @override
+  String get searchHint => 'Rechercher un service ou un prestataire';
+
+  @override
+  String get tfa => 'Authentification à deux facteurs';
+
+  @override
+  String get myaddress => 'Mon adresse';
+
+  @override
+  String get messagesTitle => 'Messages';
+
+  @override
+  String get noConversationsYet => 'Aucune conversation pour le moment';
+
+  @override
+  String get startBooking =>
+      'Commencez par réserver un service pour\ncommencer à discuter avec un prestataire.';
+
+  @override
+  String get searchInConversation => 'Rechercher dans la conversation...';
+
+  @override
+  String get typeYourMessage => 'Tapez votre message...';
+
+  @override
+  String get reactToMessage => 'Réagir au message';
+
+  @override
+  String get letUsKnowWhatYouNeed =>
+      'Dites-nous ce dont vous avez besoin, et nous\ntrouverons un professionnel pour vous aider.';
+
+  @override
+  String get openJobs => 'Emplois ouverts';
+
+  @override
+  String get searchJobs => 'Rechercher des emplois...';
+
+  @override
+  String get category => 'Catégorie';
+
+  @override
+  String get wilaya => 'Wilaya';
+
+  @override
+  String get posted => 'Publié';
+
+  @override
+  String get sendOffer => 'Envoyer une offre';
+
+  @override
+  String get offerSent => 'Offre envoyée !';
+
+  @override
+  String get myBookings => 'Mes réservations';
+
+  @override
+  String get myDemands => 'Mes demandes';
+
+  @override
+  String get noDemandsFound => 'Aucune demande trouvée';
+
+  @override
+  String get tryAdjustingSearch =>
+      'Essayez d\'ajuster votre recherche ou vos filtres';
+
+  @override
+  String get postNewDemand => 'Publier une nouvelle demande';
+
+  @override
+  String get searchByTitleOrCategory => 'Rechercher par titre ou catégorie...';
+
+  @override
+  String get filterAndSort => 'Filtrer et trier';
+
+  @override
+  String get reset => 'Réinitialiser';
+
+  @override
+  String get sortBy => 'Trier par';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get budget => 'Budget';
+
+  @override
+  String get status => 'Statut';
+
+  @override
+  String get categories => 'Catégories';
+
+  @override
+  String get carpentry => 'Menuiserie';
+
+  @override
+  String get budgetRange => 'Fourchette budgétaire';
+
+  @override
+  String get applyFilters => 'Appliquer les filtres';
+
+  @override
+  String get all => 'Tout';
+
+  @override
+  String get pending => 'En attente';
+
+  @override
+  String get inProgress => 'En cours';
+
+  @override
+  String get completed => 'Terminé';
+
+  @override
+  String get cancelled => 'Annulé';
+
+  @override
+  String serviceProvidersApplied(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count prestataires de services ont postulé',
+      one: '1 prestataire de services a postulé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get viewRequests => 'Voir les demandes';
+
+  @override
+  String get editDemand => 'Modifier la demande';
+
+  @override
+  String get cancelDemand => 'Annuler la demande';
+
+  @override
+  String get providerHired => 'Prestataire embauché';
+
+  @override
+  String get viewDetails => 'Voir les détails';
+
+  @override
+  String get jobFinished => 'Travail terminé';
+
+  @override
+  String get viewInvoice => 'Voir la facture';
+
+  @override
+  String get upcoming => 'À venir';
+
+  @override
+  String get rate => 'Évaluer';
+
+  @override
+  String get profileInformation => 'Informations du profil';
+
+  @override
+  String get name => 'Nom';
+
+  @override
+  String get profession => 'Profession';
+
+  @override
+  String get location => 'Localisation';
+
+  @override
+  String get statsInformation => 'Informations statistiques';
+
+  @override
+  String get rating => 'Évaluation';
+
+  @override
+  String get responseTime => 'Temps de réponse';
+
+  @override
+  String get editService => 'Modifier le service';
+
+  @override
+  String get deleteServiceTitle => 'Supprimer le service';
+
+  @override
+  String get deleteServiceMessage =>
+      'Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.';
+
+  @override
+  String get serviceDetails => 'Détails du service';
+
+  @override
+  String get serviceTitle => 'Titre du service';
+
+  @override
+  String get enterServiceTitle => 'Veuillez entrer le titre du service';
+
+  @override
+  String get price => 'Prix';
+
+  @override
+  String get enterServicePrice => 'Veuillez entrer le prix du service';
+
+  @override
+  String get priceExample =>
+      'ex : « À partir de 1500 DA » ou « 2500 DA par heure »';
+
+  @override
+  String get serviceStatus => 'Statut du service';
+
+  @override
+  String get visibleToCustomers => 'Le service est visible pour les clients';
+
+  @override
+  String get hiddenFromCustomers => 'Le service est masqué des clients';
+
+  @override
+  String get pricingTips => 'Conseils de tarification';
+
+  @override
+  String get tip1 =>
+      'Utilisez des formats clairs comme « 1500 DA » ou « par heure »';
+
+  @override
+  String get tip2 =>
+      'Envisagez d\'ajouter un prix de départ pour les travaux complexes';
+
+  @override
+  String get tip3 => 'Soyez transparent sur les frais supplémentaires';
+
+  @override
+  String get tip4 => 'Vérifiez les prix de vos concurrents dans votre région';
+
+  @override
+  String get deleteService => 'Supprimer le service';
+
+  @override
+  String get confirmDeleteService =>
+      'Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.';
+
+  @override
+  String get serviceVisible => 'Le service est visible par les clients';
+
+  @override
+  String get serviceHidden => 'Le service est masqué aux clients';
+
+  @override
+  String get tipClearPricing =>
+      'Utilisez des formats clairs comme « 1500 DA » ou « à l’heure »';
+
+  @override
+  String get tipStartingPrices =>
+      'Proposez des prix de départ pour les prestations complexes';
+
+  @override
+  String get tipTransparency =>
+      'Soyez transparent sur les frais supplémentaires';
+
+  @override
+  String get tipCompetitorPricing =>
+      'Comparez vos tarifs avec ceux de la concurrence';
+
+  @override
+  String get serviceImages => 'Images du service';
+
+  @override
+  String get addPhotosToAttractCustomers =>
+      'Ajoutez des photos de votre travail pour attirer plus de clients.';
+
+  @override
+  String get uploadImages => 'Télécharger des images';
+
+  @override
+  String get tapToSelectFromGallery =>
+      'Appuyez ici pour sélectionner des photos depuis votre galerie';
+
+  @override
+  String get imageUploadComingSoon => 'Téléchargement d’images – À venir';
+
+  @override
+  String get serviceName => 'Nom du service';
+
+  @override
+  String get enterServiceName => 'Saisissez le nom du service';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get describeYourService => 'Décrivez votre service en détail';
+
+  @override
+  String get pricing => 'Tarification';
+
+  @override
+  String get pricingModel => 'Modèle de tarification';
+
+  @override
+  String get hourlyRate => 'Tarif horaire';
+
+  @override
+  String get fixedPrice => 'Prix fixe';
+
+  @override
+  String get enterPrice => '0,00';
+
+  @override
+  String get pleaseEnterServiceName => 'Veuillez saisir un nom de service';
+
+  @override
+  String get pleaseEnterDescription => 'Veuillez saisir une description';
+
+  @override
+  String get pleaseEnterPrice => 'Veuillez saisir un prix';
+
+  @override
+  String get serviceAddedSuccessfully => 'Service ajouté avec succès !';
+
+  @override
   String get myServicesTitle => 'Mes Services';
 
   @override
@@ -271,26 +1249,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get actionDetails => 'Détails';
 
   @override
-  String get noDemandsFound => 'Aucune demande trouvée';
-
-  @override
   String get noDemandsSubtitle =>
       'Essayez d\'ajuster votre recherche ou vos filtres';
 
   @override
-  String get postNewDemand => 'Publier une demande';
-
-  @override
   String get searchPlaceholder => 'Rechercher par titre ou catégorie...';
-
-  @override
-  String get filterAndSort => 'Filtrer et Trier';
-
-  @override
-  String get reset => 'Réinitialiser';
-
-  @override
-  String get sortBy => 'Trier par';
 
   @override
   String get sortDate => 'Date';
@@ -300,9 +1263,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sortStatus => 'Statut';
-
-  @override
-  String get categories => 'Catégories';
 
   @override
   String get categoryElectrical => 'Électricité';
@@ -320,12 +1280,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryCleaning => 'Nettoyage';
 
   @override
-  String get budgetRange => 'Fourchette de budget';
-
-  @override
-  String get applyFilters => 'Appliquer les filtres';
-
-  @override
   String get filterAll => 'Tout';
 
   @override
@@ -334,23 +1288,161 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get viewRequests => 'Voir les demandes';
+  String get titleAddDemand => 'Nouvelle Demande';
 
   @override
-  String get editDemand => 'Modifier la demande';
+  String get questionLocation => 'Où avez-vous besoin du service ?';
 
   @override
-  String get cancelDemand => 'Annuler la demande';
+  String get labelAddress => 'Entrez votre adresse';
 
   @override
-  String get providerHired => 'Prestataire engagé';
+  String get hintAddress => 'Entrez votre adresse';
 
   @override
-  String get viewDetails => 'Voir les détails';
+  String get errorAddress => 'Veuillez entrer une adresse';
 
   @override
-  String get jobFinished => 'Travail terminé';
+  String get questionCategory => 'Quel est le type de service ?';
 
   @override
-  String get viewInvoice => 'Voir la facture';
+  String get labelCategory => 'Catégorie';
+
+  @override
+  String get errorCategory => 'Veuillez choisir une catégorie';
+
+  @override
+  String get questionServiceTitle => 'Quel est le titre de ce service ?';
+
+  @override
+  String get labelTitle => 'Titre';
+
+  @override
+  String get hintTitle => 'Entrez le titre du service';
+
+  @override
+  String get errorTitle => 'Veuillez entrer un titre';
+
+  @override
+  String get labelDate => 'Date';
+
+  @override
+  String get labelTime => 'Heure';
+
+  @override
+  String get questionDescription => 'Description';
+
+  @override
+  String get hintDescription => 'Décrivez le service dont vous avez besoin...';
+
+  @override
+  String get errorDescription => 'Veuillez entrer une description';
+
+  @override
+  String get btnPost => 'Publier';
+
+  @override
+  String get msgDemandAddedSuccess => 'Demande ajoutée avec succès !';
+
+  @override
+  String msgDemandAddedFail(String error) {
+    return 'Échec de l\'ajout : $error';
+  }
+
+  @override
+  String get catCleaning => 'Nettoyage';
+
+  @override
+  String get catPlumbing => 'Plomberie';
+
+  @override
+  String get catElectrical => 'Électricité';
+
+  @override
+  String get catGardening => 'Jardinage';
+
+  @override
+  String get catHandyman => 'Bricolage';
+
+  @override
+  String get catPainting => 'Peinture';
+
+  @override
+  String get catMoving => 'Déménagement';
+
+  @override
+  String get titleMessages => 'Messages';
+
+  @override
+  String get actionRetry => 'Réessayer';
+
+  @override
+  String get labelYesterday => 'Hier';
+
+  @override
+  String get msgNoMessagesYet => 'Pas encore de messages';
+
+  @override
+  String get titleNoConversations => 'Aucune conversation';
+
+  @override
+  String get msgStartBookingToChat =>
+      'Réservez un service pour commencer\nà discuter avec un prestataire.';
+
+  @override
+  String get msgFailedToLoadMessages => 'Échec du chargement des messages';
+
+  @override
+  String get msgStartConversation => 'Commencez la conversation !';
+
+  @override
+  String get hintTypeMessage => 'Écrivez votre message...';
+
+  @override
+  String get upgradeNow => 'Mettre à niveau';
+
+  @override
+  String get recommended => 'Recommandé';
+
+  @override
+  String get selectedPlan => 'Plan sélectionné';
+
+  @override
+  String get currentPlan => 'Plan actuel';
+
+  @override
+  String get perMonth => '/mois';
+
+  @override
+  String get perYear => '/an';
+
+  @override
+  String get failedToLoadPlans => 'Impossible de charger les plans';
+
+  @override
+  String get subscriptionSuccess => 'Plan mis à niveau avec succès !';
+
+  @override
+  String get planFreeName => 'Gratuit';
+
+  @override
+  String get planProName => 'Pro';
+
+  @override
+  String get planEliteName => 'Elite';
+
+  @override
+  String get planFreeFeatures =>
+      'Créer un compte et lister jusqu\'à 3 services.|Lister les coordonnées.|Priorité basse.|Gratuit 6 mois pour les 20 premiers.';
+
+  @override
+  String get planProFeatures =>
+      'Lister jusqu\'à 10 services.|Recevoir réservations et messages.|Créer des posts.|Répondre aux demandes.|Priorité moyenne.';
+
+  @override
+  String get planEliteFeatures =>
+      'Lister jusqu\'à 20 services.|Voir statistiques.|Priorité haute.|Badge vérifié.|Promouvoir les services.';
+
+  @override
+  String get unknownPlan => 'Plan Inconnu';
 }

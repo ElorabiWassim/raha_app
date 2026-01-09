@@ -71,12 +71,12 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
           Icon(Icons.search_off, size: 64, color: AppColors.textLight),
           const SizedBox(height: 16),
           Text(
-            l10n?.noDemandsFound ?? 'No demands found',
+            l10n.noDemandsFound,
             style: AppTextStyles.heading5.copyWith(color: AppColors.textMedium),
           ),
           const SizedBox(height: 8),
           Text(
-            l10n?.noDemandsSubtitle ?? 'Try adjusting your filters',
+            l10n.noDemandsSubtitle,
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textLight,
             ),
@@ -97,7 +97,10 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const AddDemand()),
-            );
+            ).then((_) {
+              if (!mounted) return;
+              context.read<DemandsCubit>().loadDemands();
+            });
           },
 
           style: OutlinedButton.styleFrom(
@@ -115,8 +118,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               const Icon(Icons.add, size: 18),
               const SizedBox(width: 6),
               Text(
-                AppLocalizations.of(context)?.postNewDemand ??
-                    'Post New Demand',
+                AppLocalizations.of(context).postNewDemand,
                 style: AppTextStyles.buttonSmall,
               ),
             ],
@@ -164,9 +166,9 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       ),
                       cursorColor: AppColors.primary,
                       decoration: InputDecoration(
-                        hintText:
-                            AppLocalizations.of(context)?.searchPlaceholder ??
-                            'Search...',
+                        hintText: AppLocalizations.of(
+                          context,
+                        ).searchPlaceholder,
                         hintStyle: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textHint,
                         ),
@@ -267,8 +269,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        AppLocalizations.of(context)?.filterAndSort ??
-                            'Filter & Sort',
+                        AppLocalizations.of(context).filterAndSort,
                         style: AppTextStyles.heading4,
                       ),
                       TextButton(
@@ -280,7 +281,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           });
                         },
                         child: Text(
-                          AppLocalizations.of(context)?.reset ?? 'Reset',
+                          AppLocalizations.of(context).reset,
                           style: AppTextStyles.buttonMedium.copyWith(
                             color: AppColors.primary,
                           ),
@@ -298,7 +299,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                       children: [
                         // Sort By
                         Text(
-                          AppLocalizations.of(context)?.sortBy ?? 'Sort By',
+                          AppLocalizations.of(context).sortBy,
                           style: AppTextStyles.heading5,
                         ),
                         const SizedBox(height: 12),
@@ -307,21 +308,19 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           runSpacing: 8,
                           children: [
                             _buildSortChip(
-                              AppLocalizations.of(context)?.sortDate ?? 'Date',
+                              AppLocalizations.of(context).sortDate,
                               'date',
                               tempSortBy,
                               (val) => setModalState(() => tempSortBy = val),
                             ),
                             _buildSortChip(
-                              AppLocalizations.of(context)?.sortBudget ??
-                                  'Budget',
+                              AppLocalizations.of(context).sortBudget,
                               'budget',
                               tempSortBy,
                               (val) => setModalState(() => tempSortBy = val),
                             ),
                             _buildSortChip(
-                              AppLocalizations.of(context)?.sortStatus ??
-                                  'Status',
+                              AppLocalizations.of(context).sortStatus,
                               'status',
                               tempSortBy,
                               (val) => setModalState(() => tempSortBy = val),
@@ -332,8 +331,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
 
                         // Category Filter
                         Text(
-                          AppLocalizations.of(context)?.categories ??
-                              'Categories',
+                          AppLocalizations.of(context).categories,
                           style: AppTextStyles.heading5,
                         ),
                         const SizedBox(height: 12),
@@ -342,34 +340,27 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                           runSpacing: 8,
                           children: [
                             _buildCategoryChip(
-                              AppLocalizations.of(
-                                    context,
-                                  )?.categoryElectrical ??
-                                  'Electrical',
+                              AppLocalizations.of(context).categoryElectrical,
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)?.categoryPlumbing ??
-                                  'Plumbing',
+                              AppLocalizations.of(context).categoryPlumbing,
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)?.categoryPainting ??
-                                  'Painting',
+                              AppLocalizations.of(context).categoryPainting,
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)?.categoryCarpentry ??
-                                  'Carpentry',
+                              AppLocalizations.of(context).categoryCarpentry,
                               tempSelectedCategories,
                               setModalState,
                             ),
                             _buildCategoryChip(
-                              AppLocalizations.of(context)?.categoryCleaning ??
-                                  'Cleaning',
+                              AppLocalizations.of(context).categoryCleaning,
                               tempSelectedCategories,
                               setModalState,
                             ),
@@ -379,8 +370,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
 
                         // Budget Range
                         Text(
-                          AppLocalizations.of(context)?.budgetRange ??
-                              'Budget Range',
+                          AppLocalizations.of(context).budgetRange,
                           style: AppTextStyles.heading5,
                         ),
                         const SizedBox(height: 12),
@@ -450,8 +440,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                         ),
                       ),
                       child: Text(
-                        AppLocalizations.of(context)?.applyFilters ??
-                            'Apply Filters',
+                        AppLocalizations.of(context).applyFilters,
                         style: AppTextStyles.buttonMedium,
                       ),
                     ),
@@ -567,20 +556,20 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
 
           String label;
           if (status == null) {
-            label = l10n?.filterAll ?? 'All';
+            label = l10n.filterAll;
           } else {
             switch (status) {
               case DemandStatus.pending:
-                label = l10n?.statusPending ?? 'Pending';
+                label = l10n.statusPending;
                 break;
               case DemandStatus.inProgress:
-                label = l10n?.statusInProgress ?? 'In Progress';
+                label = l10n.statusInProgress;
                 break;
               case DemandStatus.completed:
-                label = l10n?.statusCompleted ?? 'Completed';
+                label = l10n.statusCompleted;
                 break;
               case DemandStatus.cancelled:
-                label = l10n?.statusCancelled ?? 'Cancelled';
+                label = l10n.statusCancelled;
                 break;
             }
           }
@@ -794,8 +783,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          l10n?.providersApplied(demand.applicantsCount) ??
-              '${demand.applicantsCount} providers applied',
+          l10n.providersApplied(demand.applicantsCount),
           style: AppTextStyles.buttonMedium.copyWith(color: AppColors.primary),
           textAlign: TextAlign.center,
         ),
@@ -809,6 +797,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProviderOffersScreen(
+                    demandId: demand.id,
                     demandTitle: demand.title,
                     demandCategory: demand.category,
                     demandDescription: demand.description,
@@ -828,7 +817,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               ),
             ),
             child: Text(
-              AppLocalizations.of(context)?.viewRequests ?? 'View Requests',
+              AppLocalizations.of(context).viewRequests,
               style: AppTextStyles.buttonMedium,
             ),
           ),
@@ -840,7 +829,23 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
           runSpacing: 4,
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddDemand(
+                      demandId: demand.id,
+                      initialCategoryName: demand.category,
+                      initialTitle: demand.title,
+                      initialLocation: demand.location,
+                      initialDescription: demand.description,
+                    ),
+                  ),
+                ).then((_) {
+                  if (!mounted) return;
+                  context.read<DemandsCubit>().loadDemands();
+                });
+              },
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
@@ -850,14 +855,20 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                AppLocalizations.of(context)?.editDemand ?? 'Edit Demand',
+                AppLocalizations.of(context).editDemand,
                 style: AppTextStyles.buttonMedium.copyWith(
                   color: AppColors.textLight,
                 ),
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                await context.read<DemandsCubit>().cancelDemand(demand.id);
+                if (!mounted) return;
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('Demand cancelled')));
+              },
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
@@ -867,7 +878,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                AppLocalizations.of(context)?.cancelDemand ?? 'Cancel Demand',
+                AppLocalizations.of(context).cancelDemand,
                 style: AppTextStyles.buttonMedium.copyWith(
                   color: AppColors.error,
                 ),
@@ -883,7 +894,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          AppLocalizations.of(context)?.providerHired ?? 'Provider Hired',
+          AppLocalizations.of(context).providerHired,
           style: AppTextStyles.buttonMedium.copyWith(
             color: AppColors.textMedium,
           ),
@@ -904,7 +915,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               ),
             ),
             child: Text(
-              AppLocalizations.of(context)?.viewDetails ?? 'View Details',
+              AppLocalizations.of(context).viewDetails,
               style: AppTextStyles.buttonMedium,
             ),
           ),
@@ -917,7 +928,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     return Column(
       children: [
         Text(
-          AppLocalizations.of(context)?.jobFinished ?? 'Job Finished',
+          AppLocalizations.of(context).jobFinished,
           style: AppTextStyles.buttonMedium.copyWith(
             color: AppColors.textMedium,
           ),
@@ -938,7 +949,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               ),
             ),
             child: Text(
-              AppLocalizations.of(context)?.viewInvoice ?? 'View Invoice',
+              AppLocalizations.of(context).viewInvoice,
               style: AppTextStyles.buttonMedium,
             ),
           ),
@@ -957,22 +968,22 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
       case DemandStatus.pending:
         backgroundColor = AppColors.statusPendingBg;
         textColor = AppColors.statusPending;
-        label = l10n?.statusPending ?? 'Pending';
+        label = l10n.statusPending;
         break;
       case DemandStatus.inProgress:
         backgroundColor = AppColors.statusInProgressBg;
         textColor = AppColors.statusInProgress;
-        label = l10n?.statusInProgress ?? 'In Progress';
+        label = l10n.statusInProgress;
         break;
       case DemandStatus.completed:
         backgroundColor = AppColors.statusCompletedBg;
         textColor = AppColors.statusCompleted;
-        label = l10n?.statusCompleted ?? 'Completed';
+        label = l10n.statusCompleted;
         break;
       case DemandStatus.cancelled:
         backgroundColor = AppColors.statusCancelledBg;
         textColor = AppColors.statusCancelled;
-        label = l10n?.statusCancelled ?? 'Cancelled';
+        label = l10n.statusCancelled;
         break;
     }
 

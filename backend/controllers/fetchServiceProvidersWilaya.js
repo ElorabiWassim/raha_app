@@ -149,6 +149,7 @@ async function getServices(req, res) {
     const { data: services, error } = await supabase
       .from('services')
       .select(`
+        service_id,
         name,
         price_amount,
         price_type,

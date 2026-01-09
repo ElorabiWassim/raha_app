@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart'; // Added for DateFormat
 import 'dart:async';
 
-import '../../data/models/chat_message.dart';
 import '../../data/models/conversation_model.dart';
 import '../../data/models/api_response.dart';
 import '../../cubits/conversations_cubit.dart';
