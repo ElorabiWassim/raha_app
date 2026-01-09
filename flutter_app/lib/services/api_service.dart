@@ -538,7 +538,7 @@ class ApiService {
 
   Future<void> deleteService(String serviceId) async {
     final headers = await _getHeaders();
-    final response = await http.put(
+    final response = await http.delete(
       Uri.parse('$baseUrl/services/$serviceId'),
       headers: headers,
     );
@@ -564,7 +564,7 @@ class ApiService {
   
   Future<void> updateProfile({
     String? name,
-    String? profession,
+    
     String? location,
     String? experience,
   }) async {
@@ -572,11 +572,8 @@ class ApiService {
     final body = <String, dynamic>{};
 
     if (name != null) body['full_name'] = name;
-    if (profession != null) body['profession'] = profession;
     if (location != null) body['location'] = location;
     if (experience != null) body['experience_years'] = experience;
-
-  
     final response = await http.put(
       Uri.parse('$baseUrl/profiles/update'), 
       headers: headers,
