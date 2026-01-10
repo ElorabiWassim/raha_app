@@ -658,7 +658,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get securityPrivacy => 'Sécurité et confidentialité';
 
   @override
-  String get greetingWassim => 'Bonjour Wassim';
+  String get greetingWassim => 'Bienvenue sur Raha';
 
   @override
   String get browseCategories => 'Parcourir les catégories';

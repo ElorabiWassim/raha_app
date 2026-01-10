@@ -646,7 +646,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get securityPrivacy => 'SECURITY & PRIVACY';
 
   @override
-  String get greetingWassim => 'Salam Wassim';
+  String get greetingWassim => 'Welcome to Ra7a';
 
   @override
   String get browseCategories => 'Browse Categories';

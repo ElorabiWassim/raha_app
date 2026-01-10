@@ -26,7 +26,6 @@ class ServiceProviderCubit extends Cubit<ServiceProviderState> {
   ServiceProviderCubit() : super(ServiceProviderInitial());
 
   Future<void> fetchTopNProviders({
-    required String categoryId,
     required String location,
     required int topN,
   }) async {
@@ -34,7 +33,7 @@ class ServiceProviderCubit extends Cubit<ServiceProviderState> {
 
     try {
       final url = Uri.parse(
-        '${BackendConfig.baseUrl}/homeowner/getServiceProvidersTopN?category_id=$categoryId&location=$location&top_n=$topN',
+        '${BackendConfig.baseUrl}/homeowner/getServiceProvidersTopN?location=$location&top_n=$topN',
       );
 
       final response = await http.get(url);

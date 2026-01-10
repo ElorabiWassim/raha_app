@@ -37,16 +37,14 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
                   Padding(padding: EdgeInsets.only(left: 20)),
                   CircleAvatar(
                     radius: 24,
-                    backgroundImage: AssetImage(
-                      'assets/images/MohammedPicture.png',
-                    ),
+                    backgroundImage: AssetImage('assets/images/alexo.png'),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10),
                     child: Text(
                       l10n.greetingWassim,
                       style: TextStyle(
-                        color: Color(0xFF6E946D),
+                        color: Color(0xFF53B538),
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0,
@@ -74,8 +72,8 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
               ),
               //add top rated nearby
               TopNRated(
-                categoryId: "069dc664-5fd9-435c-a688-cc002e46243b",
-                location: "Blida",
+                //to choose from all categories
+                location: "Algiers",
                 topN: 3,
               ),
             ],
