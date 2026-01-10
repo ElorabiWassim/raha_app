@@ -60,10 +60,10 @@ async function getServiceProviders(req, res) {
 
 async function getServiceProvidersTopN(req, res) {
   try {
-    const { location, category_id, top_n } = req.query;
+    const { location, top_n } = req.query;
 
-    if (!location || !category_id) {
-      return res.status(400).json({ error: "Location and category_id are required" });
+    if (!location) {
+      return res.status(400).json({ error: "Location is required" });
     }
 
     // Fetch service providers along with their reviews
@@ -85,8 +85,8 @@ async function getServiceProvidersTopN(req, res) {
           rating
         )
       `)
-      .ilike('working_address', `%${location}%`)
-      .eq('service_type', category_id);
+      .ilike('working_address', `%${location}%`);
+      
 
     if (error) {
       console.error("Error fetching providers:", error);
@@ -105,10 +105,10 @@ async function getServiceProvidersTopN(req, res) {
       return { ...sp, average_rating };
     });
 
-  
+    // Sort by average rating descending
     const sortedProviders = providersWithAvg.sort((a, b) => b.average_rating - a.average_rating);
 
-   
+    // Return top N if top_n is provided
     const topProviders = top_n ? sortedProviders.slice(0, parseInt(top_n)) : sortedProviders;
 
     return res.status(200).json(topProviders);

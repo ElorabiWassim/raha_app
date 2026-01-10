@@ -6,26 +6,18 @@ import '../../cubits/load_service_providers_cubit.dart';
 import '../../cubits/ServiceProviderFetchProfileCubit.dart';
 
 class TopNRated extends StatelessWidget {
-  final String categoryId;
   final String location;
   final int topN;
 
-  const TopNRated({
-    Key? key,
-    required this.categoryId,
-    required this.location,
-    this.topN = 3,
-  }) : super(key: key);
+  const TopNRated({Key? key, required this.location, this.topN = 3})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ServiceProviderCubit()
-        ..fetchTopNProviders(
-          categoryId: categoryId,
-          location: location,
-          topN: topN,
-        ),
+      create: (_) =>
+          ServiceProviderCubit()
+            ..fetchTopNProviders(location: location, topN: topN),
       child: BlocBuilder<ServiceProviderCubit, ServiceProviderState>(
         builder: (context, state) {
           if (state is ServiceProviderLoading) {

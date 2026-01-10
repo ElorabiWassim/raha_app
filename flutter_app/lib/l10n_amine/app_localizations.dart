@@ -1333,7 +1333,7 @@ abstract class AppLocalizations {
   /// No description provided for @greetingWassim.
   ///
   /// In en, this message translates to:
-  /// **'Salam Wassim'**
+  /// **'Welcome to Ra7a'**
   String get greetingWassim;
 
   /// No description provided for @browseCategories.
