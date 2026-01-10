@@ -18,6 +18,7 @@ class WilayaCubit extends Cubit<WilayaState> {
         return Wilaya(
           name: locale == 'ar' ? row['name_ar'] : row['name_fr'],
           serviceProvidersByCategory: {},
+          wilaya_name: row['name_fr'],
         );
       }).toList();
 

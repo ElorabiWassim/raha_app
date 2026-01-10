@@ -103,7 +103,7 @@ class WilayaScreen extends StatelessWidget {
                                 create: (_) =>
                                     ServiceProviderCubit()..fetchProviders(
                                       categoryId: categoryToId[category]!,
-                                      location: wilaya.name,
+                                      location: wilaya.wilaya_name!,
                                     ),
                                 child: ServiceProviderScreen(),
                               ),

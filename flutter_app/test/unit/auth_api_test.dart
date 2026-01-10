@@ -11,7 +11,7 @@ void main() {
 
   group('AuthApi (Unit)', () {
     test('login returns decoded json on 200', () async {
-      final api = AuthApi(baseUrl: 'http://localhost:5000');
+      final api = AuthApi(baseUrl: 'http://10.242.249.27:5000');
 
       final overrides = FakeHttpOverrides(
         routes: {
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('login throws formatted validation details when present', () async {
-      final api = AuthApi(baseUrl: 'http://localhost:5000');
+      final api = AuthApi(baseUrl: 'http://10.242.249.27:5000');
 
       final overrides = FakeHttpOverrides(
         routes: {
@@ -69,7 +69,7 @@ void main() {
     });
 
     test('login throws error field when details missing', () async {
-      final api = AuthApi(baseUrl: 'http://localhost:5000');
+      final api = AuthApi(baseUrl: 'http://10.242.249.27:5000');
 
       final overrides = FakeHttpOverrides(
         routes: {

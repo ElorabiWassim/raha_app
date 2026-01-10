@@ -71,24 +71,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
-              ProfessionalCard(
-                name: l10n.professionalAmineFaiz,
-                profession: l10n.professionMasterPlumber,
-                rating: 4.9,
-                imagePath: 'assets/images/JohnDoe.png',
-              ),
-              ProfessionalCard(
-                name: l10n.professionalMariaHaniya,
-                profession: l10n.professionExpertCarpenter,
-                rating: 5.0,
-                imagePath: 'assets/images/Maria.png',
-              ),
-              ProfessionalCard(
-                name: l10n.professionalAliImem,
-                profession: l10n.professionGardeningLandscaping,
-                rating: 4.8,
-                imagePath: 'assets/images/AliImem.png',
-              ),
+              //add top rated nearby
             ],
           ),
         ),
