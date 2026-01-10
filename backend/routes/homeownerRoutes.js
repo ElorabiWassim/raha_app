@@ -13,7 +13,7 @@ const {
 } = require("../controllers/booking");
 
 const {
-  getServiceProviders, getServiceProviderProfile, getServices
+  getServiceProviders, getServiceProviderProfile, getServices , getServiceProvidersTopN
 } = require("../controllers/fetchServiceProvidersWilaya")
 
 const {
@@ -36,6 +36,8 @@ router.get("/getBookingOfUser/:user_id", getBookingOfUser);
 router.get("/getServiceProviders", getServiceProviders);
 router.post("/updateprofilephoto", upload.single('file'), uploadProfilePicture); //to update profile photo for sp
 router.get("/getServiceProviderProfile", getServiceProviderProfile);
+router.get("/getServiceProvidersTopN", getServiceProvidersTopN);
+
 router.get("/getServices", getServices);
 router.get("/categories", getAllServiceCategories);
 router.post("/addDemand", addDemand);
