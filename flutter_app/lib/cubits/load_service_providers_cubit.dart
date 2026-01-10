@@ -25,6 +25,38 @@ class ServiceProviderError extends ServiceProviderState {
 class ServiceProviderCubit extends Cubit<ServiceProviderState> {
   ServiceProviderCubit() : super(ServiceProviderInitial());
 
+  Future<void> fetchTopNProviders({
+    required String categoryId,
+    required String location,
+    required int topN,
+  }) async {
+    emit(ServiceProviderLoading());
+
+    try {
+      final url = Uri.parse(
+        '${BackendConfig.baseUrl}/homeowner/getServiceProvidersTopN?category_id=$categoryId&location=$location&top_n=$topN',
+      );
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(response.body);
+
+        final providers = jsonList
+            .map((element) => FetchedServiceProvider.fromJson(element))
+            .toList();
+
+        emit(ServiceProviderLoaded(providers));
+      } else {
+        emit(
+          ServiceProviderError('No service providers are available indeed.'),
+        );
+      }
+    } catch (e) {
+      emit(ServiceProviderError(e.toString()));
+    }
+  }
+
   Future<void> fetchProviders({
     required String categoryId,
     required String location,
@@ -47,7 +79,7 @@ class ServiceProviderCubit extends Cubit<ServiceProviderState> {
 
         emit(ServiceProviderLoaded(providers));
       } else {
-        emit(ServiceProviderError('Failed to load service providers'));
+        emit(ServiceProviderError('No service providers are availabe.'));
       }
     } catch (e) {
       emit(ServiceProviderError(e.toString()));

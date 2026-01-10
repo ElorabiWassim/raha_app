@@ -4,6 +4,7 @@ import '../widgets/category_list.dart';
 import '../widgets/Home_Demand.dart';
 import '../widgets/proffesionalCardWidget.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import './topN_rated.dart';
 
 class HomeScreenHomeOwner extends StatefulWidget {
   const HomeScreenHomeOwner({super.key});
@@ -65,13 +66,18 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
               CategoryList(),
               HomeDemand(),
               Padding(
-                padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+                padding: EdgeInsets.only(left: 20, top: 10),
                 child: Text(
                   l10n.topRatedNearYou,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
               //add top rated nearby
+              TopNRated(
+                categoryId: "069dc664-5fd9-435c-a688-cc002e46243b",
+                location: "Blida",
+                topN: 3,
+              ),
             ],
           ),
         ),

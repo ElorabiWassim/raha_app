@@ -18,6 +18,7 @@ class WilayaScreen extends StatelessWidget {
     "Moving": "837ecd35-78de-4320-be91-9cfa67a8bd1f",
     "Plumbing": "a75af59d-3e61-402d-9bd2-54a5e64fc950",
     "Painting": "da59048e-86e6-4a7e-b342-1784687004f7",
+    "More": "no more categories at the moment .",
   };
 
   @override
