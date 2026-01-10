@@ -15,7 +15,7 @@ class HomeScreenHomeOwner extends StatefulWidget {
 class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: Container(

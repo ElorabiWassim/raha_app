@@ -77,7 +77,7 @@ class _ApplicationsContentState extends State<_ApplicationsContent> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     // Filter applications based on search query
     final filteredApplications = widget.applications.where((app) {
@@ -294,7 +294,7 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),

@@ -14,6 +14,7 @@ import 'package:ra7a/presentation/screens/add_demand.dart';
 import 'package:ra7a/data/local/preferences_service.dart';
 import 'package:ra7a/data/local/local_cache_repository.dart';
 import 'package:ra7a/cubits/serviceprovider_cubit.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,7 @@ void main() async {
 
   // Setup dependency injection for Cubit architecture
   // Update the baseUrl to match your backend URL
-  await setupDependencies(baseUrl: 'http://10.0.2.2:5000');
+  await setupDependencies(baseUrl: BackendConfig.baseUrl);
 
   runApp(
     MyApp(
@@ -131,7 +132,7 @@ class _MyAppViewState extends State<MyAppView> {
             return const Locale('en');
           },
 
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
 
           home: SplashScreen(
             key: ValueKey('splash_${languageState.locale.languageCode}'),

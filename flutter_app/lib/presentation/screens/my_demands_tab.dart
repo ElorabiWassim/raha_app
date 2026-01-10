@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:convert';
+import 'dart:ui';
+import 'package:http/http.dart' as http;
 import '../../logic/cubits/demands/demands_cubit.dart';
 import '../../l10n/app_localizations.dart';
 import '../../data/models/demand_model.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 import '../themes/app_text_style.dart';
 import 'provider_offers_screen.dart';
 import 'add_demand.dart';
@@ -16,6 +20,25 @@ class MyDemandsTab extends StatefulWidget {
 
 class _MyDemandsTabState extends State<MyDemandsTab> {
   final TextEditingController _searchController = TextEditingController();
+
+  Future<Map<String, dynamic>?> _fetchAcceptedOffer(String demandId) async {
+    if (demandId.isEmpty) return null;
+    final uri = Uri.parse(
+      '${BackendConfig.baseUrl}/homeowner/getAcceptedOffer?demand_id=${Uri.encodeQueryComponent(demandId)}',
+    );
+
+    final response = await http.get(uri);
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load offer');
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map<String, dynamic>) return null;
+
+    final offer = decoded['offer'];
+    if (offer is Map<String, dynamic>) return offer;
+    return null;
+  }
 
   @override
   void initState() {
@@ -725,13 +748,260 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
               if (demand.status == DemandStatus.pending)
                 _buildPendingActions(demand)
               else if (demand.status == DemandStatus.inProgress)
-                _buildInProgressActions()
+                _buildInProgressActions(demand)
               else if (demand.status == DemandStatus.completed)
                 _buildCompletedActions(),
             ],
           ],
         ),
       ),
+    );
+  }
+
+  void _showDemandDetailsDialog(Demand demand) {
+    final l10n = AppLocalizations.of(context);
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black.withValues(alpha: .3),
+      pageBuilder: (context, _, __) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Center(
+            child: FutureBuilder<Map<String, dynamic>?>(
+              future: _fetchAcceptedOffer(demand.id),
+              builder: (context, snapshot) {
+                final offer = snapshot.data;
+                final providerName = (offer?['sp_name'] ?? '').toString();
+                final providerAvatarUrl =
+                    (offer?['sp_profile_picture_url'] ?? '').toString();
+                final offerPrice = (offer?['proposed_price'] ?? '').toString();
+                final offerMessage = (offer?['message'] ?? '').toString();
+                final offerDate = (offer?['proposed_date'] ?? '').toString();
+
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundWhite,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  demand.title,
+                                  style: AppTextStyles.heading4.copyWith(
+                                    color: AppColors.textDark,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              _buildStatusBadge(context, demand.status),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            demand.category,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textLight,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            demand.description,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textMedium,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            height: 1,
+                            color: AppColors.backgroundLight,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildDetailsRow(
+                            icon: Icons.calendar_today_outlined,
+                            label: l10n.posted,
+                            value: demand.postedDate,
+                          ),
+                          const SizedBox(height: 10),
+                          _buildDetailsRow(
+                            icon: Icons.location_on_outlined,
+                            label: l10n.location,
+                            value: demand.location,
+                          ),
+                          const SizedBox(height: 10),
+                          _buildDetailsRow(
+                            icon: Icons.schedule_outlined,
+                            label: l10n.labelTime,
+                            value: demand.preferredTime,
+                          ),
+                          const SizedBox(height: 10),
+                          _buildDetailsRow(
+                            icon: Icons.groups_outlined,
+                            label: l10n.availableServiceProviders,
+                            value: l10n.providersApplied(
+                              demand.applicantsCount,
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+                          Container(
+                            height: 1,
+                            color: AppColors.backgroundLight,
+                          ),
+                          const SizedBox(height: 16),
+
+                          Text(
+                            'Offer',
+                            style: AppTextStyles.heading5.copyWith(
+                              color: AppColors.textDark,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting)
+                            const Center(child: CircularProgressIndicator())
+                          else if (snapshot.hasError)
+                            Text(
+                              'Failed to load offer details',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.textMedium,
+                              ),
+                            )
+                          else if (offer == null)
+                            Text(
+                              'No accepted offer found for this demand.',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.textMedium,
+                              ),
+                            )
+                          else ...[
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: AppColors.backgroundLight,
+                                  backgroundImage: providerAvatarUrl.isNotEmpty
+                                      ? NetworkImage(providerAvatarUrl)
+                                      : null,
+                                  child: providerAvatarUrl.isEmpty
+                                      ? Icon(
+                                          Icons.person,
+                                          size: 18,
+                                          color: AppColors.textLight,
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    providerName.isNotEmpty
+                                        ? providerName
+                                        : 'Service Provider',
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      color: AppColors.textDark,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            _buildDetailsRow(
+                              icon: Icons.payments_outlined,
+                              label: 'Proposed price',
+                              value: offerPrice,
+                            ),
+                            const SizedBox(height: 10),
+                            _buildDetailsRow(
+                              icon: Icons.calendar_today_outlined,
+                              label: 'Proposed date',
+                              value: offerDate,
+                            ),
+                            const SizedBox(height: 10),
+                            _buildDetailsRow(
+                              icon: Icons.message_outlined,
+                              label: 'Message',
+                              value: offerMessage,
+                            ),
+                          ],
+
+                          const SizedBox(height: 18),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 40,
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.primary,
+                                side: BorderSide(color: AppColors.primary),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                l10n.cancel,
+                                style: AppTextStyles.buttonMedium,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailsRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: AppColors.textLight),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: AppTextStyles.label.copyWith(color: AppColors.textLight),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -890,7 +1160,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
     );
   }
 
-  Widget _buildInProgressActions() {
+  Widget _buildInProgressActions(Demand demand) {
     return Column(
       children: [
         Text(
@@ -905,7 +1175,7 @@ class _MyDemandsTabState extends State<MyDemandsTab> {
           width: double.infinity,
           height: 40,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () => _showDemandDetailsDialog(demand),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.backgroundWhite,

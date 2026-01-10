@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/serviceprovider_data.dart';
 import '../../modules/authentication/screens/login.dart';
+import '../../modules/authentication/screens/forgot_password_screen.dart';
+import 'edit_profile_screen.dart';
+import 'package:ra7a/core/location/location_picker_screen.dart';
+import 'package:ra7a/core/location/location_service.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../cubits/language_cubit.dart';
 import '../../services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   final ServiceProvider provider;
@@ -21,10 +26,19 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  ServiceProvider? _provider;
   bool _notificationsEnabled = true;
   bool _emailNotifications = true;
   bool _smsNotifications = false;
   bool _darkMode = false;
+
+  ServiceProvider get _providerSafe => _provider ??= widget.provider;
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = widget.provider;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,72 +86,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildProfileSection() {
-    return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Color(0xFF68E36C),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF68E36C).withValues(alpha: 0.3),
-            blurRadius: 10,
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 35,
-            backgroundColor: Colors.white,
-            // 1. Load the image if the URL exists and is not empty
-            backgroundImage:
-                (widget.provider.profileImageUrl != null &&
-                    widget.provider.profileImageUrl!.isNotEmpty)
-                ? NetworkImage(widget.provider.profileImageUrl!)
-                : null,
-            // 2. Show the Icon ONLY if the image is missing (fallback)
-            child:
-                (widget.provider.profileImageUrl == null ||
-                    widget.provider.profileImageUrl!.isEmpty)
-                ? Icon(Icons.person, size: 40, color: Color(0xFF68E36C))
-                : null,
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.provider.name,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  widget.provider.profession,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  widget.provider.location,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
-                ),
-              ],
+    return InkWell(
+      onTap: _openEditProfile,
+      child: Container(
+        margin: EdgeInsets.all(16),
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Color(0xFF68E36C),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF68E36C).withValues(alpha: 0.3),
+              blurRadius: 10,
+              spreadRadius: 0,
             ),
-          ),
-          Icon(Icons.edit, color: Colors.white, size: 20),
-        ],
+          ],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 35,
+              backgroundColor: Colors.white,
+              backgroundImage:
+                  (_providerSafe.profileImageUrl != null &&
+                      _providerSafe.profileImageUrl!.isNotEmpty)
+                  ? NetworkImage(_providerSafe.profileImageUrl!)
+                  : null,
+              child:
+                  (_providerSafe.profileImageUrl == null ||
+                      _providerSafe.profileImageUrl!.isEmpty)
+                  ? Icon(Icons.person, size: 40, color: Color(0xFF68E36C))
+                  : null,
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _providerSafe.name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    _providerSafe.profession,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    _providerSafe.location,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.edit, color: Colors.white, size: 20),
+          ],
+        ),
       ),
     );
   }
@@ -153,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           icon: Icons.lock_outline,
           title: l10n.changePassword,
           subtitle: l10n.updatePassword,
-          onTap: _showChangePasswordDialog,
+          onTap: _goToResetPassword,
         ),
         _buildDivider(),
         _buildSettingsTile(
@@ -273,11 +288,97 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _buildSettingsTile(
           icon: Icons.location_on_outlined,
           title: l10n.serviceArea,
-          subtitle: widget.provider.location,
-          onTap: () => _showComingSoon(l10n.serviceArea),
+          subtitle: _providerSafe.location,
+          onTap: _changeServiceArea,
         ),
       ],
     );
+  }
+
+  Future<void> _changeServiceArea() async {
+    final l10n = AppLocalizations.of(context);
+
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              Container(
+                width: 42,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                leading: const Icon(
+                  Icons.my_location,
+                  color: Color(0xFF68E36C),
+                ),
+                title: Text(l10n.signupUseCurrentLocation),
+                onTap: () => Navigator.pop(ctx, 'current'),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.map_outlined,
+                  color: Color(0xFF68E36C),
+                ),
+                title: const Text('Pick on map'),
+                onTap: () => Navigator.pop(ctx, 'map'),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!mounted || action == null) return;
+
+    PickedLocation? picked;
+    try {
+      if (action == 'current') {
+        final pos = await LocationService().getCurrentPosition();
+        picked = await LocationService().reverseGeocode(
+          latitude: pos.latitude,
+          longitude: pos.longitude,
+        );
+      } else if (action == 'map') {
+        picked = await Navigator.push<PickedLocation>(
+          context,
+          MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
+        );
+      }
+
+      if (!mounted || picked == null) return;
+
+      await ApiService().updateProfile(location: picked.displayAddress);
+      if (!mounted) return;
+
+      setState(() {
+        _providerSafe.location = picked!.displayAddress;
+      });
+      widget.onProfileUpdated?.call(_providerSafe.location);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.profileUpdatedSuccess)));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Widget _buildSupportSection() {
@@ -716,6 +817,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     ).then((_) => controller.dispose());
+  }
+
+  Future<void> _goToResetPassword() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = (prefs.getString('email') ?? '').trim();
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ForgotPasswordScreen(
+          prefilledEmail: email.isNotEmpty ? email : null,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openEditProfile() async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditProfileScreen(provider: _providerSafe),
+      ),
+    );
+
+    if (result != true || !mounted) return;
+
+    try {
+      final data = await ApiService().getProfile();
+      final profile = (data['profile'] is Map) ? data['profile'] as Map : null;
+      if (profile != null) {
+        setState(() {
+          _providerSafe.name =
+              profile['full_name']?.toString() ?? _providerSafe.name;
+          _providerSafe.location =
+              profile['working_address']?.toString() ?? _providerSafe.location;
+          _providerSafe.profileImageUrl =
+              profile['profile_picture_url']?.toString() ??
+              _providerSafe.profileImageUrl;
+        });
+        widget.onProfileUpdated?.call(_providerSafe.location);
+      }
+    } catch (_) {
+      // If refresh fails, keep the locally displayed provider.
+    }
   }
 
   Future<void> _changePassword(String newPassword) async {

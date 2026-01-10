@@ -1,10 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ra7a/core/config/backend_config.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:5000/api/sp';
-  static const String authBaseUrl = 'http://10.0.2.2:5000/api/auth';
+  static String get _serverBaseUrl => BackendConfig.baseUrl;
+  static String get baseUrl => '$_serverBaseUrl/api/sp';
+  static String get authBaseUrl => '$_serverBaseUrl/api/auth';
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -18,17 +21,18 @@ class ApiService {
     final token = await _getToken();
     print('=== _getHeaders called ===');
     print('Token in headers: $token');
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
+    final headers = <String, String>{'Content-Type': 'application/json'};
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+    return headers;
   }
 
   Future<Map<String, dynamic>> get(String endpoint) async {
     try {
       final headers = await _getHeaders();
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:5000$endpoint'),
+        Uri.parse('$_serverBaseUrl$endpoint'),
         headers: headers,
       );
       return _handleResponse(response);
@@ -44,7 +48,7 @@ class ApiService {
     try {
       final headers = await _getHeaders();
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000$endpoint'),
+        Uri.parse('$_serverBaseUrl$endpoint'),
         headers: headers,
         body: json.encode(body),
       );
@@ -61,7 +65,7 @@ class ApiService {
     try {
       final headers = await _getHeaders();
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:5000$endpoint'),
+        Uri.parse('$_serverBaseUrl$endpoint'),
         headers: headers,
         body: json.encode(body),
       );
@@ -93,8 +97,11 @@ class ApiService {
 
   Future<Map<String, dynamic>> getProfile() async {
     final headers = await _getHeaders();
+    if (!headers.containsKey('Authorization')) {
+      throw Exception('Not authenticated');
+    }
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:5000/api/profile'),
+      Uri.parse('$_serverBaseUrl/api/profile'),
       headers: headers,
     );
 
@@ -353,17 +360,25 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> googleAuth({
-    required String idToken,
+    String? idToken,
+    String? accessToken,
     String? role,
     String? phoneNumber,
     String? homeAddress,
     String? workingAddress,
   }) async {
+    if ((idToken == null || idToken.isEmpty) &&
+        (accessToken == null || accessToken.isEmpty)) {
+      throw Exception('Google authentication failed: missing token');
+    }
+
     final response = await http.post(
       Uri.parse('$authBaseUrl/google'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
-        'idToken': idToken,
+        if (idToken != null && idToken.isNotEmpty) 'idToken': idToken,
+        if (accessToken != null && accessToken.isNotEmpty)
+          'accessToken': accessToken,
         if (role != null && role.isNotEmpty) 'role': role,
         if (phoneNumber != null) 'phone_number': phoneNumber,
         if (homeAddress != null) 'home_address': homeAddress,
@@ -463,7 +478,7 @@ class ApiService {
   Future<void> changePassword({required String newPassword}) async {
     final headers = await _getHeaders();
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:5000/api/profile/password'),
+      Uri.parse('$_serverBaseUrl/api/profile/password'),
       headers: headers,
       body: json.encode({'newPassword': newPassword}),
     );
@@ -476,7 +491,7 @@ class ApiService {
   Future<void> deleteAccount() async {
     final headers = await _getHeaders();
     final response = await http.delete(
-      Uri.parse('http://10.0.2.2:5000/api/profile/account'),
+      Uri.parse('$_serverBaseUrl/api/profile/account'),
       headers: headers,
     );
 
@@ -609,7 +624,7 @@ class ApiService {
 
   Future<void> updateProfile({
     String? name,
-    
+
     String? location,
     String? experience,
   }) async {
@@ -620,7 +635,6 @@ class ApiService {
     if (location != null) body['location'] = location;
     if (experience != null) body['experience_years'] = experience;
 
-  
     final response = await http.put(
       Uri.parse('$baseUrl/profiles/update'),
       headers: headers,
@@ -632,7 +646,7 @@ class ApiService {
     }
   }
 
-  Future<String> updateProfilePicture(imageFile) async {
+  Future<String> updateProfilePicture(XFile imageFile) async {
     final headers = await _getHeaders();
 
     headers.remove('Content-Type');
@@ -644,8 +658,13 @@ class ApiService {
 
     request.headers.addAll(headers);
 
+    final bytes = await imageFile.readAsBytes();
     request.files.add(
-      await http.MultipartFile.fromPath('image', imageFile.path),
+      http.MultipartFile.fromBytes(
+        'image',
+        bytes,
+        filename: imageFile.name.isNotEmpty ? imageFile.name : 'profile.jpg',
+      ),
     );
 
     final streamedResponse = await request.send();
@@ -658,6 +677,40 @@ class ApiService {
     } else {
       throw Exception('Failed to upload profile picture: ${response.body}');
     }
+  }
+
+  Future<String> updateMyProfilePicture(XFile imageFile) async {
+    final headers = await _getHeaders();
+    if (!headers.containsKey('Authorization')) {
+      throw Exception('Not authenticated');
+    }
+
+    headers.remove('Content-Type');
+
+    final request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('$_serverBaseUrl/api/profile/image'),
+    );
+
+    request.headers.addAll(headers);
+
+    final bytes = await imageFile.readAsBytes();
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'image',
+        bytes,
+        filename: imageFile.name.isNotEmpty ? imageFile.name : 'profile.jpg',
+      ),
+    );
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['imageUrl'] ?? data['profile_picture_url'] ?? '';
+    }
+    throw Exception('Failed to upload profile picture: ${response.body}');
   }
 
   Future<Map<String, dynamic>> createCategory(

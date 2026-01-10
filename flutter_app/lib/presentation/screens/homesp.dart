@@ -37,6 +37,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     try {
       print(' Loading provider data...');
 
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+      if (token == null || token.isEmpty) {
+        print(' No JWT token found - redirecting to login');
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        }
+        return;
+      }
+
       final profileData = await _apiService.getProfile();
       print('Profile loaded: $profileData');
 
@@ -104,7 +119,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         profession: getProfessionName(profileData['profile']['service_type']),
         location: profileData['profile']['working_address'] ?? 'Not specified',
         jobsDone: profileData['profile']['jobs_done']?.toString() ?? '0',
-        rating :profileData['profile']['rating_avg'] ?? 0,
+        rating: profileData['profile']['rating_avg'] ?? 0,
         reviewCount: profileData['profile']['review_count'] ?? 1,
         experience: '${profileData['profile']['experience_years'] ?? 0}',
         services: servicesWithImages,
@@ -124,8 +139,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
       if (e.toString().contains('Invalid token') ||
           e.toString().contains('401') ||
-          e.toString().contains('Unauthorized')) {
-        print(' Authentication error detected - clearing token and redirecting to login');
+          e.toString().contains('Unauthorized') ||
+          e.toString().contains('No token provided') ||
+          e.toString().contains('Not authenticated')) {
+        print(
+          ' Authentication error detected - clearing token and redirecting to login',
+        );
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.remove('jwt_token');
@@ -167,7 +186,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     if (_isLoading) {
       return Scaffold(
         body: Center(
@@ -238,10 +257,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 class ServiceProviderHome extends StatelessWidget {
   final VoidCallback onRefresh;
 
-  const ServiceProviderHome({
-    super.key,
-    required this.onRefresh,
-  });
+  const ServiceProviderHome({super.key, required this.onRefresh});
 
   Future<void> _navigateToPage(
     BuildContext context,
@@ -249,7 +265,7 @@ class ServiceProviderHome extends StatelessWidget {
     Service? service,
     String? serviceIndex,
   }) async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final cubit = context.read<ServiceProviderCubit>();
     final provider = cubit.provider;
 
@@ -259,9 +275,7 @@ class ServiceProviderHome extends StatelessWidget {
 
     switch (pageName) {
       case 'Add Service':
-        page = AddServiceScreen(
-          onServiceAdded: () => onRefresh(),
-        );
+        page = AddServiceScreen(onServiceAdded: () => onRefresh());
         break;
 
       case 'Settings':
@@ -277,10 +291,7 @@ class ServiceProviderHome extends StatelessWidget {
 
       case 'Edit Service':
         if (service != null && serviceIndex != null) {
-          page = EditServiceScreen(
-            service: service,
-            serviceId: serviceIndex,
-          );
+          page = EditServiceScreen(service: service, serviceId: serviceIndex);
         }
         break;
 
@@ -289,7 +300,10 @@ class ServiceProviderHome extends StatelessWidget {
         return;
 
       default:
-        _showSnackBar(context, '${l10n.navigationTo} $pageName - ${l10n.comingSoon}');
+        _showSnackBar(
+          context,
+          '${l10n.navigationTo} $pageName - ${l10n.comingSoon}',
+        );
         return;
     }
 
@@ -317,7 +331,7 @@ class ServiceProviderHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return BlocBuilder<ServiceProviderCubit, ServiceProviderState>(
       builder: (context, state) {
@@ -423,9 +437,10 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildProfileCard(BuildContext context, ServiceProvider provider) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
-    final hasImage = provider.profileImageUrl != null &&
+    final hasImage =
+        provider.profileImageUrl != null &&
         provider.profileImageUrl!.isNotEmpty;
 
     return Container(
@@ -474,11 +489,7 @@ class ServiceProviderHome extends StatelessWidget {
                         ? NetworkImage(provider.profileImageUrl!)
                         : null,
                     child: !hasImage
-                        ? Icon(
-                            Icons.person,
-                            size: 42,
-                            color: Color(0xFF68E36C),
-                          )
+                        ? Icon(Icons.person, size: 42, color: Color(0xFF68E36C))
                         : null,
                   ),
                 ),
@@ -545,7 +556,7 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildStatsRow(BuildContext context, ServiceProvider provider) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -624,7 +635,7 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildQuickActions(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -740,7 +751,7 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildServicesSection(BuildContext context, ServiceProvider provider) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -794,7 +805,7 @@ class ServiceProviderHome extends StatelessWidget {
   }
 
   Widget _buildServiceCard(BuildContext context, Service service) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     String imageUrl = service.images.isNotEmpty
         ? service.images.first

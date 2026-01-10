@@ -233,6 +233,82 @@ async function getDemandOffers(req, res) {
 }
 
 
+async function getAcceptedOffer(req, res) {
+  try {
+    const { demand_id } = req.query;
+
+    if (!demand_id) {
+      return res.status(400).json({ error: "demand_id is required" });
+    }
+
+    const { data: demand, error: demandError } = await supabase
+      .from('demands')
+      .select('demand_id, selected_sp_id, status')
+      .eq('demand_id', demand_id)
+      .maybeSingle();
+
+    if (demandError) {
+      console.error("Error fetching demand:", demandError);
+      return res.status(500).json({ error: "Error fetching demand" });
+    }
+
+    if (!demand) {
+      return res.status(404).json({ error: "Demand not found" });
+    }
+
+    if (!demand.selected_sp_id) {
+      return res.status(200).json({ offer: null, demand });
+    }
+
+    const { data: offer, error: offerError } = await supabase
+      .from('demand_offers')
+      .select(`
+        offer_id,
+        message,
+        proposed_price,
+        proposed_date,
+        sp_id,
+        status,
+        service_providers:sp_id (
+          profile_picture_url,
+          users:users!service_providers_sp_id_fkey (
+            full_name
+          )
+        )
+      `)
+      .eq('demand_id', demand_id)
+      .eq('sp_id', demand.selected_sp_id)
+      .maybeSingle();
+
+    if (offerError) {
+      console.error("Error fetching accepted offer:", offerError);
+      return res.status(500).json({ error: "Error fetching accepted offer" });
+    }
+
+    if (!offer) {
+      return res.status(200).json({ offer: null, demand });
+    }
+
+    return res.status(200).json({
+      demand,
+      offer: {
+        offer_id: offer.offer_id,
+        message: offer.message,
+        proposed_price: offer.proposed_price,
+        proposed_date: offer.proposed_date,
+        sp_id: offer.sp_id,
+        status: offer.status,
+        sp_name: offer.service_providers?.users?.full_name || null,
+        sp_profile_picture_url: offer.service_providers?.profile_picture_url || null,
+      },
+    });
+  } catch (err) {
+    console.error("Server error:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
+
 async function acceptDemand(req, res) {
   try {
     const { demand_id, sp_id } = req.body;
@@ -260,6 +336,27 @@ async function acceptDemand(req, res) {
       return res.status(404).json({ error: "Demand not found" });
     }
 
+    // Mark the accepted offer and reject others (best-effort)
+    const { error: acceptOfferError } = await supabase
+      .from('demand_offers')
+      .update({ status: 'accepted' })
+      .eq('demand_id', demand_id)
+      .eq('sp_id', sp_id);
+
+    if (acceptOfferError) {
+      console.error("Error marking offer accepted:", acceptOfferError);
+    }
+
+    const { error: rejectOthersError } = await supabase
+      .from('demand_offers')
+      .update({ status: 'rejected' })
+      .eq('demand_id', demand_id)
+      .neq('sp_id', sp_id);
+
+    if (rejectOthersError) {
+      console.error("Error rejecting other offers:", rejectOthersError);
+    }
+
     return res.status(200).json({
       message: "Demand accepted successfully",
       demand: data
@@ -276,4 +373,4 @@ async function acceptDemand(req, res) {
 
 
 
-module.exports = { addDemand , editDemand , cancelDemand , getUserDemands , getDemandOffers , acceptDemand };
+module.exports = { addDemand , editDemand , cancelDemand , getUserDemands , getDemandOffers , getAcceptedOffer , acceptDemand };

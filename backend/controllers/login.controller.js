@@ -4,8 +4,13 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const supabase = require('../config/supabase');
 const { OAuth2Client } = require('google-auth-library');
+const { sendPasswordResetEmail, isEmailConfigured } = require('../services/mailer');
 
 const PROVIDER_APPLICATIONS_TABLE = 'provider_applications';
+const PASSWORD_RESET_EXPIRES_MINUTES = Number(process.env.PASSWORD_RESET_EXPIRES_MINUTES || 15);
+
+const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
+const getResetJwtSecret = () => process.env.PASSWORD_RESET_JWT_SECRET || process.env.JWT_SECRET;
 
 const getGoogleClient = () => {
   const googleClientId = process.env.GOOGLE_CLIENT_ID;
@@ -13,6 +18,65 @@ const getGoogleClient = () => {
     return { error: 'Missing GOOGLE_CLIENT_ID in backend environment' };
   }
   return { client: new OAuth2Client(googleClientId) };
+};
+
+const ensureVerifiedServiceProvider = async (userId) => {
+  const { data: spData, error } = await supabase
+    .from('service_providers')
+    .select('verification_status')
+    .eq('sp_id', userId)
+    .maybeSingle();
+
+  if (error || !spData) {
+    return { verified: false, status: null };
+  }
+
+  return {
+    verified: spData.verification_status === 'verified',
+    status: spData.verification_status,
+  };
+};
+
+const getGoogleUserFromAccessToken = async (accessToken) => {
+  const response = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const text = await response.text();
+  let json;
+  try {
+    json = text ? JSON.parse(text) : {};
+  } catch {
+    json = { raw: text };
+  }
+
+  if (!response.ok) {
+    const err = new Error('Failed to fetch Google user info');
+    err.details = json;
+    err.status = response.status;
+    throw err;
+  }
+
+  if (!json || !json.email) {
+    const err = new Error('Invalid Google token (missing email)');
+    err.details = json;
+    err.status = 401;
+    throw err;
+  }
+
+  return {
+    email: json.email,
+    name:
+      json.name ||
+      [json.given_name, json.family_name].filter(Boolean).join(' ') ||
+      json.given_name ||
+      'Google User',
+    picture: json.picture,
+    email_verified: json.email_verified,
+  };
 };
 
 const register = async (req, res) => {
@@ -390,6 +454,17 @@ const login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid password' });
     }
 
+    // Only allow verified service providers to log in.
+    if (user.role === 'service_provider') {
+      const { verified, status } = await ensureVerifiedServiceProvider(user.user_id);
+      if (!verified) {
+        return res.status(403).json({
+          error: 'Service provider not verified',
+          status,
+        });
+      }
+    }
+
     // Check if role-specific profile exists, create if missing
     if (user.role === 'service_provider') {
       const { data: spProfile, error: spError } = await supabase
@@ -471,10 +546,10 @@ const login = async (req, res) => {
 
 const googleAuth = async (req, res) => {
   try {
-    const { idToken, role, phone_number, home_address, working_address } = req.body;
+    const { idToken, accessToken, role, phone_number, home_address, working_address } = req.body;
 
-    if (!idToken) {
-      return res.status(400).json({ error: 'idToken is required' });
+    if (!idToken && !accessToken) {
+      return res.status(400).json({ error: 'idToken or accessToken is required' });
     }
     const hasRole = role !== undefined && role !== null && role !== '';
     if (hasRole && role !== 'service_provider' && role !== 'homeowner') {
@@ -483,23 +558,59 @@ const googleAuth = async (req, res) => {
       });
     }
 
-    const { client, error: clientError } = getGoogleClient();
-    if (clientError) {
-      return res.status(500).json({ error: clientError });
+    let email;
+    let fullNameFromGoogle;
+    let pictureUrlFromGoogle;
+
+    if (idToken) {
+      const { client, error: clientError } = getGoogleClient();
+      if (clientError) {
+        return res.status(500).json({ error: clientError });
+      }
+
+      const ticket = await client.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        return res.status(401).json({ error: 'Invalid Google token (missing email)' });
+      }
+
+      email = payload.email;
+      fullNameFromGoogle =
+        payload.name ||
+        [payload.given_name, payload.family_name].filter(Boolean).join(' ') ||
+        payload.given_name ||
+        'Google User';
+      pictureUrlFromGoogle = payload.picture;
+
+      // Some Google flows omit `picture` (and occasionally `name`) from the ID token.
+      // If we also have an access token, use the OIDC userinfo endpoint as a safe fallback.
+      if (accessToken && (!pictureUrlFromGoogle || String(pictureUrlFromGoogle).trim().length === 0)) {
+        try {
+          const userInfo = await getGoogleUserFromAccessToken(accessToken);
+          if (userInfo.email_verified === false) {
+            return res.status(401).json({ error: 'Google email is not verified' });
+          }
+          pictureUrlFromGoogle = userInfo.picture || pictureUrlFromGoogle;
+          if (!fullNameFromGoogle || String(fullNameFromGoogle).trim().length === 0) {
+            fullNameFromGoogle = userInfo.name;
+          }
+        } catch (e) {
+          // Non-fatal: proceed with idToken data.
+        }
+      }
+    } else {
+      const userInfo = await getGoogleUserFromAccessToken(accessToken);
+      if (userInfo.email_verified === false) {
+        return res.status(401).json({ error: 'Google email is not verified' });
+      }
+      email = userInfo.email;
+      fullNameFromGoogle = userInfo.name;
+      pictureUrlFromGoogle = userInfo.picture;
     }
-
-    const ticket = await client.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-    if (!payload || !payload.email) {
-      return res.status(401).json({ error: 'Invalid Google token (missing email)' });
-    }
-
-    const email = payload.email;
-    const fullNameFromGoogle = payload.name || payload.given_name || 'Google User';
 
     // Fetch user by email
     const { data: users, error: fetchError } = await supabase
@@ -591,6 +702,75 @@ const googleAuth = async (req, res) => {
       }
     }
 
+    // Best-effort: persist Google name onto users table and picture onto role table.
+    // This keeps homeowner/service provider avatars consistent without requiring People API.
+    try {
+      const safePicture =
+        typeof pictureUrlFromGoogle === 'string' && pictureUrlFromGoogle.trim().length > 0
+          ? pictureUrlFromGoogle.trim()
+          : null;
+
+      const normalizedGoogleName =
+        typeof fullNameFromGoogle === 'string' ? fullNameFromGoogle.trim() : '';
+      const normalizedCurrentName =
+        typeof user.full_name === 'string'
+          ? user.full_name.trim()
+          : (user.full_name ?? '').toString().trim();
+      const emailLocal = typeof email === 'string' ? email.split('@')[0].trim() : '';
+
+      // Update name when it's missing or looks like a placeholder.
+      const nameUpdateNeeded =
+        normalizedGoogleName.length > 0 &&
+        (normalizedCurrentName.length === 0 ||
+          normalizedCurrentName.toLowerCase() === 'google user' ||
+          normalizedCurrentName.toLowerCase() === String(email || '').toLowerCase() ||
+          (emailLocal.length > 0 && normalizedCurrentName.toLowerCase() === emailLocal.toLowerCase()));
+
+      // 1) Persist name (users.full_name)
+      if (nameUpdateNeeded) {
+        const { data: updatedUser, error: nameError } = await supabase
+          .from('users')
+          .update({ full_name: normalizedGoogleName, updated_at: new Date().toISOString() })
+          .eq('user_id', user.user_id)
+          .select()
+          .single();
+
+        if (!nameError && updatedUser) {
+          user = updatedUser;
+        }
+      }
+
+      // 2) Persist picture on role table (homeowners/service_providers.profile_picture_url)
+      if (safePicture && (effectiveRole === 'homeowner' || effectiveRole === 'service_provider')) {
+        const tableName = effectiveRole === 'homeowner' ? 'homeowners' : 'service_providers';
+        const idField = effectiveRole === 'homeowner' ? 'homeowner_id' : 'sp_id';
+
+        // Only set if currently null or empty, so we don't override user-chosen photo.
+        await supabase
+          .from(tableName)
+          .update({ profile_picture_url: safePicture })
+          .eq(idField, user.user_id)
+          .or('profile_picture_url.is.null,profile_picture_url.eq.');
+      }
+    } catch (e) {
+      // Ignore if column doesn't exist or update fails; login should still succeed.
+      console.warn('Google profile persistence skipped:', e?.message || e);
+    }
+
+    // Only allow verified service providers to log in.
+    if (user && effectiveRole === 'service_provider') {
+      const { verified, status } = await ensureVerifiedServiceProvider(user.user_id);
+      if (!verified) {
+        return res.status(403).json({
+          error: 'Service provider not verified',
+          status,
+          message: created
+            ? 'Account created, pending admin verification. Please wait for approval.'
+            : undefined,
+        });
+      }
+    }
+
     // Ensure profile exists for existing user
     if (user && effectiveRole === 'service_provider') {
       const { data: spProfile, error: spError } = await supabase
@@ -674,4 +854,154 @@ const googleAuth = async (req, res) => {
   }
 };
 
-module.exports = { register, login, googleAuth, signupHomeowner, signupProvider };
+const requestPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const normalizedEmail = (email || '').trim();
+    if (!normalizedEmail) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    if (!getResetJwtSecret()) {
+      return res.status(500).json({
+        error: 'Password reset is not configured on the backend yet',
+        hint: 'Missing PASSWORD_RESET_JWT_SECRET or JWT_SECRET in backend environment',
+      });
+    }
+
+    // Don't reveal whether the email exists.
+    const genericResponse = {
+      message: 'If an account exists for that email, a reset token has been sent.',
+    };
+
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('user_id,email,password,updated_at')
+      .eq('email', normalizedEmail)
+      .maybeSingle();
+
+    if (userError) {
+      console.error('Password reset lookup error:', userError);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (!user) {
+      return res.status(200).json(genericResponse);
+    }
+
+    // Stateless reset token: once password changes, token becomes invalid because pwv changes.
+    const pwVersion = sha256(String(user.password || user.updated_at || ''));
+    const token = jwt.sign(
+      { user_id: user.user_id, email: user.email, pwv: pwVersion, type: 'password_reset' },
+      getResetJwtSecret(),
+      { expiresIn: `${PASSWORD_RESET_EXPIRES_MINUTES}m` },
+    );
+
+    // Send email (required for real security). If SMTP isn't configured, still return generic success.
+    try {
+      const mailResult = await sendPasswordResetEmail({
+        to: user.email,
+        token,
+        expiresMinutes: PASSWORD_RESET_EXPIRES_MINUTES,
+      });
+      if (!mailResult.ok) {
+        // In dev, allow returning token for testing.
+        if (String(process.env.RETURN_RESET_TOKEN || '').toLowerCase() === 'true') {
+          return res.status(200).json({ ...genericResponse, token });
+        }
+        // Otherwise still return generic response to avoid enumeration.
+        return res.status(200).json({
+          ...genericResponse,
+          note: isEmailConfigured() ? undefined : 'SMTP is not configured',
+        });
+      }
+    } catch (mailError) {
+      console.error('Password reset email send error:', mailError);
+      if (String(process.env.RETURN_RESET_TOKEN || '').toLowerCase() === 'true') {
+        return res.status(200).json({ ...genericResponse, token });
+      }
+    }
+
+    return res.status(200).json(genericResponse);
+  } catch (error) {
+    console.error('requestPasswordReset error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token, new_password } = req.body;
+    if (!token || !new_password) {
+      return res.status(400).json({ error: 'token and new_password are required' });
+    }
+
+    const secret = getResetJwtSecret();
+    if (!secret) {
+      return res.status(500).json({
+        error: 'Password reset is not configured on the backend yet',
+        hint: 'Missing PASSWORD_RESET_JWT_SECRET or JWT_SECRET in backend environment',
+      });
+    }
+
+    let payload;
+    try {
+      payload = jwt.verify(String(token), secret);
+    } catch (_) {
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
+    }
+
+    if (!payload || payload.type !== 'password_reset' || !payload.user_id || !payload.pwv) {
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
+    }
+
+    const userId = payload.user_id;
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('user_id,password,updated_at')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (userError) {
+      console.error('Reset user lookup error:', userError);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
+    }
+
+    const currentPwVersion = sha256(String(user.password || user.updated_at || ''));
+    if (currentPwVersion !== payload.pwv) {
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
+    }
+
+    const hashedPassword = await bcrypt.hash(String(new_password), 10);
+    const now = new Date().toISOString();
+
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ password: hashedPassword, updated_at: now })
+      .eq('user_id', userId);
+
+    if (updateError) {
+      console.error('Password update error:', updateError);
+      return res.status(500).json({ error: 'Failed to update password' });
+    }
+
+    return res.status(200).json({ message: 'Password has been reset successfully' });
+  } catch (error) {
+    console.error('resetPassword error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  googleAuth,
+  signupHomeowner,
+  signupProvider,
+  requestPasswordReset,
+  resetPassword,
+};

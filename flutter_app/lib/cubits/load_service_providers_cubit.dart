@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../data/models/fetched_service_provider.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 
 @immutable
 abstract class ServiceProviderState {}
@@ -32,7 +33,7 @@ class ServiceProviderCubit extends Cubit<ServiceProviderState> {
 
     try {
       final url = Uri.parse(
-        'http://10.0.2.2:5000/homeowner/getServiceProviders?category_id=$categoryId&location=$location',
+        '${BackendConfig.baseUrl}/homeowner/getServiceProviders?category_id=$categoryId&location=$location',
       );
 
       final response = await http.get(url);

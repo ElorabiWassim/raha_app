@@ -5,6 +5,7 @@ import '../../cubits/ServiceProviderFetchProfileCubit.dart';
 import '../../cubits/booking_cubit.dart';
 import 'book_service.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -44,7 +45,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
 
   Future<List<Map<String, dynamic>>> _fetchServices(String spId) async {
     final url = Uri.parse(
-      'http://10.0.2.2:5000/homeowner/getServices?sp_id=$spId',
+      '${BackendConfig.baseUrl}/homeowner/getServices?sp_id=$spId',
     );
     final response = await http.get(url);
 
@@ -95,7 +96,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return BlocBuilder<
       ServiceProviderProfileCubit,
@@ -488,7 +489,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
     int reviewCount,
     Map reviewPercentages,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       key: key,
@@ -592,7 +593,7 @@ class _ProfileStatefulViewState extends State<_ProfileStatefulView> {
   }
 
   Widget _buildPortfolioSection(GlobalKey key) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       key: key,

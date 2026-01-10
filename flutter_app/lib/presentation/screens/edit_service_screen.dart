@@ -101,7 +101,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
 
   Future<void> _deleteService() async {
     
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     bool? confirm = await showDialog<bool>(
       context: context,
@@ -151,7 +151,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],

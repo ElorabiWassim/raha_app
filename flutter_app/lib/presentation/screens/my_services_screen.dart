@@ -63,7 +63,7 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           Container(width: 48, height: 48, alignment: Alignment.centerLeft),
           Expanded(
             child: Text(
-              l10n?.myServicesTitle ?? 'My Services',
+              l10n.myServicesTitle ?? 'My Services',
               textAlign: TextAlign.center,
               style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
             ),
@@ -99,14 +99,14 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           children: [
             Expanded(
               child: _buildTabButton(
-                label: l10n?.myBookingsTab ?? 'My Bookings',
+                label: l10n.myBookingsTab ?? 'My Bookings',
                 isSelected: _selectedTabIndex == 0,
                 onTap: () => setState(() => _selectedTabIndex = 0),
               ),
             ),
             Expanded(
               child: _buildTabButton(
-                label: l10n?.myDemandsTab ?? 'My Demands',
+                label: l10n.myDemandsTab ?? 'My Demands',
                 isSelected: _selectedTabIndex == 1,
                 onTap: () => setState(() => _selectedTabIndex = 1),
               ),

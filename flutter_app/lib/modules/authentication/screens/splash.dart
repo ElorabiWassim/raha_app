@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ra7a/cubits/language_cubit.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import 'onboarding.dart'; // make sure this path is correct
 
@@ -16,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Locale? _selectedLocale;
 
   List<Map<String, dynamic>> _getLanguages(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     return [
       {'code': 'en', 'name': localizations.languageEnglish, 'flag': '🇬🇧'},
       {'code': 'fr', 'name': localizations.languageFrench, 'flag': '🇫🇷'},
@@ -29,9 +31,15 @@ class _SplashScreenState extends State<SplashScreen> {
       _selectedLocale = locale;
     });
 
-    // Change the app language
-    if (widget.onLocaleChanged != null) {
-      widget.onLocaleChanged!(locale);
+    // Change the app language (source of truth is LanguageCubit)
+    // Keep onLocaleChanged for backward-compat, but don't rely on it.
+    try {
+      context.read<LanguageCubit>().changeLanguage(locale.languageCode);
+    } catch (_) {
+      // If LanguageCubit isn't available for some reason, fallback to callback.
+      if (widget.onLocaleChanged != null) {
+        widget.onLocaleChanged!(locale);
+      }
     }
 
     // Navigate to Onboarding after language selection
@@ -116,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen> {
               // Language Selection Title
               Builder(
                 builder: (context) {
-                  final localizations = AppLocalizations.of(context)!;
+                  final localizations = AppLocalizations.of(context);
                   return Column(
                     children: [
                       Text(

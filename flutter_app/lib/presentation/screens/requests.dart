@@ -151,7 +151,7 @@ class _RequestsPageState extends State<RequestsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
@@ -354,7 +354,7 @@ class RequestCard extends StatelessWidget {
   }
 
   String getLocalizedStatus(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     switch (booking['status']) {
       case 'pending':
         return localizations.requestsStatusPending;
@@ -394,7 +394,7 @@ class RequestCard extends StatelessWidget {
   }
 
   void _showBookingDetails(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final homeownerData = booking['homeowners'];
     final userData = homeownerData?['users'];
     final homeownerName = userData?['full_name'] ?? 'Unknown';
@@ -445,7 +445,7 @@ class RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     // Access nested homeowner data correctly
     final homeownerData = booking['homeowners'];

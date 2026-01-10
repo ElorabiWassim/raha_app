@@ -4,6 +4,7 @@ import '../../data/models/profile_data.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import './profilehome.dart';
 import '../../modules/authentication/screens/login.dart';
+import '../../modules/authentication/screens/forgot_password_screen.dart';
 import '../../cubits/language_cubit.dart';
 import '../../services/api_service.dart';
 
@@ -21,6 +22,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool pushNotifications = true;
   bool emailNotifications = false;
   bool smsNotifications = true;
+
+  Future<void> _goToResetPassword() async {
+    final email = currentProfileData.email.trim();
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ForgotPasswordScreen(
+          prefilledEmail: email.isNotEmpty ? email : null,
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -102,9 +116,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 contentPadding: EdgeInsets.all(16),
                 leading: CircleAvatar(
                   radius: 28,
-                  backgroundImage: AssetImage(
-                    'assets/images/MohammedPicture.png',
-                  ),
+                  backgroundImage:
+                      (currentProfileData.profileImageUrl != null &&
+                          currentProfileData.profileImageUrl!.trim().isNotEmpty)
+                      ? NetworkImage(currentProfileData.profileImageUrl!)
+                      : null,
                 ),
                 title: Text(
                   currentProfileData.name,
@@ -285,7 +301,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildMenuItem(
                     icon: Icons.lock_outline,
                     title: l10n.changePassword,
-                    onTap: _showChangePasswordDialog,
+                    onTap: _goToResetPassword,
                   ),
                   Divider(height: 1, thickness: 1, color: Colors.grey[200]),
                   _buildMenuItem(

@@ -1,5 +1,6 @@
 const supabase = require('../config/supabase');
 const bcrypt = require('bcryptjs');
+const path = require('path');
 
 const getProfile = async (req, res) => {
   try {
@@ -217,9 +218,89 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+const updateProfilePicture = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+    const role = req.user.role;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Reuse an existing bucket name by default to avoid breaking deployments.
+    // You can override with USER_PROFILE_BUCKET in .env.
+    const bucketName = process.env.USER_PROFILE_BUCKET || 'service-providers-profile-photos';
+
+    const ext = path.extname(file.originalname || '') || '.jpg';
+    const filePath = `users/${userId}/profile_${Date.now()}${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(filePath, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error('Profile picture upload error:', uploadError);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
+
+    const { data: urlData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+    const publicUrl = urlData?.publicUrl;
+    if (!publicUrl) {
+      return res.status(500).json({ error: 'Failed to generate image URL' });
+    }
+
+    let tableName;
+    let idField;
+    if (role === 'homeowner') {
+      tableName = 'homeowners';
+      idField = 'homeowner_id';
+    } else if (role === 'service_provider') {
+      tableName = 'service_providers';
+      idField = 'sp_id';
+    } else {
+      return res.status(403).json({ error: 'Unsupported role for profile picture update' });
+    }
+
+    const { data: updatedRows, error: updateError } = await supabase
+      .from(tableName)
+      .update({ profile_picture_url: publicUrl })
+      .eq(idField, userId)
+      .select('profile_picture_url');
+
+    if (updateError) {
+      console.error('Profile picture DB update error:', updateError);
+      return res.status(500).json({
+        error: 'Failed to update profile picture in database',
+        details: updateError.message,
+      });
+    }
+
+    if (!updatedRows || updatedRows.length === 0) {
+      return res.status(404).json({
+        error: 'Profile not found',
+        details: `No ${tableName} row found for this user`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      imageUrl: publicUrl,
+      profile_picture_url: publicUrl,
+    });
+  } catch (error) {
+    console.error('Update profile picture error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
+  updateProfilePicture,
   changePassword,
   deleteAccount,getServiceProviderProfile
 };

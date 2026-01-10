@@ -11,7 +11,7 @@ class VerificationRepository {
     VerificationData verificationData,
   ) async {
     final response = await apiService.post(
-      '/api/admin/applications',
+      '/api/verification/submit',
       verificationData.toJson(),
     );
 
@@ -26,15 +26,16 @@ class VerificationRepository {
   }
 
   Future<ApiResponse<String>> uploadDocument(
+    String userId,
     String documentType,
     String filePath,
   ) async {
     // This would typically use multipart/form-data
     // For now, we'll simulate with a simple API call
-    final response = await apiService.post('/api/sp/upload-document', {
-      'document_type': documentType,
-      'file_path': filePath,
-    });
+    final response = await apiService.post(
+      '/api/verification/upload-document',
+      {'user_id': userId, 'document_type': documentType, 'file_path': filePath},
+    );
 
     if (response['success'] == true) {
       final documentUrl = response['data']['document_url'] ?? '';
@@ -50,9 +51,7 @@ class VerificationRepository {
   Future<ApiResponse<Map<String, dynamic>>> getVerificationStatus(
     String userId,
   ) async {
-    final response = await apiService.get(
-      '/api/sp/verification-status/$userId',
-    );
+    final response = await apiService.get('/api/verification/status/$userId');
 
     if (response['success'] == true) {
       return ApiResponse(success: true, data: response['data']);

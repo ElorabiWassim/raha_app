@@ -164,10 +164,9 @@ class _VerificationPageContent extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: canSubmit
                           ? () {
-                              // TODO: Get actual userId and services
                               context
                                   .read<VerificationCubit>()
-                                  .submitVerification('user-id', []);
+                                  .submitVerification([]);
                             }
                           : null,
                       style: ElevatedButton.styleFrom(

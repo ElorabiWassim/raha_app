@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:ra7a/presentation/screens/homesp.dart';
 import 'package:ra7a/modules/authentication/screens/splash.dart';
 import 'package:ra7a/cubits/dashboard_cubit.dart';
 import 'package:ra7a/services/api_service.dart'; // ADD THIS IMPORT
+import 'forgot_password_screen.dart';
+import 'verification.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,6 +32,72 @@ class _LoginScreenState extends State<LoginScreen> {
       TextEditingController(); // CHANGED FROM username
   final TextEditingController _passwordController = TextEditingController();
   final ApiService _apiService = ApiService(); // ADD THIS
+
+  Future<void> _showNotVerifiedDialog() async {
+    if (!mounted) return;
+    const primaryColor = Color(0xFF33AD04);
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'Account not verified',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
+          ),
+          content: Text(
+            'Your service provider account is pending verification. Submit your documents to continue.',
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.grey[700],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey[700],
+                textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+              ),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VerificationPage(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w700),
+              ),
+              child: const Text('Verify account'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -110,14 +179,19 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     } catch (e) {
+      final raw = e.toString().replaceAll('Exception: ', '');
+      final lower = raw.toLowerCase();
+
+      if (lower.contains('service provider not verified')) {
+        await _showNotVerifiedDialog();
+        return;
+      }
+
       // Show error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              e.toString().replaceAll('Exception: ', ''),
-              style: GoogleFonts.poppins(),
-            ),
+            content: Text(raw, style: GoogleFonts.poppins()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -143,20 +217,21 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      // Web client ID (not secret). We default it so Google sign-in works with normal `flutter run`.
+      // You can still override it via:
+      // `flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=...`
       final serverClientId = const String.fromEnvironment(
         'GOOGLE_SERVER_CLIENT_ID',
-        defaultValue: '',
+        defaultValue:
+            '64296724638-d7avbotkca6h4cj95njomf5eabgpo2q1.apps.googleusercontent.com',
       );
 
-      if (serverClientId.isEmpty) {
-        throw Exception(
-          'Missing GOOGLE_SERVER_CLIENT_ID. Run: flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=YOUR_WEB_CLIENT_ID',
-        );
-      }
-
       final googleSignIn = GoogleSignIn(
-        serverClientId: serverClientId,
-        scopes: const ['email', 'profile'],
+        clientId: kIsWeb ? serverClientId : null,
+        serverClientId: kIsWeb ? null : serverClientId,
+        scopes: kIsWeb
+            ? const ['email', 'profile', 'openid']
+            : const ['email', 'profile', 'openid'],
       );
 
       final account = await googleSignIn.signIn();
@@ -164,13 +239,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final auth = await account.authentication;
       final idToken = auth.idToken;
-      if (idToken == null || idToken.isEmpty) {
-        throw Exception(
-          'Google idToken is null. Check that GOOGLE_SERVER_CLIENT_ID is the Web client ID.',
-        );
-      }
+      final accessToken = auth.accessToken;
 
-      final response = await _apiService.googleAuth(idToken: idToken);
+      final response = await _apiService.googleAuth(
+        idToken: idToken,
+        accessToken: accessToken,
+      );
 
       final user = response['user'] as Map<String, dynamic>?;
       final role = user?['role'] as String?;
@@ -214,20 +288,47 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       } else {
-        // If the backend says the user doesn't exist yet, send them to role selection.
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const RoleSelectionScreen()),
         );
       }
     } catch (e) {
+      final raw = e.toString().replaceAll('Exception: ', '');
+      final lower = raw.toLowerCase();
+
+      if (lower.contains('service provider not verified')) {
+        await _showNotVerifiedDialog();
+        return;
+      }
+
+      String msg = raw;
+      if (lower.contains('people api has not been used') ||
+          lower.contains('service_disabled') ||
+          lower.contains('permission_denied')) {
+        msg =
+            'Google People API is disabled for this OAuth project. Enable "People API" in Google Cloud Console for the project that owns your Google Client ID, then retry.';
+      } else if (lower.contains('popup_closed')) {
+        msg = 'Sign-in popup was closed before completing Google login.';
+      } else if (raw.length > 200) {
+        msg = '${raw.substring(0, 200)}…';
+      }
+      // If backend requires role for new Google accounts, route user to choose role.
+      if (msg.toLowerCase().contains('role is required for new accounts')) {
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RoleSelectionScreen(),
+            ),
+          );
+        }
+        return;
+      }
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            e.toString().replaceAll('Exception: ', ''),
-            style: GoogleFonts.poppins(),
-          ),
+          content: Text(msg, style: GoogleFonts.poppins()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -337,8 +438,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         final emailRegex = RegExp(
                           r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
                         );
-                        if (!emailRegex.hasMatch(v))
+                        if (!emailRegex.hasMatch(v)) {
                           return 'Email must be valid';
+                        }
                         return null;
                       },
                       decoration: InputDecoration(
@@ -433,7 +535,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ForgotPasswordScreen(),
+                            ),
+                          );
+                        },
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 0),
