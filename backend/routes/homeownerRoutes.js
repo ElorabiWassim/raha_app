@@ -25,7 +25,7 @@ const {
 } = require("../controllers/categories")
 
 const {
-  addDemand, editDemand, cancelDemand, getUserDemands, getDemandOffers, acceptDemand
+  addDemand, editDemand, cancelDemand, getUserDemands, getDemandOffers, getAcceptedOffer, acceptDemand
 } = require("../controllers/demands");
 
 
@@ -43,6 +43,7 @@ router.post("/editDemand", editDemand);
 router.post("/cancelDemand", cancelDemand);
 router.get("/getUserDemands", getUserDemands);
 router.get("/getDemandOffers", getDemandOffers);
+router.get("/getAcceptedOffer", getAcceptedOffer);
 router.post("/acceptDemand", acceptDemand);
 
 

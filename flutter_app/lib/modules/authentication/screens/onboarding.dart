@@ -34,7 +34,7 @@ class _OnboardingScreenContentState extends State<_OnboardingScreenContent> {
   int _currentIndex = 0;
 
   List<Map<String, String>> _slides(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
     return [
       {
         "title": t.onboardingTitle1,
@@ -72,7 +72,7 @@ class _OnboardingScreenContentState extends State<_OnboardingScreenContent> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
     final slides = _slides(context);
 
     return BlocListener<OnboardingCubit, OnboardingState>(

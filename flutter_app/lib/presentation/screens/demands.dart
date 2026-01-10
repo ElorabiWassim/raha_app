@@ -18,7 +18,6 @@ class _DemandsPageState extends State<DemandsPage> {
   bool _isLoading = true;
   final TextEditingController _searchController = TextEditingController();
 
-  
   final List<Map<String, String>> categories = [
     {'id': 'a75af59d-3e61-402d-9bd2-54a5e64fc950', 'name': 'Plumbing'},
     {'id': '069dc664-5fd9-435c-a688-cc002e46243b', 'name': 'Electrical'},
@@ -56,7 +55,7 @@ class _DemandsPageState extends State<DemandsPage> {
 
     try {
       Map<String, dynamic> response;
-       if (_searchController.text.isNotEmpty) {
+      if (_searchController.text.isNotEmpty) {
         response = await _apiService.searchDemands(
           query: _searchController.text,
         );
@@ -79,16 +78,27 @@ class _DemandsPageState extends State<DemandsPage> {
       setState(() {
         jobs = demands.map((d) {
           return {
-            'demand_id': d['demand_id'],
-            'title': d['title'] ?? 'Untitled',
-            'description': d['description'] ?? 'No description',
-            'location': d['location'] ?? 'Unknown',
+            'demand_id': (d['demand_id'] ?? '').toString(),
+            'title': (d['title'] ?? 'Untitled').toString(),
+            'description': (d['description'] ?? 'No description').toString(),
+            'location': (d['location'] ?? 'Unknown').toString(),
             'time': _formatTime(d['created_at']),
-            'category': d['service_categories']?['name'] ?? 'Unknown',
+            'category': (d['service_categories']?['name'] ?? 'Unknown')
+                .toString(),
             'homeowner_name':
-                d['homeowners']?['users']?['full_name'] ?? 'Anonymous',
-            'home_address': d['homeowners']?['home_address'] ?? 'Not specified',
-            'images': d['demand_images'] ?? [],
+                ((d['homeowners']?['users']?['full_name'] ?? 'Anonymous')
+                    .toString()
+                    .trim()
+                    .isNotEmpty)
+                ? (d['homeowners']?['users']?['full_name'] ?? 'Anonymous')
+                      .toString()
+                : 'Anonymous',
+            'home_address':
+                (d['homeowners']?['home_address'] ?? 'Not specified')
+                    .toString(),
+            'images': (d['demand_images'] is List)
+                ? (d['demand_images'] as List)
+                : <dynamic>[],
             'created_at': d['created_at'],
           };
         }).toList();
@@ -170,7 +180,7 @@ class _DemandsPageState extends State<DemandsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F8),
@@ -229,7 +239,7 @@ class _DemandsPageState extends State<DemandsPage> {
                         Icons.search,
                         color: Color(0xFF6B7280),
                       ),
-                      
+
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.clear, color: Colors.grey),
@@ -260,8 +270,8 @@ class _DemandsPageState extends State<DemandsPage> {
                         });
                         _loadDemands(); // Trigger search
                       } else {
-                         // If empty, reload normal list
-                         setState(() {
+                        // If empty, reload normal list
+                        setState(() {
                           _searchQuery = null;
                         });
                         _loadDemands();
@@ -625,7 +635,7 @@ class _JobCardState extends State<JobCard> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -865,7 +875,10 @@ class DemandDetailsSheet extends StatelessWidget {
                           CircleAvatar(
                             backgroundColor: const Color(0xFF4CAF50),
                             child: Text(
-                              homeownerName[0].toUpperCase(),
+                              (homeownerName.isNotEmpty
+                                      ? homeownerName[0]
+                                      : '?')
+                                  .toUpperCase(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -979,7 +992,10 @@ class DemandDetailsSheet extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           itemCount: images.length,
                           itemBuilder: (context, index) {
-                            final imageUrl = images[index]['image_url'];
+                            final dynamic item = images[index];
+                            final imageUrl =
+                                (item is Map ? item['image_url'] : item)
+                                    ?.toString();
                             return Container(
                               margin: const EdgeInsets.only(right: 12),
                               width: 120,
@@ -989,38 +1005,46 @@ class DemandDetailsSheet extends StatelessWidget {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  imageUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      color: Colors.grey[200],
-                                      child: const Icon(
-                                        Icons.image_not_supported,
-                                        color: Colors.grey,
+                                child: (imageUrl == null || imageUrl.isEmpty)
+                                    ? Container(
+                                        color: Colors.grey[200],
+                                        child: const Icon(
+                                          Icons.image_not_supported,
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    : Image.network(
+                                        imageUrl,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[200],
+                                                child: const Icon(
+                                                  Icons.image_not_supported,
+                                                  color: Colors.grey,
+                                                ),
+                                              );
+                                            },
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value:
+                                                  loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        }
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value:
-                                                loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      loadingProgress
-                                                          .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      },
-                                ),
                               ),
                             );
                           },

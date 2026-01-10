@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ra7a/core/config/backend_config.dart';
 
 @immutable
 abstract class ServiceProviderProfileState {}
@@ -28,7 +29,7 @@ class ServiceProviderProfileCubit extends Cubit<ServiceProviderProfileState> {
 
     try {
       final url = Uri.parse(
-        "http://10.0.2.2:5000/homeowner/getServiceProviderProfile?sp_id=$spId",
+        "${BackendConfig.baseUrl}/homeowner/getServiceProviderProfile?sp_id=$spId",
       );
 
       final response = await http.get(url);

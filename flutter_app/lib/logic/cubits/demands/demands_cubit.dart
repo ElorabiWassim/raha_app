@@ -5,6 +5,7 @@ import '../../../data/models/demand_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 
 // State
 abstract class DemandsState extends Equatable {
@@ -119,7 +120,7 @@ class DemandsCubit extends Cubit<DemandsState> {
       }
 
       final url = Uri.parse(
-        'http://10.0.2.2:5000/homeowner/getUserDemands?homeowner_id=$userId',
+        '${BackendConfig.baseUrl}/homeowner/getUserDemands?homeowner_id=$userId',
       );
       final response = await http.get(url);
 
@@ -164,7 +165,8 @@ class DemandsCubit extends Cubit<DemandsState> {
   Future<void> cancelDemand(String demandId) async {
     if (demandId.isEmpty) return;
     try {
-      final url = Uri.parse('http://10.0.2.2:5000/homeowner/cancelDemand');
+      final url = Uri.parse('${BackendConfig.baseUrl}/homeowner/cancelDemand');
+
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

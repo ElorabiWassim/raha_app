@@ -4,19 +4,34 @@ import 'hosetting.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import '../../data/models/profile_data.dart';
 import '../../cubits/profile_cubit.dart';
+import 'package:ra7a/core/location/location_picker_screen.dart';
+import 'package:ra7a/core/location/location_service.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../services/api_service.dart';
 
-class MyProfileScreen extends StatelessWidget {
-  ProfileData profileData = ProfileData(
-    name: 'Mohamed RGB',
-    email: 'Mohammedrgb89@email.com',
-    phone: '0555897465',
-    address: '123 Main Draria, Algiers, Algeria',
-  );
+class MyProfileScreen extends StatefulWidget {
+  const MyProfileScreen({super.key});
 
-  MyProfileScreen({super.key});
+  @override
+  State<MyProfileScreen> createState() => _MyProfileScreenState();
+}
 
-  void _navigateToPage(BuildContext context, String pageName) async {
-    final l10n = AppLocalizations.of(context)!;
+class _MyProfileScreenState extends State<MyProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<ProfileCubit>().fetchProfile();
+    });
+  }
+
+  void _navigateToPage(
+    BuildContext context,
+    String pageName,
+    ProfileData profileData,
+  ) async {
+    final l10n = AppLocalizations.of(context);
 
     if (pageName == 'Edit Profile') {
       final profileCubit = context.read<ProfileCubit>();
@@ -63,7 +78,7 @@ class MyProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -82,7 +97,11 @@ class MyProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              _navigateToPage(context, 'Settings');
+              final profileData = context
+                  .read<ProfileCubit>()
+                  .state
+                  .profileData;
+              _navigateToPage(context, 'Settings', profileData);
             },
             icon: Icon(Icons.settings_outlined),
             color: Colors.black,
@@ -105,9 +124,11 @@ class MyProfileScreen extends StatelessWidget {
                       CircleAvatar(
                         radius: 55,
                         backgroundColor: Colors.grey[300],
-                        backgroundImage: AssetImage(
-                          'assets/images/MohammedPicture.png',
-                        ),
+                        backgroundImage:
+                            (profileData.profileImageUrl != null &&
+                                profileData.profileImageUrl!.trim().isNotEmpty)
+                            ? NetworkImage(profileData.profileImageUrl!)
+                            : null,
                       ),
                       SizedBox(height: 16),
                       Text(
@@ -132,7 +153,11 @@ class MyProfileScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            _navigateToPage(context, 'Edit Profile');
+                            _navigateToPage(
+                              context,
+                              'Edit Profile',
+                              profileData,
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey[200],
@@ -203,7 +228,11 @@ class MyProfileScreen extends StatelessWidget {
                         text: l10n.paymentMethods,
                         iconColor: Color(0xFF68E36C),
                         onTap: () {
-                          _navigateToPage(context, l10n.paymentMethods);
+                          _navigateToPage(
+                            context,
+                            l10n.paymentMethods,
+                            profileData,
+                          );
                         },
                       ),
                       Divider(height: 1, thickness: 1, color: Colors.grey[200]),
@@ -212,7 +241,11 @@ class MyProfileScreen extends StatelessWidget {
                         text: l10n.helpSupport,
                         iconColor: Color(0xFF68E36C),
                         onTap: () {
-                          _navigateToPage(context, l10n.helpSupport);
+                          _navigateToPage(
+                            context,
+                            l10n.helpSupport,
+                            profileData,
+                          );
                         },
                       ),
                     ],
@@ -310,6 +343,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
   late TextEditingController _addressController;
+  String? _profileImageUrl;
+  bool _uploadingImage = false;
 
   @override
   void initState() {
@@ -319,6 +354,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailController = TextEditingController(text: profileData.email);
     _phoneController = TextEditingController(text: profileData.phone);
     _addressController = TextEditingController(text: profileData.address);
+    _profileImageUrl = widget.profileData.profileImageUrl;
+  }
+
+  Future<void> _pickAndUploadProfilePicture() async {
+    if (_uploadingImage) return;
+
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (!mounted || picked == null) return;
+
+    setState(() => _uploadingImage = true);
+    try {
+      final url = await ApiService().updateMyProfilePicture(picked);
+      if (!mounted) return;
+      setState(() {
+        _profileImageUrl = url.trim().isEmpty ? null : url.trim();
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _uploadingImage = false);
+    }
   }
 
   @override
@@ -330,9 +393,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
+  Future<void> _setAddressFromCurrentPosition() async {
+    try {
+      final pos = await LocationService().getCurrentPosition();
+      final picked = await LocationService().reverseGeocode(
+        latitude: pos.latitude,
+        longitude: pos.longitude,
+      );
+      if (!mounted) return;
+      _addressController.text = picked.displayAddress;
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _setAddressFromMap() async {
+    final picked = await Navigator.push<PickedLocation>(
+      context,
+      MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
+    );
+    if (!mounted || picked == null) return;
+    _addressController.text = picked.displayAddress;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -367,21 +459,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   CircleAvatar(
                     radius: 60,
                     backgroundColor: Colors.grey[300],
-                    backgroundImage: AssetImage(
-                      'assets/images/MohammedPicture.png',
-                    ),
+                    backgroundImage:
+                        (_profileImageUrl != null &&
+                            _profileImageUrl!.trim().isNotEmpty)
+                        ? NetworkImage(_profileImageUrl!)
+                        : null,
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF68E36C),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 3),
+                    child: InkWell(
+                      onTap: _pickAndUploadProfilePicture,
+                      borderRadius: BorderRadius.circular(999),
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF68E36C),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 3),
+                        ),
+                        child: _uploadingImage
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Icon(Icons.edit, color: Colors.white, size: 20),
                       ),
-                      child: Icon(Icons.edit, color: Colors.white, size: 20),
                     ),
                   ),
                 ],
@@ -408,6 +517,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 label: l10n.homeAddress,
                 controller: _addressController,
                 maxLines: 3,
+              ),
+              SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _setAddressFromCurrentPosition,
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: Color(0xFF68E36C)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      icon: Icon(Icons.my_location, color: Color(0xFF68E36C)),
+                      label: Text(
+                        'Use current location',
+                        style: TextStyle(color: Color(0xFF68E36C)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _setAddressFromMap,
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: Color(0xFF68E36C)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      icon: Icon(Icons.map_outlined, color: Color(0xFF68E36C)),
+                      label: Text(
+                        'Pick on map',
+                        style: TextStyle(color: Color(0xFF68E36C)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 40),
               SizedBox(
@@ -513,6 +662,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       email: _emailController.text,
       phone: _phoneController.text,
       address: _addressController.text,
+      profileImageUrl: _profileImageUrl,
     );
 
     Navigator.pop(context, updatedProfile);

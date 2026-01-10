@@ -77,7 +77,7 @@ class DashboardPage extends StatelessWidget {
   }
 
   Widget _buildDashboardContent(BuildContext context, DashboardStats stats) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -216,7 +216,7 @@ class DashboardPage extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     return AppBar(
       title: Text(localizations.dashboard),
       backgroundColor: const Color(0xFF4CAF50),

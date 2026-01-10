@@ -4,6 +4,7 @@ import '../../data/models/provider_offers_model.dart';
 import 'dart:ui';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ra7a/core/config/backend_config.dart';
 
 class ProviderOffersScreen extends StatefulWidget {
   final String demandId;
@@ -50,7 +51,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
 
     try {
       final url = Uri.parse(
-        'http://10.0.2.2:5000/homeowner/getDemandOffers?demand_id=${widget.demandId}',
+        '${BackendConfig.baseUrl}/homeowner/getDemandOffers?demand_id=${widget.demandId}',
       );
       final response = await http.get(url);
 
@@ -545,7 +546,7 @@ class _ProviderOffersScreenState extends State<ProviderOffersScreen> {
                               onPressed: () async {
                                 try {
                                   final url = Uri.parse(
-                                    'http://10.0.2.2:5000/homeowner/acceptDemand',
+                                    '${BackendConfig.baseUrl}/homeowner/acceptDemand',
                                   );
                                   final response = await http.post(
                                     url,

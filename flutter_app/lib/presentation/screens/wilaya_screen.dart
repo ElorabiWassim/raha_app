@@ -31,7 +31,7 @@ class WilayaScreen extends StatelessWidget {
           title: Padding(
             padding: const EdgeInsets.only(left: 50),
             child: Text(
-              AppLocalizations.of(context)!.selectWilaya,
+              AppLocalizations.of(context).selectWilaya,
               style: const TextStyle(
                 color: Color(0xFF1E293B),
                 fontWeight: FontWeight.bold,

@@ -74,7 +74,7 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
         readOnly: true,
         onTap: _selectDate,
         decoration: InputDecoration(
-          labelText: l10n?.selectDate ?? 'Select Date',
+          labelText: l10n.selectDate ?? 'Select Date',
           labelStyle: const TextStyle(color: Colors.black),
           prefixIcon: const Icon(
             Icons.calendar_today,
