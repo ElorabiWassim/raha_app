@@ -1,5 +1,5 @@
 #!/bin/bash
-BASE_URL="http://10.242.249.27:3000/api"
+BASE_URL="http://172.20.10.2:3000/api"
 
 # 1. Signup Homeowner
 curl -X POST "$BASE_URL/auth/signup/homeowner" \

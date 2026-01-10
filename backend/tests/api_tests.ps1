@@ -1,4 +1,4 @@
-$baseUrl = "http://10.242.249.27:3000/api"
+$baseUrl = "http://172.20.10.2:3000/api"
 $random = Get-Random
 $emailHO = "homeowner_$random@test.com"
 $emailSP = "provider_$random@test.com"
