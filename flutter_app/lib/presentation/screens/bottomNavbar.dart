@@ -37,7 +37,7 @@ class _HomeBottomNavState extends State<HomeBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final List<String> labels = [
       l10n.home,
       l10n.bookings,

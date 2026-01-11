@@ -58,6 +58,67 @@ async function getServiceProviders(req, res) {
   }
 }
 
+async function getServiceProvidersTopN(req, res) {
+  try {
+    const { location, top_n } = req.query;
+
+    if (!location) {
+      return res.status(400).json({ error: "Location is required" });
+    }
+
+    // Fetch service providers along with their reviews
+    const { data: providers, error } = await supabase
+      .from('service_providers')
+      .select(`
+        sp_id,
+        service_type_id:service_type,
+        working_address,
+        profile_picture_url,
+        users:users!service_providers_sp_id_fkey (
+          full_name,
+          email
+        ),
+        service_type:service_type (
+          name
+        ),
+        reviews:reviews!reviews_sp_id_fkey (
+          rating
+        )
+      `)
+      .ilike('working_address', `%${location}%`);
+      
+
+    if (error) {
+      console.error("Error fetching providers:", error);
+      return res.status(500).json({ error: "Error fetching providers" });
+    }
+
+    // Calculate average rating for each provider
+    const providersWithAvg = providers.map(sp => {
+      const ratings = sp.reviews.map(r => r.rating);
+      const average_rating =
+        ratings.length > 0
+          ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+          : 0; // use 0 if no ratings
+
+      delete sp.reviews; // remove raw reviews
+      return { ...sp, average_rating };
+    });
+
+    // Sort by average rating descending
+    const sortedProviders = providersWithAvg.sort((a, b) => b.average_rating - a.average_rating);
+
+    // Return top N if top_n is provided
+    const topProviders = top_n ? sortedProviders.slice(0, parseInt(top_n)) : sortedProviders;
+
+    return res.status(200).json(topProviders);
+
+  } catch (err) {
+    console.error("Server error:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
 async function getServiceProviderProfile(req, res) {
   try {
     const { sp_id } = req.query; 
@@ -170,6 +231,6 @@ async function getServices(req, res) {
   }
 }   
 
-module.exports = { getServiceProviders , getServiceProviderProfile , getServices };
+module.exports = { getServiceProviders , getServiceProviderProfile , getServices , getServiceProvidersTopN };
 
 

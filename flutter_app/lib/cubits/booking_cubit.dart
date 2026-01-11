@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 
 class BookServiceRequest {
   //we will use this class to construct the request
@@ -67,7 +68,7 @@ class BookServiceCubit extends Cubit<BookServiceState> {
 
       // Send request
       final response = await dio.post(
-        "http://10.0.2.2:5000/homeowner/bookService",
+        "${BackendConfig.baseUrl}/homeowner/bookService",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );

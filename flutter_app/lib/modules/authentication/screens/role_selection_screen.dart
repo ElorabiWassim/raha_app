@@ -10,7 +10,7 @@ class RoleSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     const primaryColor = Color(0xFF33AD04);
     const textDark = Color(0xFF101C0D);
 

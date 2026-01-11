@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ra7a/core/config/backend_config.dart';
 
 @immutable
 abstract class AddDemandState {}
@@ -35,7 +36,7 @@ class AddDemandCubit extends Cubit<AddDemandState> {
     emit(AddDemandLoading());
 
     final url = Uri.parse(
-      "http://10.0.2.2:5000/homeowner/addDemand",
+      "${BackendConfig.baseUrl}/homeowner/addDemand",
     ); // Use emulator IP
     final body = {
       "homeowner_id": homeownerId,
@@ -95,7 +96,7 @@ class AddDemandCubit extends Cubit<AddDemandState> {
   }) async {
     emit(AddDemandLoading());
 
-    final url = Uri.parse("http://10.0.2.2:5000/homeowner/editDemand");
+    final url = Uri.parse("${BackendConfig.baseUrl}/homeowner/editDemand");
     final body = {
       'demand_id': demandId,
       'category_name': categoryName,
@@ -156,7 +157,7 @@ class UserDemandsCubit extends Cubit<UserDemandsState> {
     emit(UserDemandsLoading());
 
     final url = Uri.parse(
-      "http://10.0.2.2:5000/homeowner/getUserDemands?homeowner_id=$homeownerId",
+      "${BackendConfig.baseUrl}/homeowner/getUserDemands?homeowner_id=$homeownerId",
     );
 
     try {

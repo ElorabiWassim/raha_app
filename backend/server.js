@@ -12,15 +12,28 @@ const reviewRoutes = require('./routes/review.routes');
 const profileRoutes = require('./routes/profile.routes');
 const homeownerRoutes = require('./routes/homeownerRoutes');
 const loginRoutes = require('./routes/login.routes');
+const verificationRoutes = require('./routes/verification.routes');
 
 const app = express();
+// These endpoints are user-specific and should not be cached by browsers/CDNs.
+// Disabling ETags avoids 304 responses that can prevent clients from receiving
+// updated profile fields (like profile pictures) after login.
+app.set('etag', false);
 app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/api/profile', (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
 app.use('/api/auth', loginRoutes);
+app.use('/api/verification', verificationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', conversationRoutes);
 app.use('/api', reviewRoutes);

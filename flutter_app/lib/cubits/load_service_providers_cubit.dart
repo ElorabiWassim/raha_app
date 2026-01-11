@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../data/models/fetched_service_provider.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 
 @immutable
 abstract class ServiceProviderState {}
@@ -24,15 +25,15 @@ class ServiceProviderError extends ServiceProviderState {
 class ServiceProviderCubit extends Cubit<ServiceProviderState> {
   ServiceProviderCubit() : super(ServiceProviderInitial());
 
-  Future<void> fetchProviders({
-    required String categoryId,
+  Future<void> fetchTopNProviders({
     required String location,
+    required int topN,
   }) async {
     emit(ServiceProviderLoading());
 
     try {
       final url = Uri.parse(
-        'http://10.0.2.2:5000/homeowner/getServiceProviders?category_id=$categoryId&location=$location',
+        '${BackendConfig.baseUrl}/homeowner/getServiceProvidersTopN?location=$location&top_n=$topN',
       );
 
       final response = await http.get(url);
@@ -46,7 +47,38 @@ class ServiceProviderCubit extends Cubit<ServiceProviderState> {
 
         emit(ServiceProviderLoaded(providers));
       } else {
-        emit(ServiceProviderError('Failed to load service providers'));
+        emit(
+          ServiceProviderError('No service providers are available indeed.'),
+        );
+      }
+    } catch (e) {
+      emit(ServiceProviderError(e.toString()));
+    }
+  }
+
+  Future<void> fetchProviders({
+    required String categoryId,
+    required String location,
+  }) async {
+    emit(ServiceProviderLoading());
+
+    try {
+      final url = Uri.parse(
+        '${BackendConfig.baseUrl}/homeowner/getServiceProviders?category_id=$categoryId&location=$location',
+      );
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(response.body);
+
+        final providers = jsonList
+            .map((element) => FetchedServiceProvider.fromJson(element))
+            .toList();
+
+        emit(ServiceProviderLoaded(providers));
+      } else {
+        emit(ServiceProviderError('No service providers are availabe.'));
       }
     } catch (e) {
       emit(ServiceProviderError(e.toString()));

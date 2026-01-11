@@ -2,14 +2,14 @@ class ServiceProvider {
   String name;
   String profession;
   String location;
-  double rating;
-  int reviewCount;
+  int  ? rating;
+  int? reviewCount;
   String jobsDone;
   String experience;
-  String responseTime;
-  int pendingRequests;
-  int confirmedJobs;
-  int totalEarnings;
+  String? responseTime;
+  int? pendingRequests;
+  int? confirmedJobs;
+  int? totalEarnings;
   List<Service> services;
   String? profileImageUrl;
   
@@ -18,14 +18,14 @@ class ServiceProvider {
     required this.name,
     required this.profession,
     required this.location,
-    required this.rating,
-    required this.reviewCount,
+     this.rating,
+     this.reviewCount,
     required this.jobsDone,
     required this.experience,
-    required this.responseTime,
-    required this.pendingRequests,
-    required this.confirmedJobs,
-    required this.totalEarnings,
+     this.responseTime,
+    this.pendingRequests,
+     this.confirmedJobs,
+     this.totalEarnings,
     required this.services,
     required this.profileImageUrl
   });

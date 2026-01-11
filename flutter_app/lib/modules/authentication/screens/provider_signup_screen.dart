@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,10 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ra7a/data/remote/auth_api.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
 import 'package:ra7a/services/api_service.dart';
+import 'package:ra7a/core/config/backend_config.dart';
+import 'package:ra7a/core/location/location_picker_screen.dart';
+import 'package:ra7a/core/location/location_service.dart';
 import '../../../../logic/cubits/signup/signup_cubit.dart';
 import '../../../../logic/cubits/signup/signup_state.dart';
 import 'login.dart';
 import 'splash.dart';
+import 'verification.dart';
 import '../../../presentation/screens/homesp.dart';
 
 const primaryColor = Color(0xFF33AD04);
@@ -21,14 +26,8 @@ class ProviderSignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignupCubit(
-        authApi: AuthApi(
-          baseUrl: const String.fromEnvironment(
-            'BACKEND_BASE_URL',
-            defaultValue: 'http://10.0.2.2:5000',
-          ),
-        ),
-      ),
+      create: (context) =>
+          SignupCubit(authApi: AuthApi(baseUrl: BackendConfig.baseUrl)),
       child: const _ProviderSignUpScreenContent(),
     );
   }
@@ -48,6 +47,7 @@ class _ProviderSignUpScreenContentState
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
   bool _acceptTerms = false;
+  bool _locating = false;
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -61,23 +61,68 @@ class _ProviderSignUpScreenContentState
   String? _selectedServiceType;
   DateTime? _selectedDate;
 
+  Future<void> _applyPickedLocation(PickedLocation picked) async {
+    final city = (picked.city ?? '').trim();
+    final neighborhood = (picked.neighborhood ?? '').trim();
+    if (city.isNotEmpty) {
+      _cityController.text = city;
+    } else {
+      _cityController.text = picked.displayAddress;
+    }
+    _neighborhoodController.text = neighborhood;
+  }
+
+  Future<void> _useCurrentLocation() async {
+    if (_locating) return;
+    setState(() => _locating = true);
+
+    try {
+      final pos = await LocationService().getCurrentPosition();
+      final picked = await LocationService().reverseGeocode(
+        latitude: pos.latitude,
+        longitude: pos.longitude,
+      );
+      if (!mounted) return;
+      await _applyPickedLocation(picked);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _locating = false);
+    }
+  }
+
+  Future<void> _pickLocationOnMap() async {
+    if (_locating) return;
+    final picked = await Navigator.push<PickedLocation>(
+      context,
+      MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
+    );
+    if (!mounted || picked == null) return;
+    await _applyPickedLocation(picked);
+  }
+
   Future<void> _handleGoogleSignup() async {
     final localizations = AppLocalizations.of(context);
     try {
+      // Web client ID (not secret). Default provided so Google sign-in works with normal `flutter run`.
       final serverClientId = const String.fromEnvironment(
         'GOOGLE_SERVER_CLIENT_ID',
-        defaultValue: '',
+        defaultValue:
+            '64296724638-d7avbotkca6h4cj95njomf5eabgpo2q1.apps.googleusercontent.com',
       );
 
-      if (serverClientId.isEmpty) {
-        throw Exception(
-          'Missing GOOGLE_SERVER_CLIENT_ID. Run with --dart-define=GOOGLE_SERVER_CLIENT_ID=YOUR_WEB_CLIENT_ID',
-        );
-      }
-
       final googleSignIn = GoogleSignIn(
-        serverClientId: serverClientId,
-        scopes: const ['email', 'profile'],
+        clientId: kIsWeb ? serverClientId : null,
+        serverClientId: kIsWeb ? null : serverClientId,
+        scopes: kIsWeb
+            ? const ['email', 'profile', 'openid']
+            : const ['email', 'profile', 'openid'],
       );
 
       final account = await googleSignIn.signIn();
@@ -85,15 +130,12 @@ class _ProviderSignUpScreenContentState
 
       final auth = await account.authentication;
       final idToken = auth.idToken;
-      if (idToken == null || idToken.isEmpty) {
-        throw Exception(
-          'Google idToken is null. Ensure you used the Web client ID as serverClientId and configured Google Sign-In correctly.',
-        );
-      }
+      final accessToken = auth.accessToken;
 
       final api = ApiService();
       await api.googleAuth(
         idToken: idToken,
+        accessToken: accessToken,
         role: 'service_provider',
         phoneNumber: _phoneController.text.trim().isEmpty
             ? null
@@ -126,13 +168,23 @@ class _ProviderSignUpScreenContentState
         MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
       );
     } catch (e) {
+      final raw = e.toString().replaceAll('Exception: ', '');
+      final lower = raw.toLowerCase();
+      String msg = raw;
+      if (lower.contains('people api has not been used') ||
+          lower.contains('service_disabled') ||
+          lower.contains('permission_denied')) {
+        msg =
+            'Google People API is disabled for this OAuth project. Enable "People API" in Google Cloud Console for the project that owns your Google Client ID, then retry.';
+      } else if (lower.contains('popup_closed')) {
+        msg = 'Sign-in popup was closed before completing Google signup.';
+      } else if (raw.length > 200) {
+        msg = '${raw.substring(0, 200)}…';
+      }
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            e.toString().replaceAll('Exception: ', ''),
-            style: GoogleFonts.poppins(),
-          ),
+          content: Text(msg, style: GoogleFonts.poppins()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -236,9 +288,7 @@ class _ProviderSignUpScreenContentState
           if (state is SignupSuccess) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (context) => const MainNavigationScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => const VerificationPage()),
             );
           } else if (state is SignupFailure) {
             ScaffoldMessenger.of(
@@ -340,8 +390,9 @@ class _ProviderSignUpScreenContentState
                           final emailRegex = RegExp(
                             r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
                           );
-                          if (!emailRegex.hasMatch(v))
+                          if (!emailRegex.hasMatch(v)) {
                             return 'Email must be valid';
+                          }
                           return null;
                         },
                       ),
@@ -440,9 +491,7 @@ class _ProviderSignUpScreenContentState
                         height: 56,
                         margin: const EdgeInsets.only(bottom: 16),
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            // Get current location
-                          },
+                          onPressed: _locating ? null : _useCurrentLocation,
                           style: OutlinedButton.styleFrom(
                             backgroundColor: primaryColor.withValues(alpha: .1),
                             side: const BorderSide(color: primaryColor),
@@ -456,6 +505,35 @@ class _ProviderSignUpScreenContentState
                           ),
                           label: Text(
                             localizations.signupUseCurrentLocation,
+                            style: GoogleFonts.poppins(
+                              color: primaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Pick Location On Map Button
+                      Container(
+                        width: double.infinity,
+                        height: 56,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: OutlinedButton.icon(
+                          onPressed: _locating ? null : _pickLocationOnMap,
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: primaryColor.withValues(alpha: .1),
+                            side: const BorderSide(color: primaryColor),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.map_outlined,
+                            color: primaryColor,
+                          ),
+                          label: Text(
+                            'Pick on map',
                             style: GoogleFonts.poppins(
                               color: primaryColor,
                               fontSize: 16,

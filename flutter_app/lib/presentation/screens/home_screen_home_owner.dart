@@ -4,6 +4,7 @@ import '../widgets/category_list.dart';
 import '../widgets/Home_Demand.dart';
 import '../widgets/proffesionalCardWidget.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
+import './topN_rated.dart';
 
 class HomeScreenHomeOwner extends StatefulWidget {
   const HomeScreenHomeOwner({super.key});
@@ -15,7 +16,7 @@ class HomeScreenHomeOwner extends StatefulWidget {
 class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: Container(
@@ -36,16 +37,14 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
                   Padding(padding: EdgeInsets.only(left: 20)),
                   CircleAvatar(
                     radius: 24,
-                    backgroundImage: AssetImage(
-                      'assets/images/MohammedPicture.png',
-                    ),
+                    backgroundImage: AssetImage('assets/images/alexo.png'),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10),
                     child: Text(
                       l10n.greetingWassim,
                       style: TextStyle(
-                        color: Color(0xFF6E946D),
+                        color: Color(0xFF53B538),
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0,
@@ -65,29 +64,17 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
               CategoryList(),
               HomeDemand(),
               Padding(
-                padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+                padding: EdgeInsets.only(left: 20, top: 10),
                 child: Text(
                   l10n.topRatedNearYou,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
-              ProfessionalCard(
-                name: l10n.professionalAmineFaiz,
-                profession: l10n.professionMasterPlumber,
-                rating: 4.9,
-                imagePath: 'assets/images/JohnDoe.png',
-              ),
-              ProfessionalCard(
-                name: l10n.professionalMariaHaniya,
-                profession: l10n.professionExpertCarpenter,
-                rating: 5.0,
-                imagePath: 'assets/images/Maria.png',
-              ),
-              ProfessionalCard(
-                name: l10n.professionalAliImem,
-                profession: l10n.professionGardeningLandscaping,
-                rating: 4.8,
-                imagePath: 'assets/images/AliImem.png',
+              //add top rated nearby
+              TopNRated(
+                //to choose from all categories
+                location: "Blida",
+                topN: 3,
               ),
             ],
           ),

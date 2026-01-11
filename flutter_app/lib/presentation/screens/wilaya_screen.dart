@@ -18,6 +18,7 @@ class WilayaScreen extends StatelessWidget {
     "Moving": "837ecd35-78de-4320-be91-9cfa67a8bd1f",
     "Plumbing": "a75af59d-3e61-402d-9bd2-54a5e64fc950",
     "Painting": "da59048e-86e6-4a7e-b342-1784687004f7",
+    "More": "no more categories at the moment .",
   };
 
   @override
@@ -31,7 +32,7 @@ class WilayaScreen extends StatelessWidget {
           title: Padding(
             padding: const EdgeInsets.only(left: 50),
             child: Text(
-              AppLocalizations.of(context)!.selectWilaya,
+              AppLocalizations.of(context).selectWilaya,
               style: const TextStyle(
                 color: Color(0xFF1E293B),
                 fontWeight: FontWeight.bold,
@@ -103,7 +104,7 @@ class WilayaScreen extends StatelessWidget {
                                 create: (_) =>
                                     ServiceProviderCubit()..fetchProviders(
                                       categoryId: categoryToId[category]!,
-                                      location: wilaya.name,
+                                      location: wilaya.wilaya_name!,
                                     ),
                                 child: ServiceProviderScreen(),
                               ),

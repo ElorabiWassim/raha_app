@@ -642,7 +642,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get securityPrivacy => 'الأمان والخصوصية';
 
   @override
-  String get greetingWassim => 'سلام وسيم';
+  String get greetingWassim => 'أهلًا بكم في راحة';
 
   @override
   String get browseCategories => 'تصفح الفئات';

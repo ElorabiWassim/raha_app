@@ -4,6 +4,7 @@ import '../../../data/models/booking_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ra7a/core/config/backend_config.dart';
 
 // State
 abstract class BookingsState extends Equatable {
@@ -52,7 +53,7 @@ class BookingsCubit extends Cubit<BookingsState> {
       }
 
       final url = Uri.parse(
-        'http://10.0.2.2:5000/homeowner/getBookingOfUser/$userId',
+        '${BackendConfig.baseUrl}/homeowner/getBookingOfUser/$userId',
       );
       final response = await http.get(url);
 

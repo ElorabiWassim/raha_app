@@ -77,7 +77,7 @@ class _MessagesScreenContent extends StatelessWidget {
                                     .read<ConversationsCubit>()
                                     .loadConversations();
                               },
-                              child: Text(AppLocalizations.of(context)!.actionRetry),
+                              child: Text(AppLocalizations.of(context).actionRetry),
                             ),
                           ],
                         ),
@@ -140,7 +140,7 @@ class _MessagesScreenContent extends StatelessWidget {
             ],
           ),
           Text(
-            AppLocalizations.of(context)!.titleMessages,
+            AppLocalizations.of(context).titleMessages,
             style: AppTextStyles.heading4.copyWith(color: AppColors.textDark),
           ),
         ],
@@ -154,7 +154,7 @@ class _MessagesScreenContent extends StatelessWidget {
   ) {
     final lastMessage = conversation.lastMessage;
     final hasUnread = false; // TODO: Add unread count from backend
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     // Format time helper using Intl and Localization
     String formatTime(DateTime dateTime) {
@@ -312,7 +312,7 @@ class _MessagesScreenContent extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -424,7 +424,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Scaffold(
       body: Container(
@@ -510,7 +510,7 @@ class _ConversationDetailScreenState extends State<ConversationDetailScreen> {
   }
 
   Widget _buildAppBar(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     // Determine role label based on user role
     String roleLabel = widget.otherUser.role == 'service_provider'
         ? l10n.roleServiceProvider
@@ -642,7 +642,7 @@ class _ChatInputField extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.hintTypeMessage,
+                hintText: AppLocalizations.of(context).hintTypeMessage,
                 hintStyle: const TextStyle(color: Colors.grey),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

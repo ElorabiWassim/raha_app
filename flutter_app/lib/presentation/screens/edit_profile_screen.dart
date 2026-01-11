@@ -1,6 +1,8 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; 
+import 'package:image_picker/image_picker.dart';
+import 'package:ra7a/core/location/location_picker_screen.dart';
+import 'package:ra7a/core/location/location_service.dart';
 import '../../data/models/serviceprovider_data.dart';
 import '../../services/api_service.dart';
 import 'package:ra7a/l10n/app_localizations.dart';
@@ -19,28 +21,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _locationController;
   late TextEditingController _experienceController;
-  
+
   bool _isModified = false;
   bool _isLoading = false;
-  File? _selectedImage;
+  XFile? _selectedImage;
+  Uint8List? _selectedImageBytes;
   final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.provider.name);
-    
+
     _locationController = TextEditingController(text: widget.provider.location);
-    _experienceController = TextEditingController(text: widget.provider.experience);
-    
+    _experienceController = TextEditingController(
+      text: widget.provider.experience,
+    );
+
     _nameController.addListener(_checkModified);
     _locationController.addListener(_checkModified);
     _experienceController.addListener(_checkModified);
   }
-  
+
   void _checkModified() {
     setState(() {
-      _isModified = _nameController.text != widget.provider.name ||
+      _isModified =
+          _nameController.text != widget.provider.name ||
           _locationController.text != widget.provider.location ||
           _experienceController.text != widget.provider.experience ||
           _selectedImage != null;
@@ -59,15 +65,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        final bytes = await image.readAsBytes();
         setState(() {
-          _selectedImage = File(image.path);
+          _selectedImage = image;
+          _selectedImageBytes = bytes;
           _checkModified();
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to pick image: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to pick image: $e')));
     }
   }
 
@@ -82,7 +90,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // 1. Update Text Details
       await api.updateProfile(
         name: _nameController.text,
-       
+
         location: _locationController.text,
         experience: _experienceController.text,
       );
@@ -106,10 +114,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           backgroundColor: Color(0xFF68E36C),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
-      
+
       Navigator.pop(context, true); // Return true to refresh parent
     } catch (e) {
       if (!mounted) return;
@@ -119,7 +129,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               Icon(Icons.error_outline, color: Colors.white),
               SizedBox(width: 12),
-              Expanded(child: Text('Error: ${e.toString().replaceAll('Exception:', '')}')),
+              Expanded(
+                child: Text(
+                  'Error: ${e.toString().replaceAll('Exception:', '')}',
+                ),
+              ),
             ],
           ),
           backgroundColor: Colors.red,
@@ -131,10 +145,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  Future<void> _setLocationFromCurrentPosition() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+
+    try {
+      final pos = await LocationService().getCurrentPosition();
+      final picked = await LocationService().reverseGeocode(
+        latitude: pos.latitude,
+        longitude: pos.longitude,
+      );
+      if (!mounted) return;
+      _locationController.text = picked.displayAddress;
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _setLocationFromMap() async {
+    if (_isLoading) return;
+    final picked = await Navigator.push<PickedLocation>(
+      context,
+      MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
+    );
+    if (!mounted || picked == null) return;
+    _locationController.text = picked.displayAddress;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -192,7 +241,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               backgroundColor: Color(0xFF68E36C),
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               elevation: 0,
               disabledBackgroundColor: Colors.grey[300],
             ),
@@ -234,13 +285,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: CircleAvatar(
               radius: 60,
               backgroundColor: Colors.white,
-              
-              backgroundImage: _selectedImage != null
-                  ? FileImage(_selectedImage!)
-                  : (widget.provider.profileImageUrl != null && widget.provider.profileImageUrl!.isNotEmpty)
-                      ? NetworkImage(widget.provider.profileImageUrl!) as ImageProvider
-                      : null,
-              child: (_selectedImage == null && (widget.provider.profileImageUrl == null || widget.provider.profileImageUrl!.isEmpty))
+
+              backgroundImage: _selectedImageBytes != null
+                  ? MemoryImage(_selectedImageBytes!)
+                  : (widget.provider.profileImageUrl != null &&
+                        widget.provider.profileImageUrl!.isNotEmpty)
+                  ? NetworkImage(widget.provider.profileImageUrl!)
+                        as ImageProvider
+                  : null,
+              child:
+                  (_selectedImageBytes == null &&
+                      (widget.provider.profileImageUrl == null ||
+                          widget.provider.profileImageUrl!.isEmpty))
                   ? Icon(Icons.person, size: 60, color: Color(0xFF68E36C))
                   : null,
             ),
@@ -271,14 +327,72 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           Text(
             l10n.profileInformation,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
           SizedBox(height: 16),
-          _buildTextField(controller: _nameController, label: l10n.name, icon: Icons.person_outline),
+          _buildTextField(
+            controller: _nameController,
+            label: l10n.name,
+            icon: Icons.person_outline,
+          ),
           SizedBox(height: 16),
-          _buildTextField(controller: _locationController, label: l10n.location, icon: Icons.location_on_outlined),
+          _buildTextField(
+            controller: _locationController,
+            label: l10n.location,
+            icon: Icons.location_on_outlined,
+          ),
+          SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading
+                      ? null
+                      : _setLocationFromCurrentPosition,
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Color(0xFF68E36C)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  icon: Icon(Icons.my_location, color: Color(0xFF68E36C)),
+                  label: Text(
+                    'Use current location',
+                    style: TextStyle(color: Color(0xFF68E36C)),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _setLocationFromMap,
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Color(0xFF68E36C)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  icon: Icon(Icons.map_outlined, color: Color(0xFF68E36C)),
+                  label: Text(
+                    'Pick on map',
+                    style: TextStyle(color: Color(0xFF68E36C)),
+                  ),
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: 16),
-          _buildTextField(controller: _experienceController, label: l10n.experience, icon: Icons.timeline_outlined),
+          _buildTextField(
+            controller: _experienceController,
+            label: l10n.experience,
+            icon: Icons.timeline_outlined,
+          ),
         ],
       ),
     );
@@ -293,15 +407,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return TextFormField(
       controller: controller,
       enabled: !_isLoading,
-      validator: validator ?? (val) => (val == null || val.isEmpty) ? 'Required' : null,
+      validator:
+          validator ??
+          (val) => (val == null || val.isEmpty) ? 'Required' : null,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: Color(0xFF68E36C)),
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey[300]!)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Color(0xFF68E36C), width: 2)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Color(0xFF68E36C), width: 2),
+        ),
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
@@ -319,13 +444,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.statsInformation, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+          Text(
+            l10n.statsInformation,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
           SizedBox(height: 16),
           _buildStatRow(Icons.star, '${widget.provider.rating}', l10n.rating),
           SizedBox(height: 12),
-          _buildStatRow(Icons.rate_review, '${widget.provider.reviewCount}', l10n.reviews),
+          _buildStatRow(
+            Icons.rate_review,
+            '${widget.provider.reviewCount}',
+            l10n.reviews,
+          ),
           SizedBox(height: 12),
-          _buildStatRow(Icons.check_circle, widget.provider.jobsDone, l10n.jobsDone),
+          _buildStatRow(
+            Icons.check_circle,
+            widget.provider.jobsDone,
+            l10n.jobsDone,
+          ),
         ],
       ),
     );
@@ -336,9 +476,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       children: [
         Icon(icon, color: Color(0xFF68E36C), size: 20),
         SizedBox(width: 12),
-        Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
         SizedBox(width: 4),
-        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600]))
+        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
       ],
     );
   }
