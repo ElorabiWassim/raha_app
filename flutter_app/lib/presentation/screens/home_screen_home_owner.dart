@@ -73,7 +73,7 @@ class _HomeScreenHomeOwnerState extends State<HomeScreenHomeOwner> {
               //add top rated nearby
               TopNRated(
                 //to choose from all categories
-                location: "Algiers",
+                location: "Blida",
                 topN: 3,
               ),
             ],
